@@ -1,30 +1,33 @@
 {
-  "name": "watch-place",
-  "version": "1.0.0",
-  "description": "Youtube Clone",
-  "main": "index.js",
-  "repository": "https://github.com/supercrocman/L1_ALT_CLONE_YOUTUBE",
-  "author": "L1_ALT",
-  "license": "MIT",
-  "dependencies": {
-    "express": "^4.18.2",
-    "winston": "^3.8.2"
-  },
-  "scripts": {
-    "start": "node index.js",
-    "dev": "nodemon index.js",
-    "lint": "eslint .",
-    "lint:fix": "eslint . --fix",
-    "format": "prettier-eslint \"$PWD/{,!(node_modules)/**/}*.{js,json}\"",
-    "format:fix": "prettier-eslint --write \"$PWD/{,!(node_modules)/**/}*.{js,json}\""
-  },
-  "devDependencies": {
-    "eslint": "^7.32.0 || ^8.2.0",
-    "eslint-config-airbnb-base": "^15.0.0",
-    "eslint-config-prettier": "^8.8.0",
-    "eslint-plugin-import": "^2.25.2",
-    "eslint-plugin-prettier": "^4.2.1",
-    "prettier": "^2.8.8",
-    "prettier-eslint-cli": "^7.1.0"
-  }
+    "name": "watch-place",
+    "version": "1.0.0",
+    "description": "Youtube Clone",
+    "main": "index.js",
+    "repository": "https://github.com/supercrocman/L1_ALT_CLONE_YOUTUBE",
+    "author": "L1_ALT",
+    "license": "MIT",
+    "dependencies": {
+        "dotenv": "^16.0.3",
+        "express": "^4.18.2",
+        "mysql2": "^3.2.3",
+        "sequelize": "^6.31.0",
+        "winston": "^3.8.2"
+    },
+    "scripts": {
+        "start": "node index.js",
+        "dev": "nodemon index.js",
+        "lint": "eslint .",
+        "lint:fix": "eslint . --fix",
+        "format": "prettier-eslint \"$PWD/{,!(node_modules)/**/}*.{js,json}\"",
+        "format:fix": "prettier-eslint --write \"$PWD/{,!(node_modules)/**/}*.{js,json}\""
+    },
+    "devDependencies": {
+        "eslint": "^7.32.0 || ^8.2.0",
+        "eslint-config-airbnb-base": "^15.0.0",
+        "eslint-config-prettier": "^8.8.0",
+        "eslint-plugin-import": "^2.27.5",
+        "eslint-plugin-prettier": "^4.2.1",
+        "prettier": "^2.8.8",
+        "prettier-eslint-cli": "^7.1.0"
+    }
 }
