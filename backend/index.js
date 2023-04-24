@@ -1,6 +1,6 @@
 const express = require('express');
-// eslint-disable-next-line import/no-extraneous-dependencies
 const winston = require('winston');
+const db = require('./services/sequelize');
 
 const logger = winston.createLogger({
     level: 'info',
@@ -26,6 +26,15 @@ if (process.env.NODE_ENV !== 'production') {
         })
     );
 }
+
+db.sequelize
+    .sync()
+    .then(() => {
+        logger.info('Synced db.');
+    })
+    .catch((err) => {
+        logger.info(`Failed to sync db: ${err.message}`);
+    });
 
 const app = express();
 const port = 3000;
