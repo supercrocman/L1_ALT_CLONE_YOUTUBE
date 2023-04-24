@@ -5,6 +5,6 @@ function Subscribe() {
     const handleClose = () => {
         setOpen(false);
     };
-    return <Popup></Popup>;
+    return <Popup open={open}></Popup>;
 }
 export default Subscribe;

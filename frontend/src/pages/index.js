@@ -9,10 +9,6 @@ import Popup from '@/components/profil/Popup';
 const inter = Inter({ subsets: ['latin'] });
 
 export default function Home() {
-    const [open, setOpen] = useState(false);
-    const handleClose = () => {
-        setOpen(false);
-    };
     return (
         <>
             <Head>
@@ -40,9 +36,7 @@ export default function Home() {
                     >
                         Ouvrir Pop up
                     </Button>
-                    <Popup open={open} handleClose={handleClose}>
-                        Hello ?
-                    </Popup>
+
                     <div>
                         <a
                             href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
