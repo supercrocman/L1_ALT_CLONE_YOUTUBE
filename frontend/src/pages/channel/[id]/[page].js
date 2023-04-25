@@ -11,8 +11,9 @@ import SwipeableViews from 'react-swipeable-views';
 import Typography from '@mui/material/Typography';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import PersonPinIcon from '@mui/icons-material/PersonPin';
+import Router from 'next/router';
 import { deepOrange } from '@mui/material/colors';
-import AccountMenu from '../includes/accountmenu';
+import AccountMenu from '../../includes/accountmenu';
 import { Roboto } from 'next/font/google';
 import { useRouter } from 'next/router';
 import { useTheme } from '@mui/material/styles';
@@ -21,6 +22,8 @@ const roboto = Roboto({
     weight: '400',
     subsets: ['latin'],
 })
+
+var about = '';
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -61,7 +64,12 @@ export default function Home() {
         setValue(index);
     };
     const router = useRouter()
-    const { id } = router.query
+    const { id, page } = router.query
+
+    if (page == "about") {
+        about = "id: 'full-width-tab-3', 'aria-controls': 'full-width-tabpanel-3'";
+        console.log(about);
+    }
 
     return (
         <div className={roboto.className}>
@@ -72,16 +80,15 @@ export default function Home() {
                     <div style={{ display: "flex", flexDirection: "column", alignItems: "stretch", justifyContent: "space-evenly", height: "100%" }}>
                         <p style={{}}>Remy Sharp</p>
                         <div style={{ display: "flex", flexDirection: "row", flexWrap: "wrap", color: "#606060" }}>
-                            <p style={{ marginRight: 8 }}>{id}</p>
-                            <p style={{ marginRight: 8 }}>Aucun vidéo</p>
-                            <p style={{ marginRight: 8 }}>Aucune abonné</p>
+                            <p style={{ marginRight: 8, fontWeight: "800" }}>{id}</p>
+                            <p style={{ marginRight: 8 }}>0 vidéo</p>
+                            <p style={{ marginRight: 8 }}>0 abonné</p>
                         </div>
                         <Link href="#">Découvrir tout ces petits secrets </Link>
                     </div>
                 </div>
                 <div style={{ display: "flex", alignItems: "center", width: "25%", justifyContent: "space-evenly" }}>
-                    {/* <Button variant="contained" style={{ borderRadius: "50px" }}>Personalize</Button> */}
-                    <Fab color="primary" aria-label="Personalize" variant="extended" size='medium'>
+                    <Fab color="primary" aria-label="Personalize" variant="extended" size='medium' onClick={() => Router.push(`/studio/${id}`)}>
                         Personalize
                     </Fab>
                 </div>
@@ -99,7 +106,7 @@ export default function Home() {
                         <Tab label="Home" {...a11yProps(0)} />
                         <Tab label="Videos" {...a11yProps(1)} />
                         <Tab label="Playlists" {...a11yProps(2)} />
-                        <Tab label="About" {...a11yProps(3)} />
+                        <Tab label="About" {...about} {...a11yProps(3)} />
                         <Tab icon={<FavoriteIcon />} label="" {...a11yProps(4)} />
                     </Tabs>
                 </AppBar>
@@ -118,7 +125,7 @@ export default function Home() {
                         Empty
                     </TabPanel>
                     <TabPanel value={value} index={3} dir={theme.direction}>
-                        Empty
+                        About
                     </TabPanel>
                     <TabPanel value={value} index={4} dir={theme.direction}>
                         Empty
