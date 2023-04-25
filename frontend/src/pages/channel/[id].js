@@ -101,7 +101,6 @@ export default function Home() {
                         <Tab label="Playlists" {...a11yProps(2)} />
                         <Tab label="About" {...a11yProps(3)} />
                         <Tab icon={<FavoriteIcon />} label="" {...a11yProps(4)} />
-                        <Tab icon={<PersonPinIcon />} label="" {...a11yProps(5)} />
                     </Tabs>
                 </AppBar>
                 <SwipeableViews
@@ -122,9 +121,6 @@ export default function Home() {
                         Empty
                     </TabPanel>
                     <TabPanel value={value} index={4} dir={theme.direction}>
-                        Empty
-                    </TabPanel>
-                    <TabPanel value={value} index={5} dir={theme.direction}>
                         Empty
                     </TabPanel>
                 </SwipeableViews>
