@@ -62,6 +62,10 @@ module.exports = (sequelize, DataTypes) =>
                 type: DataTypes.INTEGER,
                 allowNull: true,
             },
+            searchable_title: {
+                type: DataTypes.STRING(100),
+                allowNull: false,
+            },
         },
         {
             sequelize,
