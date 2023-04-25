@@ -53,6 +53,8 @@ app.get('/', (req, res) => {
 });
 app.use('/profil', profilRouter);
 
+app.use('/api', require('./routes/search'));
+
 app.listen(port, () => {
     logger.info(`Example app listening on port ${port}`);
 });
