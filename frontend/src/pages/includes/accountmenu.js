@@ -36,7 +36,7 @@ export default function AccountMenu() {
               aria-haspopup="true"
               aria-expanded={open ? 'true' : undefined}
             >
-              <Avatar sx={{ width: 32, height: 32 }}>M</Avatar>
+              <Avatar sx={{ width: 45, height: 45 }}>M</Avatar>
             </IconButton>
           </Tooltip>
         </Box>
@@ -53,8 +53,8 @@ export default function AccountMenu() {
               filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
               mt: 1.5,
               '& .MuiAvatar-root': {
-                width: 32,
-                height: 32,
+                width: 45,
+                height: 45,
                 ml: -0.5,
                 mr: 1,
               },
@@ -64,8 +64,8 @@ export default function AccountMenu() {
                 position: 'absolute',
                 top: 0,
                 right: 14,
-                width: 10,
-                height: 10,
+                width: 15,
+                height: 15,
                 bgcolor: 'background.paper',
                 transform: 'translateY(-50%) rotate(45deg)',
                 zIndex: 0,
