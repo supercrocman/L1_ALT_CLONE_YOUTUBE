@@ -75,7 +75,7 @@ export default function AccountMenu() {
           transformOrigin={{ horizontal: 'right', vertical: 'top' }}
           anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
         >
-          <MenuItem onClick={() => Router.push('/channel')}>
+          <MenuItem onClick={() => Router.push('/channel/@RemySharp')}>
             <Avatar /> Channel
           </MenuItem>
           <Divider />
