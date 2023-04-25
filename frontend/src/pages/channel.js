@@ -2,7 +2,7 @@ import Link from 'next/link'
 import Button from '@mui/material/Button'
 import Avatar from '@mui/material/Avatar'
 import { deepOrange } from '@mui/material/colors'
-import AccountMenu from './includes/accountmenu'
+import AccountMenu from '../includes/accountmenu'
 import { Roboto } from 'next/font/google'
 
 const roboto = Roboto({
