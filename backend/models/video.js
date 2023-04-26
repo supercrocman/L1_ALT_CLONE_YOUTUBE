@@ -21,6 +21,7 @@ module.exports = (sequelize, DataTypes) =>
             identifier: {
                 type: DataTypes.STRING(15),
                 allowNull: false,
+                unique: 'identifier',
             },
             path: {
                 type: DataTypes.STRING(30),
