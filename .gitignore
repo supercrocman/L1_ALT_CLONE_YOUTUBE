@@ -209,3 +209,13 @@ sketch
 .ionide
 
 # End of https://www.toptal.com/developers/gitignore/api/node,react,macos,visualstudiocode
+
+# Ignore package.json and yarn.lock in the root folder
+/package.json
+/yarn.lock
+
+# Don't ignore package.json and yarn.lock in the backend and frontend folders
+!/backend/package.json
+!/backend/yarn.lock
+!/frontend/package.json
+!/frontend/yarn.lock
