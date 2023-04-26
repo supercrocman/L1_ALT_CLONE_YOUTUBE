@@ -1,10 +1,9 @@
 import { Modal, Paper } from '@mui/material';
 
-function Popup({ open, handleClose, children }) {
+function Popup({ open, children }) {
     return (
         <Modal
             open={open}
-            onClose={handleClose}
             aria-labelledby="modal-modal-title"
             aria-describedby="modal-modal-description"
         >

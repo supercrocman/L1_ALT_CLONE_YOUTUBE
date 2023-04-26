@@ -2,6 +2,10 @@ const express = require('express');
 const winston = require('winston');
 const db = require('./services/sequelize');
 
+const cors = require('cors');
+
+const rooterProfil = require('./routes/rooter_profil');
+
 const logger = winston.createLogger({
     level: 'info',
     format: winston.format.json(),
@@ -37,7 +41,17 @@ db.sequelize
     });
 
 const app = express();
-const port = 3000;
+const port = 3001;
+
+app.use(
+    cors({
+        origin: 'http://localhost:3000',
+        optionsSuccessStatus: 200,
+        credentials: true,
+    })
+); // CORS pour autoriser le partage de ressources entre origines multiples (Cross-Origin Resource Sharing)
+
+app.use(express.json()); // Middleware pour analyser les requêtes au format JSON
 
 app.get('/', (req, res) => {
     res.send('Hello World!');
@@ -46,3 +60,5 @@ app.get('/', (req, res) => {
 app.listen(port, () => {
     logger.info(`Example app listening on port ${port}`);
 });
+
+app.use('/profil', rooterProfil); // Utiliser le routeur pour toutes les demandes effectuées vers /profil
