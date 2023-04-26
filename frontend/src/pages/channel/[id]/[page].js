@@ -89,6 +89,21 @@ export default function Home() {
         setValue(index);
     };
 
+    React.useEffect(() => {
+        axios.get(baseURL).then((response) => {
+          setPost(response.data);
+        });
+      }, []);
+
+    axios.get('http://localhost:3001/api/users/')
+        .catch(function (error) {
+            console.log(error);
+        })
+        .then(function (response) {
+            console.log(response.data);
+            about = response.data[0].about;
+        })
+
     return (
         <div className={roboto.className}>
             <AccountMenu></AccountMenu>
