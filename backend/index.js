@@ -53,13 +53,6 @@ app.get('/', (req, res) => {
 });
 app.use('/profil', profilRouter);
 
-app.get('/test', async (req, res) => {
-    const user = await db.User.findByPk(4);
-    const subcount = await user.getSubCount();
-    const subscriptions = await user.getSubscriptions();
-    res.send(`User 4 subs :  ${subcount}, subscriptions : ${subscriptions}`);
-});
-
 app.use('/api', require('./routes/search'));
 
 app.listen(port, () => {
