@@ -13,6 +13,15 @@ app.use(cors(
     }
 ))
 
+const cors = require('cors');
+const app = express();
+
+app.use(cors(
+    {
+        origin: '*',
+    }
+))
+
 const logger = winston.createLogger({
     level: 'info',
     format: winston.format.json(),
@@ -58,8 +67,6 @@ app.get('/', (req, res) => {
 app.use('/api', require('./routes/search'));
 
 app.use('/api', require('./routes/channelinfos'));
-
-
 
 app.listen(port, () => {
     logger.info(`Example app listening on port ${port}`);
