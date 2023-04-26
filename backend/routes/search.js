@@ -2,11 +2,17 @@ const express = require('express');
 const router = express.Router();
 const db = require('../services/sequelize');
 const { Op } = require('sequelize');
+const { body, validationResult } = require('express-validator');
 
-
-router.post('/search', async (req, res) => {
-    if(req.body.q === undefined) return res.status(400).send('No query provided');
-    if(req.body.q.length < 3) return res.status(400).send('Query too short');
+router.post('/search',
+ body('q').trim()
+ .notEmpty().withMessage('No query provided')
+ .isLength({ min: 3}).withMessage('Query too short')
+ , async (req, res) => {
+    const result = validationResult(req);
+    if (!result.isEmpty()) {
+        return res.status(400).json({ errors: result.array() });
+    }
     try {
         const videos = await db.Video.findAll({
           where: {

@@ -8,6 +8,7 @@ module.exports = (sequelize, DataTypes) =>
                 references: {
                     model: 'user',
                     key: 'id',
+                    primaryKey: true,
                 },
             },
             user_subscribe_id: {
@@ -16,6 +17,7 @@ module.exports = (sequelize, DataTypes) =>
                 references: {
                     model: 'user',
                     key: 'id',
+                    primaryKey: true,
                 },
             },
         },
@@ -24,6 +26,12 @@ module.exports = (sequelize, DataTypes) =>
             tableName: 'user_subscription',
             timestamps: false,
             indexes: [
+                {
+                    name: 'PRIMARY',
+                    unique: true,
+                    using: 'BTREE',
+                    fields: [{ name: 'user_id' }, { name: 'user_subscribe_id' }],
+                },
                 {
                     name: 'user_id',
                     using: 'BTREE',
