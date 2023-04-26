@@ -88,6 +88,12 @@ module.exports = (sequelize, DataTypes) =>
                     using: 'BTREE',
                     fields: [{ name: 'user_id' }],
                 },
+                {
+                    name: 'identifier',
+                    unique: true,
+                    using: 'BTREE',
+                    fields: [{ name: 'identifier' }],
+                },
             ],
         }
     );
