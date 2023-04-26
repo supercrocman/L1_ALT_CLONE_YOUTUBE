@@ -17,6 +17,7 @@ import AccountMenu from '../../includes/accountmenu';
 import { Roboto } from 'next/font/google';
 import { useRouter } from 'next/router';
 import { useTheme } from '@mui/material/styles';
+import { useEffect } from 'react';
 
 const roboto = Roboto({
     weight: '400',
@@ -54,7 +55,31 @@ function a11yProps(index) {
 
 export default function Home() {
     const theme = useTheme();
-    const [value, setValue] = React.useState(0);
+
+    const router = useRouter()
+    const { id, page } = router.query
+
+    let baseindex = 0;
+
+    const [value, setValue] = React.useState(baseindex);
+
+    useEffect(() => {
+        let baseindex = 0;
+    
+        if (page === "home") {
+          baseindex = 0;
+        } else if (page === "about") {
+          baseindex = 3;
+        } else if (page === "videos") {
+          baseindex = 1;
+        } else if (page === "playlists") {
+          baseindex = 2;
+        } else if (page === "likes") {
+          baseindex = 4;
+        }
+    
+        setValue(baseindex);
+      }, [page]);
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
@@ -63,13 +88,6 @@ export default function Home() {
     const handleChangeIndex = (index) => {
         setValue(index);
     };
-    const router = useRouter()
-    const { id, page } = router.query
-
-    if (page == "about") {
-        about = "id: 'full-width-tab-3', 'aria-controls': 'full-width-tabpanel-3'";
-        console.log(about);
-    }
 
     return (
         <div className={roboto.className}>
@@ -79,12 +97,12 @@ export default function Home() {
                     <Avatar sx={{ bgcolor: deepOrange[500], width: 128, height: 128, marginRight: "5%" }} alt="Remy Sharp" src="/broken-image.jpg" >R</Avatar>
                     <div style={{ display: "flex", flexDirection: "column", alignItems: "stretch", justifyContent: "space-evenly", height: "100%" }}>
                         <p style={{}}>Remy Sharp</p>
-                        <div style={{ display: "flex", flexDirection: "row", flexWrap: "wrap", color: "#606060" }}>
+                        <div style={{ display: "flex", flexDirection: "row", flexWrap: "wrap", color: "#606060", fontSize: "small" }}>
                             <p style={{ marginRight: 8, fontWeight: "800" }}>{id}</p>
                             <p style={{ marginRight: 8 }}>0 vidéo</p>
                             <p style={{ marginRight: 8 }}>0 abonné</p>
                         </div>
-                        <Link href="#">Découvrir tout ces petits secrets </Link>
+                        <Link href={"/channel/" + id + '/about'} >Découvrir tout ces petits secrets </Link>
                     </div>
                 </div>
                 <div style={{ display: "flex", alignItems: "center", width: "25%", justifyContent: "space-evenly" }}>
@@ -103,11 +121,11 @@ export default function Home() {
                         variant="fullWidth"
                         centered
                     >
-                        <Tab label="Home" {...a11yProps(0)} />
-                        <Tab label="Videos" {...a11yProps(1)} />
-                        <Tab label="Playlists" {...a11yProps(2)} />
-                        <Tab label="About" {...about} {...a11yProps(3)} />
-                        <Tab icon={<FavoriteIcon />} label="" {...a11yProps(4)} />
+                        <Tab label="Home" {...a11yProps(0)} onClick={() => Router.push('/channel/' + id + '/home')} />
+                        <Tab label="Videos" {...a11yProps(1)} onClick={() => Router.push('/channel/' + id + '/videos')} />
+                        <Tab label="Playlists" {...a11yProps(2)} onClick={() => Router.push('/channel/' + id + '/playlists')} />
+                        <Tab label="About" {...about} {...a11yProps(3)} onClick={() => Router.push('/channel/' + id + '/about')} />
+                        <Tab icon={<FavoriteIcon />} label="" {...a11yProps(4)} onClick={() => Router.push('/channel/' + id + '/likes')} />
                     </Tabs>
                 </AppBar>
                 <SwipeableViews
@@ -134,4 +152,5 @@ export default function Home() {
             </Box>
         </div>
     )
+
 }
