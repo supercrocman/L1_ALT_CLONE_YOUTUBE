@@ -18,6 +18,10 @@ module.exports = (sequelize, DataTypes) =>
                     key: 'id',
                 },
             },
+            identifier: {
+                type: DataTypes.STRING(15),
+                allowNull: false,
+            },
             path: {
                 type: DataTypes.STRING(30),
                 allowNull: false,
