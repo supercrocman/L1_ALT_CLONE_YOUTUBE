@@ -14,19 +14,44 @@ router.post('/search',
         return res.status(400).json({ errors: result.array() });
     }
     try {
+        const channels = await db.User.findAll({
+            where: {
+                name: {
+                    [Op.substring]: req.body.q,
+                }
+            }
+        });
         const videos = await db.Video.findAll({
+        limit : 10,
+        order : [['views', 'DESC']],
           where: {
             searchable_title: {
               [Op.substring]: req.body.q,
             }
           }
         });
+        const topChannel = await getTopChannel(channels);
+        const topChannelName = topChannel ? topChannel.name : null;
         const titleList = videos.map((video) => video.title);
-        res.json(titleList);
+        res.json({topChannelName, videos: titleList });
       } catch (error) {
         console.error(error);
         res.status(500).send('Server error');
       }
 });
+
+async function getTopChannel(channels) {
+    let topChannel = null;
+    let topSubCount = 0;
+    for (let i = 0; i < channels.length; i++) {
+        const channel = channels[i];
+        const subCount = await channel.getSubCount();
+        if (subCount > topSubCount) {
+            topSubCount = subCount;
+            topChannel = channel;
+        }
+    }
+    return topChannel;
+}
 
 module.exports = router;
