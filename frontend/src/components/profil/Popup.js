@@ -1,6 +1,6 @@
 import { Modal, Paper } from '@mui/material';
 
-function Popup({ open, handleClose, children }) {
+function Popup({ open, children }) {
     return (
         <Modal
             open={open}
