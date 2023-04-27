@@ -71,7 +71,6 @@ export default function ChannelPage() {
         }
     }, [id]);
 
-
     let baseindex = 0;
 
     const [value, setValue] = React.useState(baseindex);
@@ -150,7 +149,6 @@ export default function ChannelPage() {
                         <Link href={"/channel/" + id + '/about'}>
                             {description && description.length > 0 ? description.substring(0, 20) : ""}
                         </Link>
-
                     </div>
                 </div>
                 <div style={{ display: "flex", alignItems: "center", width: "25%", justifyContent: "space-evenly" }}>

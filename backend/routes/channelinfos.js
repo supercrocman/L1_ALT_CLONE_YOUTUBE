@@ -37,7 +37,7 @@ router.get('/user/:identifier', async (req, res) => {
 
     const subCount = await user.getSubCount()
 
-    const videoCount = await db.Video.count(
+    const videoCount = await db.Video.count( 42d595f1ca889953792a1b974ac61385a3421ab5
       {
         where: {
           user_id: user.id
@@ -67,7 +67,7 @@ router.get('/user/:identifier', async (req, res) => {
 
     } else {
       res.status(404).send('Utilisateur non trouvé');
-    }""
+    }
   } catch (error) {
     // res.status(500).send(error);
     res.status(500).send('Erreur lors de la récupération de l\'utilisateur');
