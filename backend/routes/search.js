@@ -42,7 +42,7 @@ router.post('/search',
 
 async function getTopChannel(channels) {
     let topChannel = null;
-    let topSubCount = 0;
+    let topSubCount = -1;
     for (let i = 0; i < channels.length; i++) {
         const channel = channels[i];
         const subCount = await channel.getSubCount();
