@@ -4,15 +4,6 @@ const winston = require('winston');
 const db = require('./services/sequelize');
 const profilRouter = require('./routes/profils');
 
-const cors = require('cors');
-const app = express();
-
-app.use(cors(
-    {
-        origin: '*',
-    }
-))
-
 const logger = winston.createLogger({
     level: 'info',
     format: winston.format.json(),
