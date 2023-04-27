@@ -55,7 +55,7 @@ function a11yProps(index) {
     };
 }
 
-export default function Home() {
+export default function ChannelPage() {
     const theme = useTheme();
 
     const router = useRouter()
