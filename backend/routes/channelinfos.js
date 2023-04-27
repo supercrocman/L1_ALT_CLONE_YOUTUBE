@@ -37,7 +37,7 @@ router.get('/user/:identifier', async (req, res) => {
 
     const subCount = await user.getSubCount()
 
-    const videoCount = await db.Video.count( 42d595f1ca889953792a1b974ac61385a3421ab5
+    const videoCount = await db.Video.count(
       {
         where: {
           user_id: user.id
