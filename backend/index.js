@@ -13,15 +13,6 @@ app.use(cors(
     }
 ))
 
-const cors = require('cors');
-const app = express();
-
-app.use(cors(
-    {
-        origin: '*',
-    }
-))
-
 const logger = winston.createLogger({
     level: 'info',
     format: winston.format.json(),
