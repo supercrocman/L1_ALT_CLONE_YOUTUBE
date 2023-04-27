@@ -55,11 +55,16 @@ export default function SearchBar() {
         filterOptions={filterOptions}
         renderInput={(params) => <TextField id="outlined-basic" variant="outlined" {...params} label="Search ..." />
         }
+        onKeyDown={(event) => {
+          if (event.key === 'Enter') {
+            alert('Enter pressed, Search for : ' + inputValue);
+          }
+        }}
       />
       <Button variant="contained"
         className={styleSearch.buttonSearch}
         onClick={() => {
-          alert('clicked');
+          alert('Clicked, Search for : ' + inputValue);
         }}
         sx={{
           borderTopRightRadius: 4, borderBottomRightRadius: 4,
