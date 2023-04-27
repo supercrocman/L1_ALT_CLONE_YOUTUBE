@@ -20,13 +20,13 @@ export default function SearchBar() {
   return (
     <div className={styleSearch.SearchBoxContainer}>
       <Autocomplete
-        disablePortal
         freeSolo
+        disableRipple
         id="SearchBar-AutoComplete"
         sx={{
-          width: 800,
+          width: 500,
           "& .MuiOutlinedInput-root": {
-            borderRadius: "0",
+            borderRadius: "4px 0 0 4px",
           },
           "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
             border: "1px solid #95A1AC"
@@ -40,7 +40,6 @@ export default function SearchBar() {
               q: newInputValue
             })
               .then(function (response) {
-                console.log(response.data.topChannelName, response.data.videos);
                 setSearchResults(response.data.videos);
                 if (response.data.topChannelName) {
                   setSearchResults([response.data.topChannelName, ...response.data.videos]);
