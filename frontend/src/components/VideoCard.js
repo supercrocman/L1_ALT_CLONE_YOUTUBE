@@ -1,61 +1,27 @@
-import {
-    Avatar,
-    Button,
-    CardMedia,
-    Container,
-    Divider,
-    IconButton,
-    Stack,
-} from "@mui/material";
-import {
-    ChannelName,
-    Description,
-    LowerButton,
-    UserCard,
-} from "@/components/AuthorCard";
+import { CardMedia, Divider, IconButton, Stack } from "@mui/material";
+import { ChannelName, Description } from "@/components/AuthorCard";
 
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import { AuthorName } from "./AuthorName";
 import FlagIcon from "@mui/icons-material/Flag";
 import Grid from "@mui/material/Unstable_Grid2";
 import Link from "next/link";
-import ListItemIcon from "@mui/material/ListItemIcon";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
 import React from "react";
 import ReplyIcon from "@mui/icons-material/Reply";
-import TuneIcon from "@mui/icons-material/Tune";
+import { VideoVuesAndDate } from "./VideoVuesAndDate";
 import { styled } from "@mui/material/styles";
 import { useRouter } from "next/router";
-
-const ChannelCard = styled("div")(({ theme }) => ({
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
-    padding: "8px 0px",
-    fontSize: "0.75rem",
-    color: theme.palette.text.secondary,
-    paddingTop: "8px",
-    paddingBottom: "8px",
-}));
-
-const ChannelNameVideo = styled(Link)(({ theme }) => ({
-    textDecoration: "none",
-    color: theme.palette.text.secondary,
-    "&:hover": {
-        color: theme.palette.text.primary,
-    },
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
-}));
 
 const TitleLink = styled(Link)(({ theme }) => ({
     "&::visited": {
         color: theme.palette.text.primary,
     },
     textDecoration: "none",
+    lineHeight: "normal",
     color: theme.palette.text.primary,
     "&:hover": {
         color: theme.palette.text.primary,
@@ -89,36 +55,11 @@ const secondToTime = (duration) => {
     }`;
 };
 
-const dateTimeToHowLongAgo = (date) => {
-    const seconds = Math.floor((new Date() - new Date(date)) / 1000);
-    let interval = Math.floor(seconds / 31536000);
-    if (interval > 1) {
-        return "il y a " + interval + " ans";
-    }
-    interval = Math.floor(seconds / 2592000);
-    if (interval > 1) {
-        return "il y a " + interval + " mois";
-    }
-    interval = Math.floor(seconds / 86400);
-    if (interval > 1) {
-        return "il y a " + interval + " jours";
-    }
-    interval = Math.floor(seconds / 3600);
-    if (interval > 1) {
-        return "il y a " + interval + " heures";
-    }
-    interval = Math.floor(seconds / 60);
-    if (interval > 1) {
-        return "il y a " + interval + " minutes";
-    }
-    return "il y a " + Math.floor(seconds) + " secondes";
-};
-
-export const VideoCard = ({ video }) => {
+export const VideoCard = ({ video, small = false }) => {
     const router = useRouter();
     const [anchorEl, setAnchorEl] = React.useState(null);
     const [time, setTime] = React.useState(secondToTime(video.duration));
-    const [date, setDate] = React.useState(dateTimeToHowLongAgo(video.date));
+
     const open = Boolean(anchorEl);
     const handleClick = (event) => {
         event.preventDefault();
@@ -133,23 +74,30 @@ export const VideoCard = ({ video }) => {
     return (
         <Grid
             container
-            spacing={2}
+            spacing={!small && 2}
             sx={{
-                mt: 0.5,
-                mb: 0.5,
+                mt: small ? 1 : 0.5,
                 "&:hover .MuiIconButton-root": {
                     display: "inline-flex",
                 },
             }}
-            onClick={() => router.push(`/video/${video.identifier}`)}
+            onClick={() => router.push(`/watch/${video.identifier}`)}
         >
             <Grid
-                xs={4}
+                xs={small ? 5 : 4}
                 display="flex"
                 justifyContent="center"
                 alignItems="center"
             >
-                <ThumbnailContainer href={`/video/${video.identifier}`}>
+                <ThumbnailContainer
+                    sx={
+                        small && {
+                            height: "94px",
+                            width: "168px",
+                        }
+                    }
+                    href={`/watch/${video.identifier}`}
+                >
                     <Timer>{time}</Timer>
                     <CardMedia
                         sx={{ borderRadius: "12px" }}
@@ -159,39 +107,43 @@ export const VideoCard = ({ video }) => {
                     />
                 </ThumbnailContainer>
             </Grid>
-            <Grid xs={7.5}>
+            <Grid xs={small ? 6 : 7.5} sx={small && { pt: 1, pb: 1, pl: 1 }}>
                 <Stack>
                     <ChannelName sx={{ marginBottom: 0.25 }}>
                         <TitleLink
-                            href={`/video/${video.identifier}`}
+                            href={`/watch/${video.identifier}`}
                             color="inherit"
                             underline="none"
+                            sx={
+                                small && {
+                                    display: "block",
+                                    maxHeight: "2rem",
+                                    overflow: "hidden",
+                                    textOverflow: "ellipsis",
+                                    whiteSpace: "normal",
+                                    display: "-webkit-box",
+                                    "-webkit-line-clamp": "2",
+                                    "-webkit-box-orient": "vertical",
+                                }
+                            }
                         >
                             {video.title}
                         </TitleLink>
                     </ChannelName>
-                    <Description sx={{ marginBottom: "4px", marginTop: "4px" }}>
-                        {video.views} vues • {date}
-                    </Description>
-                    <ChannelCard>
-                        <ChannelNameVideo
-                            href={`/channel/@${video.author.identifier}`}
-                        >
-                            <Avatar
-                                alt={video.author.name}
-                                src={video.author.avatar}
-                                sx={{
-                                    width: 24,
-                                    height: 24,
-                                    marginRight: "8px",
-                                }}
-                            />
-                            {video.author.name}
-                        </ChannelNameVideo>
-                    </ChannelCard>
-                    <Description>
-                        {video.description.substring(0, 200)}...
-                    </Description>
+                    {small ? (
+                        <>
+                            <AuthorName author={video.author} small />
+                            <VideoVuesAndDate video={video} small />
+                        </>
+                    ) : (
+                        <>
+                            <VideoVuesAndDate video={video} />
+                            <AuthorName author={video.author} />
+                            <Description sx={{ cursor: "pointer" }}>
+                                {video.description.substring(0, 200)}...
+                            </Description>
+                        </>
+                    )}
                 </Stack>
             </Grid>
             <Grid xs={0.5}>
