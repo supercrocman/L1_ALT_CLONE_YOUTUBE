@@ -2,11 +2,9 @@ import * as React from 'react';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import SearchIcon from '@mui/icons-material/Search';
-import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import styleSearch from '../styles/SearchBar.module.css';
 import axios from 'axios';
-import { useState, useEffect } from 'react'
 
 export default function SearchBar() {
   const [inputValue, setInputValue] = React.useState('');
