@@ -13,13 +13,13 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import PersonPinIcon from '@mui/icons-material/PersonPin';
 import Router from 'next/router';
 import { deepOrange } from '@mui/material/colors';
-import AccountMenu from '../../includes/accountmenu';
+import AccountMenu from '../../../components/accountmenu';
 import { Roboto } from 'next/font/google';
 import { useRouter } from 'next/router';
 import { useTheme } from '@mui/material/styles';
 import { useEffect } from 'react';
 import axios from 'axios';
-import VideoCard from '../../includes/videocard';
+import VideoCard from '../../../components/videocard';
 
 const roboto = Roboto({
     weight: '400',
@@ -60,6 +60,17 @@ export default function ChannelPage() {
 
     const router = useRouter()
     const { id, page } = router.query
+    useEffect(() => {
+        if (id === undefined) {
+            // Ne faites rien si id n'est pas encore défini
+            return;
+        }
+
+        if (!id.startsWith("@")) {
+            Router.push('/404');
+        }
+    }, [id]);
+
 
     let baseindex = 0;
 
@@ -103,15 +114,19 @@ export default function ChannelPage() {
                 const baseURL = 'http://localhost:3001/api/user/' + id.split("@")[1];
                 try {
                     const response = await axios.get(baseURL);
-                    console.log(response.data);
-                    setName(response.data["user"].name);
-                    setDescription(response.data["user"].description);
-                    setVerified(response.data["user"].verified);
-                    setSubscribers(response.data["subCount"][0].subCount);
-                    setVideoCount(response.data["videoCount"][0].videoCount);
-                    setVideos(response.data["videos"]);
+                    if (response.data["user"]["informations"].verified === "true") {
+                        setVerified(true);
+                    }
+                    setName(response.data["user"]["informations"].name);
+                    setDescription(response.data["user"]["informations"].description);
+                    setSubscribers(response.data["user"]["subCount"]);
+                    setVideoCount(response.data["user"]["videoCount"]);
+                    setVideos(response.data["user"]["videos"]);
                 } catch (error) {
-                    console.log(error);
+                    console.log(error.response.data);
+                    if (error.response.data === "User not found") {
+                        Router.push('/404');
+                    }
                 }
             }
         };
@@ -132,7 +147,10 @@ export default function ChannelPage() {
                             <p style={{ marginRight: 8 }}>{videoCount} vidéo</p>
                             <p style={{ marginRight: 8 }}>{subscribers} abonné</p>
                         </div>
-                        <Link href={"/channel/" + id + '/about'} >Découvrir tout ces petits secrets </Link>
+                        <Link href={"/channel/" + id + '/about'}>
+                            {description && description.length > 0 ? description.substring(0, 20) : ""}
+                        </Link>
+
                     </div>
                 </div>
                 <div style={{ display: "flex", alignItems: "center", width: "25%", justifyContent: "space-evenly" }}>
@@ -167,7 +185,7 @@ export default function ChannelPage() {
                         Empty
                     </TabPanel>
                     <TabPanel value={value} index={1} dir={theme.direction} >
-                        <div style={{display: "flex", flexWrap: "wrap", flexDirection: "row", justifyContent: "flex-start"}}>
+                        <div style={{ display: "flex", flexWrap: "wrap", flexDirection: "row", justifyContent: "flex-start" }}>
                             {videos.map((video) => (
                                 // thumbnail, title, views, date, duration
                                 console.log(video),
