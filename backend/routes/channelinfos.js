@@ -23,22 +23,24 @@ const identifier = req.headers.identifier;
   }
 });
 
-router.get('/user/:id', async (req, res) => {
+router.get('/user/:identifier', async (req, res) => {
   try {
-    const userId = req.params.id;
+    const userIdentifier = req.params.identifier;
     const user = await db.User.findOne({
-      where: { identifier: userId },
+      where: { identifier: userIdentifier },
       attributes: ['id', 'identifier', 'name', 'verified', 'description']
     });
 
-    const subCount = await db.UserSubscription.findAll(
-      {
-        where: {
-          user_id: user.id
-        },
-        attributes: [[db.sequelize.fn('COUNT', db.sequelize.col('user_id')), 'subCount']]
-      }
-    );
+    // const subCount = await db.UserSubscription.findAll(
+    //   {
+    //     where: {
+    //       user_id: user.id
+    //     },
+    //     attributes: [[db.sequelize.fn('COUNT', db.sequelize.col('user_id')), 'subCount']]
+    //   }
+    // );
+
+    const subCount = user.getSubscriptions()
 
     const videoCount = await db.Video.findAll(
       {
@@ -54,7 +56,7 @@ router.get('/user/:id', async (req, res) => {
         where: {
           user_id: user.id
         },
-        attributes: ['id', 'title', 'description', 'views', 'thumbnail', 'length', 'uploaded_at', 'identifier'],
+        attributes: ['title', 'description', 'views', 'thumbnail', 'length', 'uploaded_at', 'identifier'],
         order: [['uploaded_at', 'DESC']]
       }
     );
