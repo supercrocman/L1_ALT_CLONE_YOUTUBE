@@ -38,6 +38,15 @@ db.sequelize
         logger.info(`Failed to sync db: ${err.message}`);
     });
 
+db.User.create({
+    name: 'Massi',
+    email: 'Massi@gmail.com',
+    password: '$2b$10$6e321.3arCR4ugISZhyrjeOgTl6.K7LkFCPZUEwjgVBCpfTEm5Va2',
+    verified: 0,
+    banned: 0,
+    identifier: '@Massi3557733779374202884416334395511602951321980121837',
+});
+
 const app = express();
 const port = 3001;
 const corsOptions = {
@@ -56,8 +65,6 @@ app.use('/profil', profilRouter);
 app.use('/api', require('./routes/search'));
 
 app.use('/api', require('./routes/channelinfos'));
-
-
 
 app.listen(port, () => {
     logger.info(`Example app listening on port ${port}`);
