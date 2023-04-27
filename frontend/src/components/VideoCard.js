@@ -122,8 +122,8 @@ export const VideoCard = ({ video, small = false }) => {
                                     textOverflow: "ellipsis",
                                     whiteSpace: "normal",
                                     display: "-webkit-box",
-                                    "-webkit-line-clamp": "2",
-                                    "-webkit-box-orient": "vertical",
+                                    WebkitLineClamp: "2",
+                                    WebkitBoxOrient: "vertical",
                                 }
                             }
                         >
