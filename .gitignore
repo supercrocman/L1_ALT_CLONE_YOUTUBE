@@ -219,3 +219,6 @@ sketch
 !/backend/yarn.lock
 !/frontend/package.json
 !/frontend/yarn.lock
+
+
+frontend\public\videos\thumbnails

@@ -4,7 +4,6 @@ const router = express.Router();
 const db = require('../services/sequelize');// Importez le modèle User
 const { Op } = require('sequelize');
 
-
 router.get('/users', async (req, res) => {
   // if (req.body.q === undefined) return res.status(400).send('No query provided');
   // if (req.body.q.length < 3) return res.status(400).send('Query too short');
@@ -31,23 +30,18 @@ router.get('/user/:identifier', async (req, res) => {
       attributes: ['id', 'identifier', 'name', 'verified', 'description']
     });
 
-    // const subCount = await db.UserSubscription.findAll(
-    //   {
-    //     where: {
-    //       user_id: user.id
-    //     },
-    //     attributes: [[db.sequelize.fn('COUNT', db.sequelize.col('user_id')), 'subCount']]
-    //   }
-    // );
+    if (!user) {
+      res.status(404).send('User not found');
+      return;
+    }
 
-    const subCount = user.getSubscriptions()
+    const subCount = await user.getSubCount()
 
-    const videoCount = await db.Video.findAll(
+    const videoCount = await db.Video.count(
       {
         where: {
           user_id: user.id
         },
-        attributes: [[db.sequelize.fn('COUNT', db.sequelize.col('user_id')), 'videoCount']]
       }
     );
 
@@ -62,11 +56,18 @@ router.get('/user/:identifier', async (req, res) => {
     );
 
     if (user) {
-      res.json({user, subCount, videoCount, videos});
+      res.json({
+        user: {
+            informations: user,
+            subCount,
+            videoCount: videoCount,
+            videos
+        }
+    });
 
     } else {
       res.status(404).send('Utilisateur non trouvé');
-    }
+    }""
   } catch (error) {
     // res.status(500).send(error);
     res.status(500).send('Erreur lors de la récupération de l\'utilisateur');
