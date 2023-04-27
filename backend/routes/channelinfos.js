@@ -13,9 +13,7 @@ const identifier = req.headers.identifier;
     const users = await db.User.findAll({
       attributes: ['id', 'identifier', 'name', 'verified', 'description'],
       where: {
-        identifier: {
-          [Op.substring]: identifier,
-        }
+        identifier: identifier
       }
     });
     res.json(users);
@@ -28,13 +26,42 @@ const identifier = req.headers.identifier;
 router.get('/user/:id', async (req, res) => {
   try {
     const userId = req.params.id;
-    const user = await User.findOne({
-      where: { id: userId },
+    const user = await db.User.findOne({
+      where: { identifier: userId },
       attributes: ['id', 'identifier', 'name', 'verified', 'description']
     });
 
+    const subCount = await db.UserSubscription.findAll(
+      {
+        where: {
+          user_id: user.id
+        },
+        attributes: [[db.sequelize.fn('COUNT', db.sequelize.col('user_id')), 'subCount']]
+      }
+    );
+
+    const videoCount = await db.Video.findAll(
+      {
+        where: {
+          user_id: user.id
+        },
+        attributes: [[db.sequelize.fn('COUNT', db.sequelize.col('user_id')), 'videoCount']]
+      }
+    );
+
+    const videos = await db.Video.findAll(
+      {
+        where: {
+          user_id: user.id
+        },
+        attributes: ['id', 'title', 'description', 'views', 'thumbnail', 'length', 'uploaded_at', 'identifier'],
+        order: [['uploaded_at', 'DESC']]
+      }
+    );
+
     if (user) {
-      res.json(user);
+      res.json({user, subCount, videoCount, videos});
+
     } else {
       res.status(404).send('Utilisateur non trouvé');
     }
