@@ -13,13 +13,13 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import PersonPinIcon from '@mui/icons-material/PersonPin';
 import Router from 'next/router';
 import { deepOrange } from '@mui/material/colors';
-import AccountMenu from '../../../components/accountmenu';
+import AccountMenu from '../../../components/AccountMenu';
 import { Roboto } from 'next/font/google';
 import { useRouter } from 'next/router';
 import { useTheme } from '@mui/material/styles';
 import { useEffect } from 'react';
 import axios from 'axios';
-import VideoCard from '../../../components/videocard';
+import VideoCard from '../../../components/VideoCard';
 
 const roboto = Roboto({
     weight: '400',
