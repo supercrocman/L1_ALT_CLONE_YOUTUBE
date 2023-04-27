@@ -40,6 +40,22 @@ router.post('/search',
       }
 });
 
+router.get('/submit-search',
+ body('q').trim()
+ .notEmpty().withMessage('No query provided')
+ , async (req, res) => {
+    const result = validationResult(req);
+    if (!result.isEmpty()) {
+        return res.status(400).json({ errors: result.array() });
+    }
+    try {
+        res.json({ok: "ok"});
+      } catch (error) {
+        console.error(error);
+        res.status(500).send('Server error');
+      }
+});
+
 async function getTopChannel(channels) {
     let topChannel = null;
     let topSubCount = -1;
