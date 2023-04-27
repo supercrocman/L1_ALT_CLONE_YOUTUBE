@@ -76,7 +76,6 @@ export default function ChannelPage() {
     const [value, setValue] = React.useState(baseindex);
     const [name, setName] = React.useState('');
     const [description, setDescription] = React.useState('');
-    const [verified, setVerified] = React.useState(false);
     const [subscribers, setSubscribers] = React.useState(0);
     const [videoCount, setVideoCount] = React.useState(0);
     const [videos, setVideos] = React.useState([]);
@@ -113,11 +112,8 @@ export default function ChannelPage() {
                 const baseURL = 'http://localhost:3001/api/user/' + id.split("@")[1];
                 try {
                     const response = await axios.get(baseURL);
-                    if (response.data["user"]["informations"].verified === "true") {
-                        setVerified(true);
-                    }
-                    setName(response.data["user"]["informations"].name);
-                    setDescription(response.data["user"]["informations"].description);
+                    setName(response.data["user"].name);
+                    setDescription(response.data["user"].description);
                     setSubscribers(response.data["user"]["subCount"]);
                     setVideoCount(response.data["user"]["videoCount"]);
                     setVideos(response.data["user"]["videos"]);

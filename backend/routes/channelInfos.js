@@ -9,7 +9,7 @@ router.get('/user/:identifier', async (req, res) => {
     const userIdentifier = req.params.identifier;
     const user = await db.User.findOne({
       where: { identifier: userIdentifier },
-      attributes: ['identifier', 'name', 'verified', 'description']
+      attributes: ['id', 'identifier', 'name', 'description']
     });
 
     if (!user) {
@@ -38,20 +38,26 @@ router.get('/user/:identifier', async (req, res) => {
     );
 
     if (user) {
+      const user_informations = {
+        identifier: user.identifier,
+        name: user.name,
+        description: user.description,
+      }
+
       res.json({
         user: {
-            informations: user,
-            subCount,
-            videoCount: videoCount,
-            videos
+          ...user_informations,
+          subCount,
+          videoCount,
+          videos
         }
-    });
+      });
 
     } else {
       res.status(404).send('Utilisateur non trouvé');
     }
   } catch (error) {
-    // res.status(500).send(error);
+    console.log(error);
     res.status(500).send('Erreur lors de la récupération de l\'utilisateur');
   }
 });
