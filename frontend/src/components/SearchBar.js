@@ -20,17 +20,24 @@ export default function SearchBar() {
   return (
     <div className={styleSearch.SearchBoxContainer}>
       <Autocomplete
+        disablePortal
         freeSolo
-        disableRipple
         id="SearchBar-AutoComplete"
         sx={{
-          width: 500,
+          width: 400,
+          // border: "1px solid blue",
           "& .MuiOutlinedInput-root": {
-            borderRadius: "4px 0 0 4px",
+            // border: "1px solid #95A1AC",
+            borderRadius: "30px 0 0 30px",
+            color: "white",
+            backgroundColor: "#333",
           },
           "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
-            border: "1px solid #95A1AC"
-          }
+            border: "1px solid #95A1AC",
+          },
+          "& .MuiAutocomplete-endAdornment .MuiIconButton-root": {
+            color: "white",
+          },
         }}
         options={searchResults}
         inputValue={inputValue}
@@ -41,7 +48,7 @@ export default function SearchBar() {
             })
               .then(function (response) {
                 setSearchResults(response.data.videos);
-                if (response.data.topChannelName) {
+                if (response.data.topChannelName) { 
                   setSearchResults([response.data.topChannelName, ...response.data.videos]);
                 }
               })
@@ -52,7 +59,11 @@ export default function SearchBar() {
           setInputValue(newInputValue);
         }}
         filterOptions={filterOptions}
-        renderInput={(params) => <TextField id="outlined-basic" variant="outlined" {...params} label="Search ..." />
+        renderInput={(params) => <TextField id="outlined-basic"
+          variant="outlined"
+          {...params}
+          placeholder="Recherche"
+        />
         }
         onKeyDown={(event) => {
           if (event.key === 'Enter') {
@@ -60,19 +71,24 @@ export default function SearchBar() {
           }
         }}
       />
-      <Button variant="contained"
+      < Button variant="contained"
         className={styleSearch.buttonSearch}
         onClick={() => {
-          alert('Clicked, Search for : ' + inputValue);
+          alert('clicked');
         }}
         sx={{
-          borderTopRightRadius: 4, borderBottomRightRadius: 4,
-          borderTopLeftRadius: 0, borderBottomLeftRadius: 0, background: '#95A1AC', boxShadow: 0,
+          borderRadius: "0px 30px 30px 0px",
+          background: '#cccccc',
+          boxShadow: 0,
+          "&:hover": {
+            background: '#404040',
+            color: '#fff',
+          }
         }}>
         <div className={styleSearch.SearchIconBox}>
           <SearchIcon className={styleSearch.SearchIcon} fontSize='large' />
         </div>
       </Button>
-    </div>
+    </div >
   );
 }
