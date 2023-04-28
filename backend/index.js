@@ -1,8 +1,7 @@
 const express = require('express');
 const winston = require('winston');
-const db = require('./services/sequelize');
-
 const cors = require('cors');
+const db = require('./services/sequelize');
 
 const rooterProfil = require('./routes/rooter_profil');
 
