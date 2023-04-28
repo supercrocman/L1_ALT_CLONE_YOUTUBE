@@ -54,7 +54,56 @@ router.get('/submit-search',
         return res.status(400).json({ errors: result.array() });
     }
     try {
-        res.json({ok: "ok"});
+        // renvoyer top sub user, 2 most recent vids, up to 10 results from title , up to  10 results from tags
+        const channels = await db.User.findAll({
+            where: {
+                name: {
+                    [Op.substring]: req.body.q,
+                }
+            }
+        });
+        const videos = await db.Video.findAll({
+        limit : 10,
+        order : [['views', 'DESC']],
+          where: {
+            searchable_title: {
+              [Op.substring]: req.body.q,
+            }
+          }
+        });
+        const videos_tags = await db.Video.findAll({
+            attributes: [
+                'user_id',
+                'identifier',
+                'path',
+                'uploaded_at',
+                'thumbnail',
+                'title',
+                'description',
+                'upvote',
+                'downvote',
+                'views',
+                'length',
+                'bitrate',
+              ],
+            limit : 10,
+            order : [['views', 'DESC']],
+            include: [
+                {
+                  model: db.Tag,
+                  where: {
+                    name: {
+                      [Op.substring]: req.body.q
+                    }
+                  },
+                  through: {
+                    model: db.VideoTag
+                  }
+                }
+              ]
+            });
+        const topChannel = await getTopChannel(channels);
+        res.json({topChannel, videos, videos_tags});
       } catch (error) {
         console.error(error);
         res.status(500).send('Server error');
