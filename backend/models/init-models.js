@@ -97,6 +97,36 @@ function initModels(sequelize) {
         return subscriptions;
     };
 
+    User.prototype.getVideos = async function () {
+        const videos = await Video.findAll({
+            attributes: [
+                'id',
+                'user_id',
+                'identifier',
+                'uploaded_at',
+                'thumbnail',
+                'title',
+                'description',
+                'views',
+                'length',
+            ],
+            where: {
+                user_id: this.id,
+            },
+        });
+        return videos;
+    };
+
+    Video.prototype.getAuthor = async function () {
+        const user = await User.findOne({
+            attributes: ['id', 'identifier', 'name', 'description', 'avatar'],
+            where: {
+                id: this.user_id,
+            },
+        });
+        return user;
+    };
+
     return {
         Comments,
         Playlist,
