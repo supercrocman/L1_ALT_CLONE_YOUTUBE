@@ -24,7 +24,7 @@ module.exports = (sequelize, DataTypes) =>
                 unique: 'identifier',
             },
             path: {
-                type: DataTypes.STRING(30),
+                type: DataTypes.STRING(300),
                 allowNull: false,
             },
             uploaded_at: {
@@ -33,7 +33,7 @@ module.exports = (sequelize, DataTypes) =>
                 defaultValue: Sequelize.Sequelize.fn('current_timestamp'),
             },
             thumbnail: {
-                type: DataTypes.STRING(30),
+                type: DataTypes.STRING(300),
                 allowNull: false,
             },
             title: {
