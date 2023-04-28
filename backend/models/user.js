@@ -23,7 +23,7 @@ module.exports = (sequelize, DataTypes) =>
                 unique: 'email',
             },
             email_confirmation_token: {
-                type: DataTypes.STRING(50),
+                type: DataTypes.STRING(150),
                 allowNull: true,
             },
             password: {
@@ -39,7 +39,7 @@ module.exports = (sequelize, DataTypes) =>
                 allowNull: true,
             },
             avatar: {
-                type: DataTypes.STRING(30),
+                type: DataTypes.STRING(50),
                 allowNull: true,
             },
             verified: {

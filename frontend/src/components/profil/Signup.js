@@ -1,16 +1,31 @@
-import { Box, Button, TextField, Typography } from '@mui/material';
+import {
+    Accordion,
+    AccordionDetails,
+    AccordionSummary,
+    Alert,
+    Box,
+    Button,
+    Divider,
+    Stack,
+    TextField,
+    Typography,
+} from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useState } from 'react';
 import Popup from './Popup';
 import axios from 'axios';
 
 function Subscribe() {
     const [open, setOpen] = useState(false);
+    const [data, setData] = useState({});
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
-    const [image, setImage] = useState('');
+    const [image, setImage] = useState(null);
     const [errors, setErrors] = useState({});
+    const [errorFetch, setErrorFetch] = useState({});
+
     function validateMDP(mdp) {
         var Reg = new RegExp(
             /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/
@@ -19,28 +34,30 @@ function Subscribe() {
     }
     async function saveUser(formData) {
         try {
-            // {
-            //     name: username,
-            //     email: email,
-            //     password: password,
-            //     verified: 0,
-            //     banned: 0
-            //   }
             const result = await axios({
                 method: 'post',
                 url: 'http://localhost:3001/profil/signup',
                 data: formData,
             });
-            console.log(result);
+            setData(result);
+            setErrorFetch({});
         } catch (e) {
             console.log(e);
+            setErrorFetch({
+                message: "il y a eu un problème lors de l'inscription.",
+            });
+        } finally {
+            setUsername('');
+            setEmail('');
+            setPassword('');
+            setConfirmPassword('');
         }
     }
     const handleSubmit = (event) => {
         event.preventDefault();
+        setData({});
         setErrors({});
         let newErrors = {};
-        const extensions = ['jpeg', 'jpg', 'png'];
         // Vérification du pseudo
         if (!username) {
             newErrors['p'] = true;
@@ -68,23 +85,22 @@ function Subscribe() {
 
         if (Object.entries(newErrors).length === 0) {
             // Envoyer le formulaire
-            console.log('Formulaire envoyé !');
             const formData = new FormData();
-            formData.append('image', image);
+            if (image) {
+                const newNameImage = image.name.split(' ').join('_');
+                formData.append('image', image, newNameImage);
+            }
             formData.append('name', username);
             formData.append('email', email);
             formData.append('password', password);
             formData.append('verified', 0);
             formData.append('banned', 0);
-            console.log(formData);
-            console.log(username);
-
             saveUser(formData);
         }
     };
 
     return (
-        <Box component="form" noValidate autoComplete="off">
+        <Box>
             <Button
                 onClick={() => {
                     setOpen(true);
@@ -100,57 +116,123 @@ function Subscribe() {
                         justifyContent: 'center',
                         alignItems: 'center',
                     }}
+                    component="form"
+                    noValidate
+                    autoComplete="off"
                 >
                     <Typography variant="h2">Inscription</Typography>
-                    <TextField
-                        error={errors.i}
-                        variant="filled"
-                        type="file"
-                        onChange={(e) => {
-                            setImage(e.target.files[0]);
-                            console.log(e.target.files);
+                    <Box
+                        sx={{
+                            backgroundColor: '#BA55D3',
+                            width: 250,
+                            height: 10,
+                            marginBottom: 5,
                         }}
-                    />
-                    <TextField
-                        error={errors.p}
-                        required
-                        label="Pseudo"
-                        variant="filled"
-                        onChange={(e) => setUsername(e.target.value)}
-                    />
-                    <TextField
-                        required
-                        error={errors.e}
-                        label="Email"
-                        variant="filled"
-                        onChange={(e) => setEmail(e.target.value)}
-                    />
-                    <TextField
-                        required
-                        error={errors.m}
-                        label="Mot de passe"
-                        variant="filled"
-                        type="password"
-                        onChange={(e) => setPassword(e.target.value)}
-                    />
-                    <Box>
-                        <ul>
-                            <li>Au moins 8 caractères</li>
-                            <li>Un chiffre ou plus</li>
-                            <li>Au moins une majuscule</li>
-                            <li>Au moins un caractères spéciales</li>
-                        </ul>
-                    </Box>
-                    <TextField
-                        error={errors.cM}
-                        required
-                        type="password"
-                        label="Confirmation mot de passe"
-                        variant="filled"
-                        onChange={(e) => setConfirmPassword(e.target.value)}
-                    />
-                    <Button onClick={handleSubmit}>S'inscrire</Button>
+                    ></Box>
+                    {Object.entries(data).length !== 0 ||
+                    Object.entries(errorFetch).length !== 0 ? (
+                        <Alert
+                            color={
+                                Object.entries(data).length !== 0
+                                    ? 'success'
+                                    : 'error'
+                            }
+                        >
+                            {Object.entries(data).length !== 0
+                                ? data.data.message
+                                : errorFetch.message}
+                        </Alert>
+                    ) : null}
+                    <Stack
+                        direction="row"
+                        divider={<Divider orientation="vertical" flexItem />}
+                        spacing={3}
+                        sx={{ marginBottom: 2 }}
+                    >
+                        <Stack direction="column" spacing={3}>
+                            <TextField
+                                sx={{ margin: '5px  0' }}
+                                color="secondary"
+                                error={errors.i}
+                                type="file"
+                                onChange={(e) => {
+                                    setImage(e.target.files[0]);
+                                    console.log(e.target.files);
+                                }}
+                            />
+                            <TextField
+                                sx={{ margin: '5px  0' }}
+                                color="secondary"
+                                error={errors.p}
+                                required
+                                label="Pseudo"
+                                onChange={(e) => setUsername(e.target.value)}
+                            />
+                            <TextField
+                                sx={{ margin: '5px  0' }}
+                                required
+                                color="secondary"
+                                error={errors.e}
+                                label="Email"
+                                onChange={(e) => setEmail(e.target.value)}
+                            />
+                        </Stack>
+                        <Stack
+                            direction="column"
+                            spacing={3}
+                            sx={{ width: '300px' }}
+                        >
+                            <Accordion
+                                sx={{ margin: '5px  0', minHeight: '55px' }}
+                            >
+                                <AccordionSummary
+                                    expandIcon={<ExpandMoreIcon />}
+                                    aria-controls="panel1a-content"
+                                    id="panel1a-header"
+                                >
+                                    <Typography>
+                                        Critères mot de passe
+                                    </Typography>
+                                </AccordionSummary>
+                                <AccordionDetails>
+                                    <Typography>
+                                        <li>Au moins 8 caractères</li>
+                                        <li>Un chiffre ou plus</li>
+                                        <li>Au moins une majuscule</li>
+                                        <li>Au moins un caractère spéciale</li>
+                                    </Typography>
+                                </AccordionDetails>
+                            </Accordion>
+                            <TextField
+                                sx={{ margin: '5px  0' }}
+                                required
+                                error={errors.m}
+                                color="secondary"
+                                label="Mot de passe"
+                                type="password"
+                                autoComplete="off"
+                                onChange={(e) => setPassword(e.target.value)}
+                            />
+
+                            <TextField
+                                sx={{ margin: '5px  0' }}
+                                error={errors.cM}
+                                required
+                                color="secondary"
+                                type="password"
+                                label="Confirmation mot de passe"
+                                autoComplete="off"
+                                onChange={(e) =>
+                                    setConfirmPassword(e.target.value)
+                                }
+                            />
+                        </Stack>
+                    </Stack>
+                    <Button onClick={handleSubmit} color="secondary">
+                        S'inscrire
+                    </Button>
                 </Box>
+                <a href="#">Déjà inscrit ? Se connecter </a>
             </Popup>
         </Box>
     );

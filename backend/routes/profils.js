@@ -1,9 +1,11 @@
 const express = require('express');
+const multer = require('../middlewares/multer');
 
-const { signup } = require('../middlewares/profil');
+const { signup, verifyUser } = require('../middlewares/profil');
 
 const router = express.Router();
 
-router.post('/signup', signup);
+router.post('/signup', multer, signup);
+router.get('/verify/:confirmationCode', verifyUser);
 
 module.exports = router;
