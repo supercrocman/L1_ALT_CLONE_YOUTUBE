@@ -125,8 +125,10 @@ router.get('/submit-search',
         const videos_result = videos.concat(videos_tags);
 
         let authors = new Map();
-        topChannel.dataValues.subCount = await topChannel.getSubCount();
-        authors.set(topChannel.id, topChannel);
+        if(topChannel){ 
+                topChannel.dataValues.subCount = await topChannel.getSubCount();
+                authors.set(topChannel.id, topChannel);
+        }
         for (let i = 0; i < videos_result.length; i++) {
             const video = videos_result[i];
             const author_id = video.user_id;
@@ -154,7 +156,7 @@ router.get('/submit-search',
         }
 
         const videos_found = videos_result.map((video) => {
-            const { id, user_id, ...video_without_id } = video.dataValues;
+            const { id, user_id, tags, ...video_without_id } = video.dataValues;
             return video_without_id;
         });
 
@@ -191,6 +193,9 @@ async function getTopChannel(channels) {
 }
 
 async function getRecentVideo(channel, amount) {
+    if(!channel) {
+        return [];
+    }
     const videos = await channel.getVideos({
         limit: amount,
         order: [['uploaded_at', 'DESC']],
