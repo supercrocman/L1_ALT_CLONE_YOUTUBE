@@ -1,15 +1,15 @@
 // routes/channelinfos.js
 const express = require('express');
+const db = require('../services/sequelize'); // Importez le modèle User
 
 const router = express.Router();
-const db = require('../services/sequelize'); // Importez le modèle User
 
 router.get('/user/:identifier', async (req, res) => {
     try {
         const userIdentifier = req.params.identifier;
         const user = await db.User.findOne({
             where: { identifier: userIdentifier },
-            attributes: ['id', 'identifier', 'name', 'verified', 'description'],
+            attributes: ['id', 'identifier', 'name', 'description'],
         });
 
         if (!user) {
@@ -42,9 +42,15 @@ router.get('/user/:identifier', async (req, res) => {
         });
 
         if (user) {
+            const userInformations = {
+                identifier: user.identifier,
+                name: user.name,
+                description: user.description,
+            };
+
             res.json({
                 user: {
-                    informations: user,
+                    ...userInformations,
                     subCount,
                     videoCount,
                     videos,
@@ -54,7 +60,7 @@ router.get('/user/:identifier', async (req, res) => {
             res.status(404).send('Utilisateur non trouvé');
         }
     } catch (error) {
-        // res.status(500).send(error);
+        console.log(error);
         res.status(500).send("Erreur lors de la récupération de l'utilisateur");
     }
 });
