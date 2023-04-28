@@ -5,15 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c265b43a-1ed0-4302-baa0-b848748c302b" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/frontend/package.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/src/component/Player.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/src/component/VideoComments.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/src/component/VideoInformation.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/src/pages/VideoPlayerPage.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/static/videos/rick.mp4" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/package-lock.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/package.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/config/db.connfig.env" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/script/sync.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/backend/yarn.lock" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -31,6 +29,7 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/backend/src/script/sync.js" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/frontend/src/component/Player.js" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/frontend/src/pages/VideoPlayerPage.js" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/frontend/src/pages/index.js" root0="FORCE_HIGHLIGHTING" />
@@ -77,7 +76,7 @@
       <updated>1682494426102</updated>
       <workItem from="1682494427111" duration="7488000" />
       <workItem from="1682513582814" duration="3570000" />
-      <workItem from="1682670553808" duration="7580000" />
+      <workItem from="1682670553808" duration="10101000" />
     </task>
     <servers />
   </component>

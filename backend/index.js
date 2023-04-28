@@ -1,5 +1,4 @@
 const express = require('express');
-const winston = require('winston');
 const db = require('./services/sequelize');
 const bodyParser = require('body-parser');
 const cors = require('cors');
