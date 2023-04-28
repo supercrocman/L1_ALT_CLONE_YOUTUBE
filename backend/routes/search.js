@@ -51,35 +51,55 @@ router.get('/submit-search',
     try {
         // renvoyer top sub user, 2 most recent vids, up to 10 results from title , up to  10 results from tags
         const channels = await db.User.findAll({
+            attributes: [
+                'id',
+                'identifier',
+                'name',
+                'description',
+                'avatar',
+              ],
             where: {
                 name: {
                     [Op.substring]: req.body.q,
                 }
             }
         });
+        const topChannel = await getTopChannel(channels);
+        const topChannelVideos = await getRecentVideo(topChannel, 2);
         const videos = await db.Video.findAll({
+            attributes: [
+                'id',
+                'user_id',
+                'identifier',
+                'uploaded_at',
+                'thumbnail',
+                'title',
+                'description',
+                'views',
+                'length',
+              ],
         limit : 10,
         order : [['views', 'DESC']],
           where: {
             searchable_title: {
               [Op.substring]: req.body.q,
+            },
+            id: {
+                [Op.notIn]: topChannelVideos.map(video => video.id)
             }
           }
         });
         const videos_tags = await db.Video.findAll({
             attributes: [
+                'id',
                 'user_id',
                 'identifier',
-                'path',
                 'uploaded_at',
                 'thumbnail',
                 'title',
                 'description',
-                'upvote',
-                'downvote',
                 'views',
                 'length',
-                'bitrate',
               ],
             limit : 10,
             order : [['views', 'DESC']],
@@ -92,13 +112,35 @@ router.get('/submit-search',
                     }
                   },
                   through: {
-                    model: db.VideoTag
+                    model: db.VideoTag,
+                    where: {
+                        video_id: {
+                            [Op.notIn]: videos.map(video => video.id)
+                        }
+                    }
                   }
                 }
               ]
             });
-        const topChannel = await getTopChannel(channels);
-        res.json({topChannel, videos, videos_tags});
+        const videos_result = videos.concat(videos_tags);
+
+        let authors = new Map();
+        topChannel.dataValues.subCount = await topChannel.getSubCount();
+        authors.set(topChannel.id, topChannel);
+        for (let i = 0; i < videos_result.length; i++) {
+            const video = videos_result[i];
+            const author_id = video.user_id;
+            if (authors.has(author_id)) {
+                continue;
+            }
+            const author = await video.getAuthor();
+            const subCount = await author.getSubCount();
+            author.dataValues.subCount = subCount;
+            authors.set(author_id, author);
+        }
+        authors = Array.from(authors.values());
+        
+        res.json({authors, topChannelVideos, videos_result});
       } catch (error) {
         console.error(error);
         res.status(500).send('Server error');
@@ -117,6 +159,14 @@ async function getTopChannel(channels) {
         }
     }
     return topChannel;
+}
+
+async function getRecentVideo(channel, amount) {
+    const videos = await channel.getVideos({
+        limit: amount,
+        order: [['uploaded_at', 'DESC']],
+    });
+    return videos;
 }
 
 module.exports = router;
