@@ -5,12 +5,26 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c265b43a-1ed0-4302-baa0-b848748c302b" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/backend/index.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/package-lock.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/package.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/config/db.connfig.env" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/script/sync.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/config/db.config.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/models/comments.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/models/init-models.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/models/playlist.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/models/playlistVideo.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/models/tag.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/models/user.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/models/userHistory.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/models/userSubscription.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/models/video.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/models/videoTag.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/routes/.gitkeep" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/routes/channelInfos.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/routes/search.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/services/sequelize.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/backend/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/backend/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/config/db.connfig.env" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/backend/yarn.lock" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -76,12 +90,15 @@
       <updated>1682494426102</updated>
       <workItem from="1682494427111" duration="7488000" />
       <workItem from="1682513582814" duration="3570000" />
-      <workItem from="1682670553808" duration="10101000" />
+      <workItem from="1682670553808" duration="11549000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="UnknownFeatures">
+    <option featureType="com.intellij.fileTypeFactory" implementationName="*.env" />
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
