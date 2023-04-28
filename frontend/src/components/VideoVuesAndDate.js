@@ -30,17 +30,11 @@ export const VideoVuesAndDate = ({ video, small = false }) => {
     const [date, setDate] = React.useState(dateTimeToHowLongAgo(video.date));
     return (
         <Description
-            sx={
-                !small
-                    ? {
-                          marginBottom: "4px",
-                          marginTop: "4px",
-                          cursor: "pointer",
-                      }
-                    : {
-                          cursor: "pointer",
-                      }
-            }
+            sx={{
+                marginBottom: !small && "4px",
+                marginTop: !small && "4px",
+                cursor: "pointer",
+            }}
         >
             {video.views} vues • {date}
         </Description>

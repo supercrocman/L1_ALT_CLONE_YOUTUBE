@@ -107,7 +107,7 @@ const Results = () => {
                                     video={authorVideo}
                                 />
                             ))}
-                            <Divider />
+                            <Divider sx={{ mt: "12px" }} />
                         </>
                     )}
                 {Array.from(new Array(100)).map((_, i) => (
