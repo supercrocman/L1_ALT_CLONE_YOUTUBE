@@ -1,5 +1,4 @@
 .SearchBoxContainer {
-    padding: 1rem;
     /* background-color: white; */
     color: black;
     display: flex;
@@ -19,11 +18,13 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    border-radius: 0px 4px 4px 0px
+    border-radius: 0px 4px 4px 0px;
 }
 
 .SearchIcon {
-    color: #333;
+    color: #f1f1f1;
+    width: 1.75rem;
+    height: 1.75rem;
 }
 
 .SearchBox {
