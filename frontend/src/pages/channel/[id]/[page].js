@@ -19,7 +19,7 @@ import { useRouter } from 'next/router';
 import { useTheme } from '@mui/material/styles';
 import { useEffect } from 'react';
 import axios from 'axios';
-import VideoCard from '../../../components/VideoCard';
+import {VideoCard} from '../../../components/VideoCard';
 
 const roboto = Roboto({
     weight: '400',
@@ -79,6 +79,8 @@ export default function ChannelPage() {
     const [subscribers, setSubscribers] = React.useState(0);
     const [videoCount, setVideoCount] = React.useState(0);
     const [videos, setVideos] = React.useState([]);
+    const [avatar, setAvatar] = React.useState('');
+    const [date , setDate] = React.useState('');
 
     useEffect(() => {
         if (page === "home") {
@@ -112,11 +114,13 @@ export default function ChannelPage() {
                 const baseURL = 'http://localhost:3001/api/user/' + id.split("@")[1];
                 try {
                     const response = await axios.get(baseURL);
+                    console.log(response.data);
                     setName(response.data["user"].name);
                     setDescription(response.data["user"].description);
                     setSubscribers(response.data["user"]["subCount"]);
                     setVideoCount(response.data["user"]["videoCount"]);
                     setVideos(response.data["user"]["videos"]);
+                    setAvatar(response.data["user"]["avatar"]);
                 } catch (error) {
                     console.log(error.response.data);
                     if (error.response.data === "User not found") {
@@ -142,8 +146,8 @@ export default function ChannelPage() {
                             <p style={{ marginRight: 8 }}>{videoCount} vidéo</p>
                             <p style={{ marginRight: 8 }}>{subscribers} abonné</p>
                         </div>
-                        <Link href={"/channel/" + id + '/about'}>
-                            {description && description.length > 0 ? description.substring(0, 20) : ""}
+                        <Link href={"/channel/" + id + '/about'} style={{color: "white", textDecoration: "none"}}>
+                            {description && description.length > 0 ? description.substring(0, 20) : ""} {description && description.length > 20 ? "..." : ""}
                         </Link>
                     </div>
                 </div>
@@ -182,15 +186,26 @@ export default function ChannelPage() {
                         <div style={{ display: "flex", flexWrap: "wrap", flexDirection: "row", justifyContent: "flex-start" }}>
                             {videos.map((video) => (
                                 // thumbnail, title, views, date, duration
+                                video = {
+                                    thumbnail: video.thumbnail,
+                                    title: video.title,
+                                    views: video.views,
+                                    date: video.uploaded_at,
+                                    duration: video.length,
+                                    identifier: video.identifier,
+                                    description: video.description,
+                                    author : {
+                                        name: name,
+                                        avatar: avatar,
+                                        subCount: subscribers,
+                                        description: description,
+                                        identifier: id.split("@")[1]
+                                    }
+                                },
                                 console.log(video),
                                 <VideoCard
-                                    thumbnail={"http://localhost:3000" + video.thumbnail}
-                                    title={video.title}
-                                    views={video.views}
-                                    date={video.date}
-                                    duration={video.length}
-                                    description={video.description}
-                                    identifier={video.identifier}
+                                    video={video}
+                                    small
                                 />
                             ))}
                         </div>

@@ -9,7 +9,7 @@ router.get('/user/:identifier', async (req, res) => {
     const userIdentifier = req.params.identifier;
     const user = await db.User.findOne({
       where: { identifier: userIdentifier },
-      attributes: ['id', 'identifier', 'name', 'description']
+      attributes: ['id', 'identifier', 'name', 'description', 'avatar', 'createdAt']
     });
 
     if (!user) {
