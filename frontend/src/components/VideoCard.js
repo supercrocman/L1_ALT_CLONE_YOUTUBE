@@ -1,45 +1,215 @@
-import React from 'react';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
-import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
-import IconButton from '@mui/material/IconButton';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import ShareIcon from '@mui/icons-material/Share';
-import CardActions from '@mui/material/CardActions';
-import Router from 'next/router';
+import { CardMedia, Divider, IconButton, Stack } from "@mui/material";
+import { ChannelName, Description } from "@/components/AuthorCard";
 
-const VideoCard = ({ thumbnail, title, views, date, duration, identifier, description }) => {
-  return (
-    <Card sx={{ maxWidth: 345, marginRight: 8}} onClick={() => Router.push('/video/' + identifier)}>
-      <CardMedia
-        component="img"
-        height="140"
-        image={thumbnail}
-        alt={title}
-      />
-      <CardContent>
-        <Typography gutterBottom variant="h5" component="div">
-          {title}
-        </Typography>
-        <Typography variant="body2" color="text.secondary">
-          {description}
-        </Typography>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-          <Typography variant="body2" color="text.secondary">
-            {views} vues
-          </Typography>
-          <Typography variant="body2" color="text.secondary">
-            {date}
-          </Typography>
-        </Box>
-        <Typography variant="body2" color="text.secondary">
-          Durée : {Math.floor(duration / 60)}:{duration % 60}
-        </Typography>
-      </CardContent>
-    </Card>
-  );
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import { AuthorName } from "./AuthorName";
+import FlagIcon from "@mui/icons-material/Flag";
+import Grid from "@mui/material/Unstable_Grid2";
+import Link from "next/link";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
+import React from "react";
+import ReplyIcon from "@mui/icons-material/Reply";
+import { VideoVuesAndDate } from "./VideoVuesAndDate";
+import { styled } from "@mui/material/styles";
+import { useRouter } from "next/router";
+
+const TitleLink = styled(Link)(({ theme }) => ({
+    "&::visited": {
+        color: theme.palette.text.primary,
+    },
+    textDecoration: "none",
+    lineHeight: "normal",
+    color: theme.palette.text.primary,
+    "&:hover": {
+        color: theme.palette.text.primary,
+    },
+}));
+
+const ThumbnailContainer = styled(Link)(({ theme }) => ({
+    textDecoration: "none",
+    color: theme.palette.text.primary,
+    position: "relative",
+}));
+
+const Timer = styled("span")(({ theme }) => ({
+    position: "absolute",
+    bottom: "6px",
+    right: "6px",
+    backgroundColor: "rgba(0, 0, 0, 0.8)",
+    borderRadius: "4px",
+    padding: "2px 4px",
+    fontSize: "0.75rem",
+    color: theme.palette.text.primary,
+    fontWeight: "bold",
+}));
+
+const secondToTime = (duration) => {
+    let seconds = parseInt(duration % 60);
+    let minutes = parseInt((duration / 60) % 60);
+    let hours = parseInt(duration / 3600);
+    return `${hours > 0 ? hours + ":" : ""}${minutes > 0 ? minutes : "0"}:${
+        seconds < 10 ? "0" + seconds : seconds
+    }`;
 };
 
-export default VideoCard;
+export const VideoCard = ({ video, small = false }) => {
+    const router = useRouter();
+    const [anchorEl, setAnchorEl] = React.useState(null);
+    const [time, setTime] = React.useState(secondToTime(video.duration));
+
+    const open = Boolean(anchorEl);
+    const handleClick = (event) => {
+        event.preventDefault();
+        // preventing any parent handlers from being notified of the event.
+        event.stopPropagation();
+        setAnchorEl(event.currentTarget);
+    };
+    const handleClose = (event) => {
+        event.stopPropagation();
+        setAnchorEl(null);
+    };
+    return (
+        <Grid
+            container
+            spacing={!small && 2}
+            sx={{
+                mt: small ? 1 : 0.5,
+                "&:hover .MuiIconButton-root": {
+                    display: "inline-flex",
+                },
+            }}
+            onClick={() => router.push(`/watch/${video.identifier}`)}
+        >
+            <Grid
+                xs={small ? 5 : 4}
+                display="flex"
+                justifyContent="center"
+                alignItems="center"
+            >
+                <ThumbnailContainer
+                    sx={
+                        small && {
+                            height: "94px",
+                            width: "168px",
+                        }
+                    }
+                    href={`/watch/${video.identifier}`}
+                >
+                    <Timer>{time}</Timer>
+                    <CardMedia
+                        sx={{ borderRadius: "12px" }}
+                        component="img"
+                        image={video.thumbnail}
+                        alt="Thumbnail"
+                    />
+                </ThumbnailContainer>
+            </Grid>
+            <Grid xs={small ? 6 : 7.5} sx={small && { pt: 1, pb: 1, pl: 1 }}>
+                <Stack>
+                    <ChannelName sx={{ marginBottom: 0.25 }}>
+                        <TitleLink
+                            href={`/watch/${video.identifier}`}
+                            color="inherit"
+                            underline="none"
+                            sx={
+                                small && {
+                                    display: "block",
+                                    maxHeight: "2rem",
+                                    overflow: "hidden",
+                                    textOverflow: "ellipsis",
+                                    whiteSpace: "normal",
+                                    display: "-webkit-box",
+                                    WebkitLineClamp: "2",
+                                    WebkitBoxOrient: "vertical",
+                                }
+                            }
+                        >
+                            {video.title}
+                        </TitleLink>
+                    </ChannelName>
+                    {small ? (
+                        <>
+                            <AuthorName author={video.author} small />
+                            <VideoVuesAndDate video={video} small />
+                        </>
+                    ) : (
+                        <>
+                            <VideoVuesAndDate video={video} />
+                            <AuthorName author={video.author} />
+                            <Description sx={{ cursor: "pointer" }}>
+                                {video.description.substring(0, 200)}...
+                            </Description>
+                        </>
+                    )}
+                </Stack>
+            </Grid>
+            <Grid xs={0.5}>
+                <IconButton
+                    onClick={handleClick}
+                    size="small"
+                    aria-controls={open ? "video-options" : undefined}
+                    aria-haspopup="true"
+                    aria-expanded={open ? "true" : undefined}
+                    sx={{ display: open ? "inline-flex" : "none" }}
+                >
+                    <MoreVertIcon />
+                </IconButton>
+            </Grid>
+            <Menu
+                anchorEl={anchorEl}
+                id="video-options"
+                open={open}
+                onClose={handleClose}
+                onClick={handleClose}
+                PaperProps={{
+                    elevation: 0,
+                    sx: {
+                        overflow: "visible",
+                        filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
+                        mt: 0,
+                        "& .MuiSvgIcon-root": {
+                            ml: -0.5,
+                            mr: 1,
+                        },
+                        bgcolor: "#282828",
+                        "&:before": {
+                            content: '""',
+                            display: "block",
+                            position: "absolute",
+                            top: 0,
+                            right: 11.35,
+                            width: 10,
+                            height: 10,
+                            bgcolor: "#282828",
+                            transform: "translateY(-50%) rotate(45deg)",
+                            zIndex: 0,
+                        },
+                    },
+                }}
+                transformOrigin={{ horizontal: "right", vertical: "top" }}
+                anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+            >
+                <MenuItem onClick={handleClose}>
+                    {/* TODO: link to playlist */}
+                    <AccessTimeIcon /> Enregistrer dans "À regarder plus tard"
+                </MenuItem>
+                <MenuItem onClick={handleClose}>
+                    {/* TODO: link to playlist */}
+                    <PlaylistAddIcon /> Enregistrer dans une playlist
+                </MenuItem>
+                <MenuItem onClick={handleClose}>
+                    {/* TODO: link to share */}
+                    <ReplyIcon sx={{ transform: "scaleX(-1)" }} /> Partager
+                </MenuItem>
+                <Divider />
+                <MenuItem onClick={handleClose}>
+                    {/* TODO: link to signal */}
+                    <FlagIcon /> Signaler
+                </MenuItem>
+            </Menu>
+        </Grid>
+    );
+};
