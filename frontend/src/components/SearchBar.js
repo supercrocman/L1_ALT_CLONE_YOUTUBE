@@ -25,9 +25,7 @@ export default function SearchBar() {
         id="SearchBar-AutoComplete"
         sx={{
           width: 400,
-          // border: "1px solid blue",
           "& .MuiOutlinedInput-root": {
-            // border: "1px solid #95A1AC",
             borderRadius: "30px 0 0 30px",
             color: "white",
             backgroundColor: "#333",
