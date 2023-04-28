@@ -2,9 +2,8 @@ const express = require('express');
 const winston = require('winston');
 const db = require('./services/sequelize');
 const bodyParser = require('body-parser');
-
-
 const cors = require('cors');
+
 const app = express();
 
 app.use(cors(
@@ -50,6 +49,7 @@ db.sequelize
 const port = 3001;
 
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 
 app.get('/', (req, res) => {
     res.send('Hello World!');
