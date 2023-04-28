@@ -49,7 +49,6 @@ router.get('/submit-search',
         return res.status(400).json({ errors: result.array() });
     }
     try {
-        // renvoyer top sub user, 2 most recent vids, up to 10 results from title , up to  10 results from tags
         const channels = await db.User.findAll({
             attributes: [
                 'id',
