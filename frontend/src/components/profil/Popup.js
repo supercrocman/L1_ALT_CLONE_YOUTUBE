@@ -1,10 +1,9 @@
 import { Modal, Paper } from '@mui/material';
 
-function Popup({ open, handleClose, children }) {
+function Popup({ open, children }) {
     return (
         <Modal
             open={open}
-            onClose={handleClose}
             aria-labelledby="modal-modal-title"
             aria-describedby="modal-modal-description"
         >
@@ -14,7 +13,8 @@ function Popup({ open, handleClose, children }) {
                     top: '50%',
                     left: '50%',
                     transform: 'translate(-50%, -50%)',
-                    width: 400,
+                    minWidth: 400,
+                    maxWidth: 800,
                     bgcolor: '#ffffff',
                     border: '2px solid #000',
                     boxShadow: 24,
