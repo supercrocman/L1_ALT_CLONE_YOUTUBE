@@ -5,6 +5,15 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 
 
+const cors = require('cors');
+const app = express();
+
+app.use(cors(
+    {
+        origin: '*',
+    }
+))
+
 const logger = winston.createLogger({
     level: 'info',
     format: winston.format.json(),
@@ -39,7 +48,6 @@ db.sequelize
         logger.info(`Failed to sync db: ${err.message}`);
     });
 
-const app = express();
 const port = 3001;
 
 app.use(cors());
@@ -51,6 +59,10 @@ app.get('/', (req, res) => {
 });
 
 app.use('/api', require('./routes/search'));
+
+app.use('/api', require('./routes/channelinfos'));
+
+
 
 app.listen(port, () => {
     logger.info(`Example app listening on port ${port}`);

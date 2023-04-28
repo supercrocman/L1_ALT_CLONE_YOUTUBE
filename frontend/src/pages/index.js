@@ -1,4 +1,4 @@
-import AccountMenu from './includes/accountmenu'
+import AccountMenu from '@/components/AccountMenu'
 import SearchBar from '@/components/SearchBar'
 import styleHeader from '@/styles/header.module.css'
 
