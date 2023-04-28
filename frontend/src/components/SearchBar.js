@@ -38,6 +38,9 @@ export default function SearchBar() {
           "& .MuiAutocomplete-endAdornment .MuiIconButton-root": {
             color: "white",
           },
+          "& .MuiOutlinedInput-root .MuiAutocomplete-input": {
+            paddingLeft: "15px",
+          },
         }}
         options={searchResults}
         inputValue={inputValue}
