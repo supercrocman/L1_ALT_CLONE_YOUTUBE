@@ -8,6 +8,10 @@
     align-items: stretch;
 }
 
+.css-sh9osf-MuiAutocomplete-root .MuiOutlinedInput-root .MuiAutocomplete-input {
+    padding: 7.5px 5px 7.5px 500px ;
+}
+
 .SearchIconBox {
     padding-left: 0.2rem;
     padding-right: 0.4rem;
