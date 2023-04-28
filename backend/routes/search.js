@@ -139,8 +139,37 @@ router.get('/submit-search',
             authors.set(author_id, author);
         }
         authors = Array.from(authors.values());
+
+        for (let i = 0; i < videos_result.length; i++) {
+            const video = videos_result[i];
+            const author_id = video.user_id;
+            const author = authors.find(author => author.id === author_id);
+            video.dataValues.author = author.identifier;
+        }
+        for (let i = 0; i < topChannelVideos.length; i++) {
+            const video = topChannelVideos[i];
+            const author_id = topChannel.id;
+            const author = authors.find(author => author.id === author_id);
+            video.dataValues.author = author.identifier;
+        }
+
+        const videos_found = videos_result.map((video) => {
+            const { id, user_id, ...video_without_id } = video.dataValues;
+            return video_without_id;
+        });
+
+        const topChannelVideos_found = topChannelVideos.map((video) => {
+            const { id, user_id, ...video_without_id } = video.dataValues;
+            return video_without_id;
+        });
         
-        res.json({authors, topChannelVideos, videos_result});
+        const authors_found = authors.map((author) => {
+            const { id, ...author_without_id } = author.dataValues;
+            return author_without_id;
+        });
+
+        const data = { authors_found, topChannelVideos_found, videos_found };
+        res.json(data);
       } catch (error) {
         console.error(error);
         res.status(500).send('Server error');
