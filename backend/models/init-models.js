@@ -75,10 +75,10 @@ function initModels(sequelize) {
         const userSubCount = await UserSubscription.count({
             where: {
                 user_subscribe_id: this.id,
-            }
+            },
         });
         return userSubCount;
-     }
+     };
     
     User.prototype.getSubscriptions = async function () { 
         const userSubscriptions = await UserSubscription.findAll(
@@ -86,15 +86,17 @@ function initModels(sequelize) {
             attributes: ['user_id', 'user_subscribe_id'],
             where: {
                 user_id: this.id,
-            }
+            },
         });
         const subscriptions = [];
         for (const userSubscription of userSubscriptions) {
-            const user = await User.findByPk(userSubscription.user_subscribe_id);
+            const user = await User.findByPk(
+                userSubscription.user_subscribe_id
+            );
             subscriptions.push(user);
         }
         return subscriptions;
-    }
+    };
 
     User.prototype.getVideos = async function () {
         const videos = await Video.findAll({
