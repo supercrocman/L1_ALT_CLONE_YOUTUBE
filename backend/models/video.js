@@ -18,6 +18,11 @@ module.exports = (sequelize, DataTypes) =>
                     key: 'id',
                 },
             },
+            identifier: {
+                type: DataTypes.STRING(15),
+                allowNull: false,
+                unique: 'identifier',
+            },
             path: {
                 type: DataTypes.STRING(30),
                 allowNull: false,
@@ -82,6 +87,12 @@ module.exports = (sequelize, DataTypes) =>
                     name: 'user_id',
                     using: 'BTREE',
                     fields: [{ name: 'user_id' }],
+                },
+                {
+                    name: 'identifier',
+                    unique: true,
+                    using: 'BTREE',
+                    fields: [{ name: 'identifier' }],
                 },
             ],
         }

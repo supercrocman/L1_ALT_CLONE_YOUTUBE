@@ -1,6 +1,8 @@
 const express = require('express');
 const winston = require('winston');
 const db = require('./services/sequelize');
+const bodyParser = require('body-parser');
+
 
 const logger = winston.createLogger({
     level: 'info',
@@ -39,9 +41,13 @@ db.sequelize
 const app = express();
 const port = 3001;
 
+app.use(bodyParser.urlencoded({ extended: true }));
+
 app.get('/', (req, res) => {
     res.send('Hello World!');
 });
+
+app.use('/api', require('./routes/search'));
 
 app.listen(port, () => {
     logger.info(`Example app listening on port ${port}`);
