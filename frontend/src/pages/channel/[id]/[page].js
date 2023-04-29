@@ -19,7 +19,9 @@ import { useRouter } from 'next/router';
 import { useTheme } from '@mui/material/styles';
 import { useEffect } from 'react';
 import axios from 'axios';
-import {VideoCard} from '../../../components/VideoCard';
+import { VideoCard } from '../../../components/VideoCard';
+import stringToColor from '../../../utils/stringToColor';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 const roboto = Roboto({
     weight: '400',
@@ -27,6 +29,8 @@ const roboto = Roboto({
 })
 
 var about = '';
+
+
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -41,7 +45,8 @@ function TabPanel(props) {
         >
             {value === index && (
                 <Box sx={{ p: 3 }}>
-                    <Typography>{children}</Typography>
+                    {children}
+                    {/* <Typography>{children}</Typography> */}
                 </Box>
             )}
         </div>
@@ -80,7 +85,7 @@ export default function ChannelPage() {
     const [videoCount, setVideoCount] = React.useState(0);
     const [videos, setVideos] = React.useState([]);
     const [avatar, setAvatar] = React.useState('');
-    const [date , setDate] = React.useState('');
+    const [date, setDate] = React.useState('');
 
     useEffect(() => {
         if (page === "home") {
@@ -133,20 +138,29 @@ export default function ChannelPage() {
         fetchData();
     }, [id, page]);
 
+
+    const colorgentheme = createTheme({
+        palette: {
+            primary: {
+                main: stringToColor(name),
+            },
+        },
+    });
+
     return (
         <div className={roboto.className}>
             <AccountMenu></AccountMenu>
             <div style={{ display: "flex", justifyContent: "space-evenly", width: "100%", marginBottom: "25px" }}>
                 <div style={{ display: "flex", alignItems: "center", justifyContent: "space-evenly", width: "25%" }}>
-                    <Avatar sx={{ bgcolor: deepOrange[500], width: 128, height: 128, marginRight: "5%" }} alt="Remy Sharp" src="/broken-image.jpg" >R</Avatar>
+                    <Avatar alt={name} sx={{ bgcolor: stringToColor(name), width: 128, height: 128, marginRight: "5%" }} src="/broken-image.jpg" />
                     <div style={{ display: "flex", flexDirection: "column", alignItems: "stretch", justifyContent: "space-evenly", height: "100%" }}>
-                        <p style={{}}>{name}</p>
+                        <p>{name}</p>
                         <div style={{ display: "flex", flexDirection: "row", flexWrap: "wrap", color: "#606060", fontSize: "small" }}>
                             <p style={{ marginRight: 8, fontWeight: "800" }}>{id}</p>
                             <p style={{ marginRight: 8 }}>{videoCount} vidéo</p>
                             <p style={{ marginRight: 8 }}>{subscribers} abonné</p>
                         </div>
-                        <Link href={"/channel/" + id + '/about'} style={{color: "white", textDecoration: "none"}}>
+                        <Link href={"/channel/" + id + '/about'} style={{ color: "white", textDecoration: "none" }}>
                             {description && description.length > 0 ? description.substring(0, 20) : ""} {description && description.length > 20 ? "..." : ""}
                         </Link>
                     </div>
@@ -158,12 +172,13 @@ export default function ChannelPage() {
                 </div>
             </div>
             <Box>
-                <AppBar position="static" style={{ backgroundColor: "#000" }}>
+                <AppBar position="static" style={{ backgroundColor: "#000" }} color="primary">
                     <Tabs
+                        // theme={colorgentheme}
                         value={value}
                         onChange={handleChange}
                         indicatorColor="secondary"
-                        textColor="inherit"
+                        textColor="secondary"
                         variant="fullWidth"
                         centered
                     >
@@ -194,7 +209,7 @@ export default function ChannelPage() {
                                     duration: video.length,
                                     identifier: video.identifier,
                                     description: video.description,
-                                    author : {
+                                    author: {
                                         name: name,
                                         avatar: avatar,
                                         subCount: subscribers,
@@ -202,7 +217,6 @@ export default function ChannelPage() {
                                         identifier: id.split("@")[1]
                                     }
                                 },
-                                console.log(video),
                                 <VideoCard
                                     video={video}
                                     small
