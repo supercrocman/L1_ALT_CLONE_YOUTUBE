@@ -7,7 +7,8 @@ import { useCookies } from 'react-cookie';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
-import { Typography } from '@mui/material';
+import { Stack, Typography } from '@mui/material';
+import profilStyles from '../../../styles/profil.module.css';
 
 const Login = ({ open, setOpen, setFenetre }) => {
     const [userMail, setuserMail] = useState('');
@@ -41,53 +42,48 @@ const Login = ({ open, setOpen, setFenetre }) => {
         <Box sx={{ justifyContent: 'space-between' }}>
             <Popup open={open} setOpen={setOpen} setFenetre={setFenetre}>
                 <Box
-                    sx={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                    }}
+                    className={`${profilStyles.profilContainer}`}
                     component="form"
                     noValidate
                     autoComplete="off"
                     onSubmit={handleSubmit}
                 >
-                    <TextField
-                        label="Email 📮"
-                        id="outlined-size-small"
-                        color="secondary"
-                        size="small"
-                        type="text"
-                        value={userMail}
-                        onChange={(e) => setuserMail(e.target.value)}
-                    />
-                    <TextField
-                        label="Password 🥷"
-                        id="outlined-size-small"
-                        color="secondary"
-                        size="small"
-                        type="text"
-                        value={userPassword}
-                        onChange={(e) => setuserPassword(e.target.value)}
-                    />
-                    {error && <div>{error}</div>}
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        href="#contained-buttons"
-                        onClick={handleSubmit}
-                    >
-                        Log In
+                    <Typography variant="h2">Connexion</Typography>
+                    <Box
+                        className={`${profilStyles.profilBar} ${profilStyles.profilBar_inscription_connexion}`}
+                    ></Box>
+                    <Stack spacing={3} sx={{ marginBottom: 2 }}>
+                        <TextField
+                            label="Email 📮"
+                            color="secondary"
+                            type="text"
+                            value={userMail}
+                            onChange={(e) => setuserMail(e.target.value)}
+                        />
+                        <TextField
+                            label="Password 🥷"
+                            color="secondary"
+                            type="password"
+                            value={userPassword}
+                            autoComplete="off"
+                            onChange={(e) => setuserPassword(e.target.value)}
+                        />
+                        {error && <div>{error}</div>}
+                    </Stack>
+
+                    <Button color="secondary" onClick={handleSubmit}>
+                        Se connecter
                     </Button>
-                    <Typography
-                        variant="a"
-                        onClick={() => {
-                            setFenetre(0);
-                        }}
-                    >
-                        Pas encore de compte ? Inscrivez-vous
-                    </Typography>
                 </Box>
+                <Typography
+                    variant="a"
+                    className={`${profilStyles.lien}`}
+                    onClick={() => {
+                        setFenetre(0);
+                    }}
+                >
+                    Pas encore de compte ? Inscrivez-vous
+                </Typography>
             </Popup>
         </Box>
     );

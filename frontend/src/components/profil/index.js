@@ -13,6 +13,7 @@ function Profil() {
     return (
         <Box>
             <Button
+                color="secondary"
                 onClick={() => {
                     setOpen(true);
                 }}

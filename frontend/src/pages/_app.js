@@ -1,10 +1,10 @@
-import { ThemeProvider, createTheme } from "@mui/material/styles";
+import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { CookiesProvider } from 'react-cookie';
-import CssBaseline from "@mui/material/CssBaseline";
+import CssBaseline from '@mui/material/CssBaseline';
 
 const darkTheme = createTheme({
     palette: {
-        mode: "dark",
+        mode: 'dark',
     },
 });
 import { CookiesProvider } from 'react-cookie';
@@ -14,7 +14,7 @@ export default function App({ Component, pageProps }) {
         <ThemeProvider theme={darkTheme}>
             <CssBaseline />
             <CookiesProvider>
-            <Component {...pageProps} />
+                <Component {...pageProps} />
             </CookiesProvider>
         </ThemeProvider>
     );

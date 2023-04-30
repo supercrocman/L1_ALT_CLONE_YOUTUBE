@@ -12,6 +12,7 @@ import {
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useState } from 'react';
+import profilStyles from '../../../styles/profil.module.css';
 import Popup from './Popup';
 import axios from 'axios';
 
@@ -102,24 +103,14 @@ function Signup({ open, setOpen, setFenetre }) {
         <Box>
             <Popup open={open} setOpen={setOpen} setFenetre={setFenetre}>
                 <Box
-                    sx={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                    }}
+                    className={`${profilStyles.profilContainer}`}
                     component="form"
                     noValidate
                     autoComplete="off"
                 >
                     <Typography variant="h2">Inscription</Typography>
                     <Box
-                        sx={{
-                            backgroundColor: '#BA55D3',
-                            width: 250,
-                            height: 10,
-                            marginBottom: 5,
-                        }}
+                        className={`${profilStyles.profilBar} ${profilStyles.profilBar_inscription_connexion}`}
                     ></Box>
                     {Object.entries(data).length !== 0 ||
                     Object.entries(errorFetch).length !== 0 ? (
@@ -226,6 +217,7 @@ function Signup({ open, setOpen, setFenetre }) {
                 </Box>
                 <Typography
                     variant="a"
+                    className={`${profilStyles.lien}`}
                     onClick={() => {
                         setFenetre(1);
                     }}

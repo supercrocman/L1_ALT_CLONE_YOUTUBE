@@ -16,7 +16,6 @@ function Popup({ open, setOpen, children, setFenetre }) {
                     transform: 'translate(-50%, -50%)',
                     minWidth: 400,
                     maxWidth: 800,
-                    bgcolor: '#ffffff',
                     border: '2px solid #000',
                     boxShadow: 24,
                     p: 4,

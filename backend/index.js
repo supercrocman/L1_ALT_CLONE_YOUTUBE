@@ -55,7 +55,7 @@ app.use('/profil', profilRouter);
 
 app.use('/api', require('./routes/search'));
 
-app.use('/api', require('./routes/channelinfos'));
+app.use('/api', require('./routes/channelInfos'));
 
 app.listen(port, () => {
     logger.info(`Example app listening on port ${port}`);
