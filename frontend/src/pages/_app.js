@@ -7,7 +7,6 @@ const darkTheme = createTheme({
         mode: 'dark',
     },
 });
-import { CookiesProvider } from 'react-cookie';
 
 export default function App({ Component, pageProps }) {
     return (

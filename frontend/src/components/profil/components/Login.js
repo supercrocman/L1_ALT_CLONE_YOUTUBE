@@ -7,7 +7,7 @@ import { useCookies } from 'react-cookie';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
-import { Stack, Typography } from '@mui/material';
+import { Alert, Stack, Typography } from '@mui/material';
 import profilStyles from '../../../styles/profil.module.css';
 
 const Login = ({ open, setOpen, setFenetre }) => {
@@ -18,6 +18,7 @@ const Login = ({ open, setOpen, setFenetre }) => {
 
     async function handleSubmit(event) {
         event.preventDefault();
+        setError('');
         try {
             const response = await axios({
                 method: 'POST',
@@ -53,6 +54,8 @@ const Login = ({ open, setOpen, setFenetre }) => {
                         className={`${profilStyles.profilBar} ${profilStyles.profilBar_inscription_connexion}`}
                     ></Box>
                     <Stack spacing={3} sx={{ marginBottom: 2 }}>
+                        {error !== '' && <Alert color="error">{error}</Alert>}
+
                         <TextField
                             label="Email 📮"
                             color="secondary"
@@ -68,7 +71,6 @@ const Login = ({ open, setOpen, setFenetre }) => {
                             autoComplete="off"
                             onChange={(e) => setuserPassword(e.target.value)}
                         />
-                        {error && <div>{error}</div>}
                     </Stack>
 
                     <Button color="secondary" onClick={handleSubmit}>
