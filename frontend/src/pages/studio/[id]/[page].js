@@ -9,6 +9,7 @@ import MiniDrawer from "@/components/studio/testnavbar";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { styled, useTheme } from '@mui/material/styles';
+import Dashboard from "@/components/studio/Dashboard";
 
 const DrawerHeader = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -45,34 +46,55 @@ export default function StudioPage() {
     }, [page]);
 
     useEffect(() => {
-        if (id === undefined) {
-            return;
-        }
+        if (id) {
+            const fetchData = async () => {
+                const baseURL = 'http://localhost:3001/api/user/' + id.split("@")[1];
+                try {
+                    const response = await axios.get(baseURL)
+                    response.data.user.avatarcolor = stringToColor(response.data.user.name)
+                    setUser(response.data.user);
+                    // console.log(response.data.user);
+                } catch (error) {
+                    console.log(error);
+                }
+            }
 
-        const fetchData = async () => {
-            const baseURL = 'http://localhost:3001/api/user/' + id.split("@")[1];
-            try {
-                const response = await axios.get(baseURL)
-                response.data.user.avatarcolor = stringToColor(response.data.user.name)
-                setUser(response.data.user);
-                console.log(user);
-            } catch (error) {
-                console.log(error);
+            fetchData();
+
+            if (!id.startsWith("@")) {
+                Router.push('/404');
             }
         }
 
-        fetchData();
 
-        if (!id.startsWith("@")) {
-            Router.push('/404');
-        }
     }, [id]);
 
+    const renderPageContent = () => {
+        switch (page) {
+          case 'dashboard':
+            return <Box component="main" sx={{ flexGrow: 1, p: 3, marginLeft: "64px" }}><Dashboard user={user} /></Box>;
+          case 'commentaires':
+            return "commentaires";
+          case 'videos':
+            return "videos";
+          case 'playlists':
+            return "playlists";
+          case 'personnalisation':
+            return "personnalisation";
+          case 'paramètres':
+            return "paramètres";
+          case 'analytics':
+            return "analytics";
+          default:
+            return null;
+        }
+      };
 
     return (
         <div>
-            <MiniDrawer page={page} user={user}/>
-            <Box component="main" sx={{ flexGrow: 1, p: 3, marginLeft: "64px"  }}>
+            <MiniDrawer user={user} page={page} />
+            {renderPageContent()}
+            {/* <Box component="main" sx={{ flexGrow: 1, p: 3, marginLeft: "64px" }}>
                 <DrawerHeader />
                 <Typography paragraph>
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
@@ -101,7 +123,7 @@ export default function StudioPage() {
                     eleifend. Commodo viverra maecenas accumsan lacus vel facilisis. Nulla
                     posuere sollicitudin aliquam ultrices sagittis orci a.
                 </Typography>
-            </Box>
+            </Box> */}
         </div>
     )
 }

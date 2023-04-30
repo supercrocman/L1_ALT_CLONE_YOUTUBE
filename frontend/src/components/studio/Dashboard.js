@@ -37,7 +37,7 @@ export default function Dashboard({ user }) {
             <h1>
                 Tableau de bord de {name}
             </h1>
-            <Box sx={{ minWidth: 275 }}>
+            <Box sx={{ minWidth: 275, maxWidth: 545 }}>
                 <Card variant="outlined">
                     <React.Fragment>
                         <CardContent style={{ paddingTop: 22, paddingLeft: 24, paddingRight: 24, paddingBottom: 12 }}>

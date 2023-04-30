@@ -27,6 +27,8 @@ import PlaylistPlayIcon from '@mui/icons-material/PlaylistPlay';
 import CommentIcon from '@mui/icons-material/Comment';
 import EqualizerIcon from '@mui/icons-material/Equalizer';
 import Router from 'next/router';
+import Avatar from '@mui/material/Avatar';
+import stringToColor from "@/utils/stringToColor";
 
 const drawerWidth = 240;
 
@@ -100,13 +102,15 @@ export default function MiniDrawer({ user, page }) {
     const [open, setOpen] = React.useState(false);
     const [DashbordFill, setDashbordFill] = React.useState('#fff');
     const [identifier, setIdentifier] = React.useState('');
+    const [name, setName] = React.useState('');
 
     React.useEffect(() => {
         if (user) {
-            setIdentifier(user.identifier);
             console.log(user);
+            setIdentifier(user.identifier);
+            setName(user.name);
         }
-    }, []);
+    }, [user]);
 
     const handleDrawerOpen = () => {
         setOpen(true);
@@ -122,7 +126,7 @@ export default function MiniDrawer({ user, page }) {
     };
 
     const handleClick = (newPage) => {
-        Router.push(`/studio/[id]/${newPage}`, `/studio/@${identifier}/${newPage}`);
+        Router.push(`/studio/@${identifier}/${newPage}`);
     };
 
     const navItems = [
@@ -156,9 +160,22 @@ export default function MiniDrawer({ user, page }) {
                 </Toolbar>
             </AppBar>
             <Drawer variant="permanent" open={open}>
-                <DrawerHeader>
+                <DrawerHeader style={{ display: "flex", justifyContent: "space-between" }}>
+                    {open && user && (
+                        <Avatar alt={name} sx={{
+                            bgcolor: stringToColor(name),
+                            // marginRight: 'auto',
+                            // marginLeft: theme.spacing(1),
+                        }} src="/broken-image.jpg" />
+                    )}
+                    <p style={{ fontWeight: "800" }}>{name}</p>
+                    <p style={{ color: "#606060" }}>@{identifier}</p>
                     <IconButton onClick={handleDrawerClose}>
-                        {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
+                        {theme.direction === 'rtl' ? (
+                            <ChevronRightIcon />
+                        ) : (
+                            <ChevronLeftIcon />
+                        )}
                     </IconButton>
                 </DrawerHeader>
                 <Divider />
@@ -171,6 +188,9 @@ export default function MiniDrawer({ user, page }) {
                                     minHeight: 48,
                                     justifyContent: open ? 'initial' : 'center',
                                     px: 2.5,
+                                    borderLeft: isActive(item.page)
+                                        ? '4px solid #ce93d8'
+                                        : 'none',
                                 }}
                             >
                                 <ListItemIcon
@@ -183,35 +203,11 @@ export default function MiniDrawer({ user, page }) {
                                 >
                                     {item.icon}
                                 </ListItemIcon>
-                                <ListItemText primary={item.label} sx={{ opacity: open ? 1 : 0 }} />
+                                <ListItemText primary={item.label} sx={{ opacity: open ? 1 : 0, color: isActive(item.page) ? '#ce93d8' : null }} />
                             </ListItemButton>
                         </ListItem>
                     ))}
                 </List>
-                {/* <List>
-                    {['Dashboard', 'Videos', 'Playlists', 'Commentaires', 'Analytics'].map((text, index) => (
-                        <ListItem key={text} disablePadding sx={{ display: 'block' }}>
-                            <ListItemButton
-                                sx={{
-                                    minHeight: 48,
-                                    justifyContent: open ? 'initial' : 'center',
-                                    px: 2.5,
-                                }}
-                            >
-                                <ListItemIcon
-                                    sx={{
-                                        minWidth: 0,
-                                        mr: open ? 3 : 'auto',
-                                        justifyContent: 'center',
-                                    }}
-                                >
-                                    {index === 0 ? <SpaceDashboard sx={{ fill: DashbordFill }} /> : index === 1 ? <VideoLibraryIcon /> : index === 2 ? <PlaylistPlayIcon /> : index === 3 ? <CommentIcon /> : <EqualizerIcon />}
-                                </ListItemIcon>
-                                <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
-                            </ListItemButton>
-                        </ListItem>
-                    ))}
-                </List> */}
                 <Divider />
                 <List>
                     {['Personalization', 'Paramètres'].map((text, index) => (
