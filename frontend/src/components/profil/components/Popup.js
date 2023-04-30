@@ -1,6 +1,7 @@
-import { Modal, Paper } from '@mui/material';
+import { IconButton, Modal, Paper } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 
-function Popup({ open, children }) {
+function Popup({ open, setOpen, children, setFenetre }) {
     return (
         <Modal
             open={open}
@@ -22,6 +23,16 @@ function Popup({ open, children }) {
                     border: 'none',
                 }}
             >
+                <IconButton
+                    aria-label="close"
+                    color="inherit"
+                    onClick={() => {
+                        setOpen(false);
+                        setFenetre(1);
+                    }}
+                >
+                    <CloseIcon fontSize="inherit" />
+                </IconButton>
                 {children}
             </Paper>
         </Modal>

@@ -1,7 +1,6 @@
 const express = require('express');
 const cors = require('cors');
 const winston = require('winston');
-const cors = require('cors');
 const db = require('./services/sequelize');
 const profilRouter = require('./routes/profils');
 
@@ -57,5 +56,3 @@ app.use('/profil', profilRouter);
 app.listen(port, () => {
     logger.info(`Example app listening on port ${port}`);
 });
-
-app.use('/profil', rooterProfil); // Utiliser le routeur pour toutes les demandes effectuées vers /profil

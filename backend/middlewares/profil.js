@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 /* eslint-disable no-console */
 require('dotenv').config();
 const bcrypt = require('bcrypt');
@@ -42,7 +43,6 @@ exports.signup = (req, res) => {
                         <a href=http://localhost:3000/confirm/${token}> Click here</a>
                         </div>`,
                 },
-                // eslint-disable-next-line consistent-return
                 async (error, info) => {
                     if (error) {
                         console.log(error);
@@ -95,5 +95,44 @@ exports.verifyUser = async (req, res) => {
     } catch (err) {
         console.log(err);
         return res.status(500).send({ message: err });
+    }
+};
+
+exports.login = async (req, res) => {
+    try {
+        const { userMail, userPassword } = req.body;
+        const user = await User.findOne({ where: { email: userMail } });
+        if (!user) {
+            return res
+                .status(401)
+                .json({ message: 'Email ou mot de passe incorrect.' });
+        }
+
+        // eslint-disable-next-line consistent-return
+        bcrypt.compare(userPassword, user.password).then((result, err) => {
+            if (err || !result) {
+                return res
+                    .status(401)
+                    .json({ message: 'Email ou mot de passe incorrect.' });
+            }
+            const buf = crypto.randomBytes(8);
+            const hex = buf.toString('hex');
+            const secretkey = parseInt(hex, 16);
+
+            const token = jwt.sign(
+                { identifier: user.identifier },
+                secretkey.toString()
+            );
+
+            return res.status(200).json({
+                token,
+                avatar: user.avatar,
+                identifier: user.identifier,
+                pseudo: user.name,
+                userId: user.id,
+            });
+        });
+    } catch (error) {
+        return res.status(500).json({ message: 'Erreur serveur' });
     }
 };

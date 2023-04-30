@@ -15,8 +15,7 @@ import { useState } from 'react';
 import Popup from './Popup';
 import axios from 'axios';
 
-function Subscribe() {
-    const [open, setOpen] = useState(false);
+function Signup({ open, setOpen, setFenetre }) {
     const [data, setData] = useState({});
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
@@ -27,7 +26,7 @@ function Subscribe() {
     const [errorFetch, setErrorFetch] = useState({});
 
     function validateMDP(mdp) {
-        var Reg = new RegExp(
+        const Reg = new RegExp(
             /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/
         );
         return Reg.test(mdp);
@@ -101,14 +100,7 @@ function Subscribe() {
 
     return (
         <Box>
-            <Button
-                onClick={() => {
-                    setOpen(true);
-                }}
-            >
-                Ouvrir Pop up
-            </Button>
-            <Popup open={open}>
+            <Popup open={open} setOpen={setOpen} setFenetre={setFenetre}>
                 <Box
                     sx={{
                         display: 'flex',
@@ -232,9 +224,16 @@ function Subscribe() {
                         S'inscrire
                     </Button>
                 </Box>
-                <a href="#">Déjà inscrit ? Se connecter </a>
+                <Typography
+                    variant="a"
+                    onClick={() => {
+                        setFenetre(1);
+                    }}
+                >
+                    Déjà inscrit ? Se connecter
+                </Typography>
             </Popup>
         </Box>
     );
 }
-export default Subscribe;
+export default Signup;
