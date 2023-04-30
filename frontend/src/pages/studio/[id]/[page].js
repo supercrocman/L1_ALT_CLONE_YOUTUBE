@@ -5,7 +5,6 @@ import { useRouter } from 'next/router';
 import StudioLeftNavBar from '../../../components/studio/StudioLeftNavBar';
 import axios from "axios";
 import stringToColor from "@/utils/stringToColor";
-import MiniDrawer from "@/components/studio/testnavbar";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { styled, useTheme } from '@mui/material/styles';
@@ -92,7 +91,7 @@ export default function StudioPage() {
 
     return (
         <div>
-            <MiniDrawer user={user} page={page} />
+            <StudioLeftNavBar user={user} page={page} />
             {renderPageContent()}
             {/* <Box component="main" sx={{ flexGrow: 1, p: 3, marginLeft: "64px" }}>
                 <DrawerHeader />

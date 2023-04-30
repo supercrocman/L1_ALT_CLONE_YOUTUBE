@@ -1,131 +1,240 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
-import Typography from '@mui/material/Typography';
+import { styled, useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
-import { Avatar } from '@mui/material';
-import stringToColor from '../../utils/stringToColor';
+import MuiDrawer from '@mui/material/Drawer';
+import MuiAppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import List from '@mui/material/List';
+import CssBaseline from '@mui/material/CssBaseline';
+import Typography from '@mui/material/Typography';
+import Divider from '@mui/material/Divider';
+import IconButton from '@mui/material/IconButton';
+import MenuIcon from '@mui/icons-material/Menu';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import ListItem from '@mui/material/ListItem';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import InboxIcon from '@mui/icons-material/MoveToInbox';
+import MailIcon from '@mui/icons-material/Mail';
+import SpaceDashboard from '@mui/icons-material/SpaceDashboard';
+import SettingsIcon from '@mui/icons-material/Settings';
+import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
+import VideoLibraryIcon from '@mui/icons-material/VideoLibrary';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import PlaylistPlayIcon from '@mui/icons-material/PlaylistPlay';
+import CommentIcon from '@mui/icons-material/Comment';
+import EqualizerIcon from '@mui/icons-material/Equalizer';
 import Router from 'next/router';
-import { useEffect } from 'react';
-import AccountMenu from '../AccountMenu';
-import Dashboard from './Dashboard';
+import Avatar from '@mui/material/Avatar';
+import stringToColor from "@/utils/stringToColor";
 
-function TabPanel(props) {
-    const { children, value, index, ...other } = props;
+const drawerWidth = 240;
 
-    return (
-        <div
-            role="tabpanel"
-            hidden={value !== index}
-            id={`vertical-tabpanel-${index}`}
-            aria-labelledby={`vertical-tab-${index}`}
-            {...other}
-        >
-            {value === index && (
-                <Box sx={{ p: 3 }}>
-                    {children}
-                    {/* <Typography>{children}</Typography> */}
-                </Box>
-            )}
-        </div>
-    );
-}
+const openedMixin = (theme) => ({
+    width: drawerWidth,
+    transition: theme.transitions.create('width', {
+        easing: theme.transitions.easing.sharp,
+        duration: theme.transitions.duration.enteringScreen,
+    }),
+    overflowX: 'hidden',
+});
 
-TabPanel.propTypes = {
-    children: PropTypes.node,
-    index: PropTypes.number.isRequired,
-    value: PropTypes.number.isRequired,
-};
+const closedMixin = (theme) => ({
+    transition: theme.transitions.create('width', {
+        easing: theme.transitions.easing.sharp,
+        duration: theme.transitions.duration.leavingScreen,
+    }),
+    overflowX: 'hidden',
+    width: `calc(${theme.spacing(7)} + 1px)`,
+    [theme.breakpoints.up('sm')]: {
+        width: `calc(${theme.spacing(8)} + 1px)`,
+    },
+});
 
-function a11yProps(index) {
-    return {
-        id: `vertical-tab-${index}`,
-        'aria-controls': `vertical-tabpanel-${index}`,
-    };
-}
+const DrawerHeader = styled('div')(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    padding: theme.spacing(0, 1),
+    // necessary for content to be below app bar
+    ...theme.mixins.toolbar,
+}));
+
+const AppBar = styled(MuiAppBar, {
+    shouldForwardProp: (prop) => prop !== 'open',
+})(({ theme, open }) => ({
+    zIndex: theme.zIndex.drawer + 1,
+    transition: theme.transitions.create(['width', 'margin'], {
+        easing: theme.transitions.easing.sharp,
+        duration: theme.transitions.duration.leavingScreen,
+    }),
+    ...(open && {
+        marginLeft: drawerWidth,
+        width: `calc(100% - ${drawerWidth}px)`,
+        transition: theme.transitions.create(['width', 'margin'], {
+            easing: theme.transitions.easing.sharp,
+            duration: theme.transitions.duration.enteringScreen,
+        }),
+    }),
+}));
+
+const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' })(
+    ({ theme, open }) => ({
+        width: drawerWidth,
+        flexShrink: 0,
+        whiteSpace: 'nowrap',
+        boxSizing: 'border-box',
+        ...(open && {
+            ...openedMixin(theme),
+            '& .MuiDrawer-paper': openedMixin(theme),
+        }),
+        ...(!open && {
+            ...closedMixin(theme),
+            '& .MuiDrawer-paper': closedMixin(theme),
+        }),
+    }),
+);
 
 export default function StudioLeftNavBar({ user, page }) {
-    const [value, setValue] = React.useState(0);
-    const [name, setName] = React.useState('');
-    const [avatarColor, setAvatarColor] = React.useState('red');
+    const theme = useTheme();
+    const [open, setOpen] = React.useState(false);
+    const [DashbordFill, setDashbordFill] = React.useState('#fff');
     const [identifier, setIdentifier] = React.useState('');
+    const [name, setName] = React.useState('');
 
     React.useEffect(() => {
         if (user) {
-            setName(user.name)
-            setAvatarColor(stringToColor(user.name))
-            setIdentifier('@' + user.identifier)
+            console.log(user);
+            setIdentifier(user.identifier);
+            setName(user.name);
         }
+    }, [user]);
 
-        if (page === "dashboard") {
-            setValue(0);
-        } else if (page === "commentaires") {
-            setValue(3);
-        } else if (page === "videos") {
-            setValue(1);
-        } else if (page === "playlists") {
-            setValue(2);
-        } else if (page === "personnalisation") {
-            setValue(4);
-        } else if (page === "paramètres") {
-            setValue(5);
-        } else if (page === "analytics") {
-            setValue(6);
-        }
-    }, [user, page])
-
-    const handleChange = (event, newValue) => {
-        setValue(newValue);
+    const handleDrawerOpen = () => {
+        setOpen(true);
     };
 
+    const handleDrawerClose = () => {
+        setOpen(false);
+    };
+
+
+    const isActive = (itemPage) => {
+        return page === itemPage;
+    };
+
+    const handleClick = (newPage) => {
+        Router.push(`/studio/@${identifier}/${newPage}`);
+    };
+
+    const navItems = [
+        { label: 'Dashboard', icon: <SpaceDashboard />, page: 'dashboard' },
+        { label: 'Videos', icon: <VideoLibraryIcon />, page: 'videos' },
+        { label: 'Playlists', icon: <PlaylistPlayIcon />, page: 'playlists' },
+        { label: 'Commentaires', icon: <CommentIcon />, page: 'commentaires' },
+        { label: 'Analytics', icon: <EqualizerIcon />, page: 'analytics' },
+    ];
+
     return (
-        <div>
-            <AccountMenu />
-            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", width: 171.87 }}>
-                <Avatar alt={name} sx={{ bgcolor: avatarColor }} src="/broken-image.jpg" />
-                <p style={{ marginRight: 8, fontWeight: "800" }}>{name}</p>
-                <p style={{ marginRight: 8, color: "#606060" }}>{identifier}</p>
-            </div>
-            <Box
-                sx={{ flexGrow: 1, bgcolor: 'background.paper', display: 'flex', height: "75%" }}
-            >
-                <Tabs
-                    orientation="vertical"
-                    variant="scrollable"
-                    value={value}
-                    onChange={handleChange}
-                    aria-label="Vertical tabs example"
-                    sx={{ borderRight: 1, borderColor: 'divider' }}
-                    indicatorColor="secondary"
-                    textColor="secondary"
-                >
-                    <Tab label="Dashboard" {...a11yProps(0)} onClick={() => Router.push('/studio/' + identifier + '/dashboard')} />
-                    <Tab label="Videos" {...a11yProps(1)} onClick={() => Router.push('/studio/' + identifier + '/videos')} />
-                    <Tab label="Playlists" {...a11yProps(2)} onClick={() => Router.push('/studio/' + identifier + '/playlists')} />
-                    <Tab label="Commentaires" onClick={() => Router.push('/studio/' + identifier + '/commentaires')} />
-                    <Tab label="Personnalisation" onClick={() => Router.push('/studio/' + identifier + '/personnalisation')} />
-                    <Tab label="Paramètres" onClick={() => Router.push('/studio/' + identifier + '/paramètres')} />
-                </Tabs>
-                <TabPanel value={value} index={0}>
-                    <Dashboard user={user} />
-                </TabPanel>
-                <TabPanel value={value} index={1}>
-                    Videos
-                </TabPanel>
-                <TabPanel value={value} index={2}>
-                    Playlists
-                </TabPanel>
-                <TabPanel value={value} index={3}>
-                    Commentaires
-                </TabPanel>
-                <TabPanel value={value} index={4}>
-                    Personnalisation
-                </TabPanel>
-                <TabPanel value={value} index={5}>
-                    Paramètres
-                </TabPanel>
-            </Box>
-        </div>
+        <Box sx={{ display: 'flex' }}>
+            <CssBaseline />
+            <AppBar position="fixed" open={open}>
+                <Toolbar>
+                    <IconButton
+                        color="inherit"
+                        aria-label="open drawer"
+                        onClick={handleDrawerOpen}
+                        edge="start"
+                        sx={{
+                            marginRight: 5,
+                            ...(open && { display: 'none' }),
+                        }}
+                    >
+                        <MenuIcon />
+                    </IconButton>
+                    <Typography variant="h6" noWrap component="div">
+                        WatchSpace Studio
+                    </Typography>
+                </Toolbar>
+            </AppBar>
+            <Drawer variant="permanent" open={open}>
+                <DrawerHeader style={{ display: "flex", justifyContent: "space-between" }}>
+                    {open && user && (
+                        <Avatar alt={name} sx={{
+                            bgcolor: stringToColor(name),
+                            // marginRight: 'auto',
+                            // marginLeft: theme.spacing(1),
+                        }} src="/broken-image.jpg" />
+                    )}
+                    <p style={{ fontWeight: "800" }}>{name}</p>
+                    <p style={{ color: "#606060" }}>@{identifier}</p>
+                    <IconButton onClick={handleDrawerClose}>
+                        {theme.direction === 'rtl' ? (
+                            <ChevronRightIcon />
+                        ) : (
+                            <ChevronLeftIcon />
+                        )}
+                    </IconButton>
+                </DrawerHeader>
+                <Divider />
+                <List>
+                    {navItems.map((item) => (
+                        <ListItem key={item.label} disablePadding sx={{ display: 'block' }}>
+                            <ListItemButton
+                                onClick={() => handleClick(item.page)}
+                                sx={{
+                                    minHeight: 48,
+                                    justifyContent: open ? 'initial' : 'center',
+                                    px: 2.5,
+                                    borderLeft: isActive(item.page)
+                                        ? '4px solid #ce93d8'
+                                        : 'none',
+                                }}
+                            >
+                                <ListItemIcon
+                                    sx={{
+                                        minWidth: 0,
+                                        mr: open ? 3 : 'auto',
+                                        justifyContent: 'center',
+                                        color: isActive(item.page) ? '#ce93d8' : null,
+                                    }}
+                                >
+                                    {item.icon}
+                                </ListItemIcon>
+                                <ListItemText primary={item.label} sx={{ opacity: open ? 1 : 0, color: isActive(item.page) ? '#ce93d8' : null }} />
+                            </ListItemButton>
+                        </ListItem>
+                    ))}
+                </List>
+                <Divider />
+                <List>
+                    {['Personalization', 'Paramètres'].map((text, index) => (
+                        <ListItem key={text} disablePadding sx={{ display: 'block' }}>
+                            <ListItemButton
+                                sx={{
+                                    minHeight: 48,
+                                    justifyContent: open ? 'initial' : 'center',
+                                    px: 2.5,
+                                }}
+                            >
+                                <ListItemIcon
+                                    sx={{
+                                        minWidth: 0,
+                                        mr: open ? 3 : 'auto',
+                                        justifyContent: 'center',
+                                    }}
+                                >
+                                    {index === 0 ? <AutoFixHighIcon /> : <SettingsIcon />}
+                                </ListItemIcon>
+                                <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
+                            </ListItemButton>
+                        </ListItem>
+                    ))}
+                </List>
+            </Drawer>
+            {/* <MiniDrawer /> */}
+        </Box>
     );
 }
