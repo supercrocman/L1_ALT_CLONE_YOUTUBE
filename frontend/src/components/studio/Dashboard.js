@@ -6,6 +6,10 @@ import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
+import UploadIcon from '@mui/icons-material/Upload';
+import StreamIcon from '@mui/icons-material/Stream';
+import MovingIcon from '@mui/icons-material/Moving';
+import Router from 'next/router';
 
 const bull = (
     <Box
@@ -21,6 +25,7 @@ export default function Dashboard({ user }) {
     const [avatarColor, setAvatarColor] = React.useState('red');
     const [identifier, setIdentifier] = React.useState('');
     const [subCount, setSubCount] = React.useState(0);
+    const [VueCount, setVueCount] = React.useState(0);
 
     React.useEffect(() => {
         if (user) {
@@ -28,15 +33,26 @@ export default function Dashboard({ user }) {
             setAvatarColor(stringToColor(user.name))
             setIdentifier('@' + user.identifier)
             setSubCount(user.subCount);
+            setVueCount(user.VueCount);
         }
     }, [user]);
 
     console.log(name);
     return (
         <div>
-            <h1>
-                Tableau de bord de {name}
-            </h1>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <h1>
+                    Tableau de bord de {name}
+                </h1>
+                <div>
+                    <Button variant="contained" color="primary" sx={{ borderRadius: 50 }}>
+                        <UploadIcon sx={{ fontSize: "2rem" }} />
+                    </Button>
+                    <Button variant="contained" sx={{ marginLeft: 2, borderRadius: 50 }} color="secondary">
+                        <StreamIcon sx={{ fontSize: "2rem" }} />
+                    </Button>
+                </div>
+            </div>
             <Box sx={{ minWidth: 275, maxWidth: 545 }}>
                 <Card variant="outlined">
                     <React.Fragment>
@@ -64,9 +80,12 @@ export default function Dashboard({ user }) {
                                     <Typography variant="body2">
                                         Nombre de vues
                                     </Typography>
-                                    <Typography variant="body2">
-                                        0  -
-                                    </Typography>
+                                    <div style={{ display: "flex" }}>
+                                        <Typography variant="body2">
+                                            {VueCount}
+                                        </Typography>
+                                        <MovingIcon sx={{ fontSize: "1rem" }} />
+                                    </div>
                                 </div>
                                 <div style={{ display: "flex", justifyContent: "space-between", fontSize: 13, fontWeight: 400, paddingTop: 5, paddingBottom: 7 }}>
                                     <Typography variant="body2">
@@ -87,7 +106,7 @@ export default function Dashboard({ user }) {
                                 </Typography>
                             </div>
                         </CardContent>
-                        <CardActions sx={{ display: "flex", justifyContent: "center" }}>
+                        <CardActions sx={{ display: "flex", justifyContent: "center" }} onClick={() => Router.push(`/studio/${identifier}/analytics`)}>
                             <Button size="small" sx={{ paddingTop: "8px", paddingBottom: "8px" }}>Données d'analyse de la chaîne</Button>
                         </CardActions>
                     </React.Fragment>

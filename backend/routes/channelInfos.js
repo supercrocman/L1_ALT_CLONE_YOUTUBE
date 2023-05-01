@@ -37,6 +37,12 @@ router.get('/user/:identifier', async (req, res) => {
       }
     );
 
+    const VueCount = await db.Video.sum('views', {
+      where: {
+        user_id: user.id
+      }
+    });
+
     if (user) {
       const user_informations = {
         identifier: user.identifier,
@@ -49,7 +55,8 @@ router.get('/user/:identifier', async (req, res) => {
           ...user_informations,
           subCount,
           videoCount,
-          videos
+          videos,
+          VueCount
         }
       });
 

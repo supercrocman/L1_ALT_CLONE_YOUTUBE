@@ -106,7 +106,6 @@ export default function StudioLeftNavBar({ user, page }) {
 
     React.useEffect(() => {
         if (user) {
-            console.log(user);
             setIdentifier(user.identifier);
             setName(user.name);
         }
@@ -164,8 +163,6 @@ export default function StudioLeftNavBar({ user, page }) {
                     {open && user && (
                         <Avatar alt={name} sx={{
                             bgcolor: stringToColor(name),
-                            // marginRight: 'auto',
-                            // marginLeft: theme.spacing(1),
                         }} src="/broken-image.jpg" />
                     )}
                     <p style={{ fontWeight: "800" }}>{name}</p>
