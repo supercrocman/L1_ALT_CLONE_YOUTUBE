@@ -130,7 +130,7 @@ export default function StudioLeftNavBar({ user, page }) {
 
     const navItems = [
         { label: 'Dashboard', icon: <SpaceDashboard />, page: 'dashboard' },
-        { label: 'Videos', icon: <VideoLibraryIcon />, page: 'videos' },
+        { label: 'Contenu', icon: <VideoLibraryIcon />, page: 'content' },
         { label: 'Playlists', icon: <PlaylistPlayIcon />, page: 'playlists' },
         { label: 'Commentaires', icon: <CommentIcon />, page: 'commentaires' },
         { label: 'Analytics', icon: <EqualizerIcon />, page: 'analytics' },

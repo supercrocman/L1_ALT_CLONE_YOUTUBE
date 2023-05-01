@@ -27,15 +27,41 @@ router.get('/user/:identifier', async (req, res) => {
       }
     );
 
-    const videos = await db.Video.findAll(
+    let videos = await db.Video.findAll(
       {
         where: {
           user_id: user.id
         },
-        attributes: ['title', 'description', 'views', 'thumbnail', 'length', 'uploaded_at', 'identifier'],
+        attributes: ['id', 'title', 'description', 'views', 'thumbnail', 'length', 'uploaded_at', 'identifier', 'upvote', 'downvote'],
         order: [['uploaded_at', 'DESC']]
       }
     );
+
+    let videosfinal = {};
+    let videos_informations = {};
+
+    videos.map(async (video) => {
+      video.commentsCount = await db.Comments.count(
+        {
+          where: {
+            video_id: video.id
+          },
+        }
+      );
+      videos_informations = {
+        video.title,
+        video.description,
+        video.views,
+        video.thumbnail,
+        video.length,
+        video.uploaded_at,
+        video.identifier,
+        video.upvote,
+        video.downvote,
+        video.commentsCount
+      }
+      videosfinal.push(videos_informations)
+    });
 
     const VueCount = await db.Video.sum('views', {
       where: {

@@ -9,7 +9,7 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { styled, useTheme } from '@mui/material/styles';
 import Dashboard from "@/components/studio/Dashboard";
-import Videos from "@/components/studio/Videos";
+import Content from "@/components/studio/Content";
 
 const DrawerHeader = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -56,8 +56,8 @@ export default function StudioPage() {
                 return <Dashboard user={user} />;
             case 'commentaires':
                 return "commentaires";
-            case 'videos':
-                return <Videos/>;
+            case 'content':
+                return <Content user={user} />;
             case 'playlists':
                 return "playlists";
             case 'personnalisation':

@@ -234,13 +234,21 @@ EnhancedTableToolbar.propTypes = {
     numSelected: PropTypes.number.isRequired,
 };
 
-export default function Videos() {
+export default function Content({user}) {
     const [order, setOrder] = React.useState('desc');
     const [orderBy, setOrderBy] = React.useState('date');
     const [selected, setSelected] = React.useState([]);
     const [page, setPage] = React.useState(0);
     const [dense, setDense] = React.useState(false);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
+    const [videos, setVideos] = React.useState([]);
+
+    React.useEffect(() => {
+        if (user) {
+            setVideos(user.videos)
+            console.log(user.videos)
+        }
+    })
 
     const handleRequestSort = (event, property) => {
         const isAsc = orderBy === property && order === 'asc';
@@ -250,7 +258,7 @@ export default function Videos() {
 
     const handleSelectAllClick = (event) => {
         if (event.target.checked) {
-            const newSelected = rows.map((n) => n.name);
+            const newSelected = videos.map((n) => n.name);
             setSelected(newSelected);
             return;
         }
@@ -294,11 +302,11 @@ export default function Videos() {
 
     // Avoid a layout jump when reaching the last page with empty rows.
     const emptyRows =
-        page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+        page > 0 ? Math.max(0, (1 + page) * rowsPerPage - videos.length) : 0;
 
     const visibleRows = React.useMemo(
         () =>
-            stableSort(rows, getComparator(order, orderBy)).slice(
+            stableSort(videos, getComparator(order, orderBy)).slice(
                 page * rowsPerPage,
                 page * rowsPerPage + rowsPerPage,
             ),
@@ -321,21 +329,21 @@ export default function Videos() {
                             orderBy={orderBy}
                             onSelectAllClick={handleSelectAllClick}
                             onRequestSort={handleRequestSort}
-                            rowCount={rows.length}
+                            rowCount={videos.length}
                         />
                         <TableBody>
-                            {visibleRows.map((row, index) => {
-                                const isItemSelected = isSelected(row.name);
+                            {videos.map((row, index) => {
+                                const isItemSelected = isSelected(row.title);
                                 const labelId = `enhanced-table-checkbox-${index}`;
 
                                 return (
                                     <TableRow
                                         hover
-                                        onClick={(event) => handleClick(event, row.name)}
+                                        onClick={(event) => handleClick(event, row.title)}
                                         role="checkbox"
                                         aria-checked={isItemSelected}
                                         tabIndex={-1}
-                                        key={row.name}
+                                        key={row.title}
                                         selected={isItemSelected}
                                         sx={{ cursor: 'pointer' }}
                                     >
@@ -354,14 +362,14 @@ export default function Videos() {
                                             scope="row"
                                             padding="none"
                                         >
-                                            {row.video}
+                                            {row.title}
                                         </TableCell>
                                         <TableCell align="right">{row.visibility}</TableCell>
                                         <TableCell align="right">{row.restrictions}</TableCell>
-                                        <TableCell align="right">{row.date}</TableCell>
-                                        <TableCell align="right">{row.vues}</TableCell>
-                                        <TableCell align="right">{row.commentary}</TableCell>
-                                        <TableCell align="right">{row.likes}</TableCell>
+                                        <TableCell align="right">{row.uploaded_at}</TableCell>
+                                        <TableCell align="right">{row.views}</TableCell>
+                                        <TableCell align="right">{row.commentsCount}</TableCell>
+                                        <TableCell align="right">{((row.upvote / (row.downvote + row.upvote)) * 100).toFixed(2)} %</TableCell>
                                     </TableRow>
                                 );
                             })}
@@ -380,7 +388,7 @@ export default function Videos() {
                 <TablePagination
                     rowsPerPageOptions={[5, 10, 25]}
                     component="div"
-                    count={rows.length}
+                    count={videos.length}
                     rowsPerPage={rowsPerPage}
                     page={page}
                     onPageChange={handleChangePage}
