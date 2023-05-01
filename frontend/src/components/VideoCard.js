@@ -63,7 +63,7 @@ const secondToTime = (duration) => {
 export const VideoCard = ({ video, small = false, vertical = false }) => {
     const router = useRouter();
     const [anchorEl, setAnchorEl] = React.useState(null);
-    const [time, setTime] = React.useState(secondToTime(video.duration));
+    const [time, setTime] = React.useState(secondToTime(video.length));
 
     const open = Boolean(anchorEl);
     const handleClick = (event) => {
