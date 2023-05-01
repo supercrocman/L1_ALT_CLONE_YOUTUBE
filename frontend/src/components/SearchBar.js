@@ -13,9 +13,14 @@ const SearchForm = styled("form")(({ theme }) => ({
     marginTop: 10,
 }));
 
-export default function SearchBar() {
-    const [inputValue, setInputValue] = React.useState("");
+export default function SearchBar({ defaultValue = "" }) {
+    const [inputValue, setInputValue] = React.useState(null);
     const [searchResults, setSearchResults] = React.useState([]);
+    const [cancelToken, setCancelToken] = React.useState(null);
+    const formRef = React.useRef(null);
+    if (defaultValue && inputValue === null) {
+        setInputValue(defaultValue);
+    }
 
     const filterOptions = (options, { inputValue }) => {
         if (inputValue.length > 2) {
@@ -28,13 +33,14 @@ export default function SearchBar() {
         <SearchForm
             action="/results"
             className={styleSearch.SearchBoxContainer}
+            ref={formRef}
         >
             <Autocomplete
                 disablePortal
                 freeSolo
                 id="SearchBar-AutoComplete"
                 sx={{
-                    width: 400,
+                    width: 600,
                     "& .MuiOutlinedInput-root": {
                         borderRadius: "30px 0 0 30px",
                         color: "white",
@@ -64,27 +70,47 @@ export default function SearchBar() {
                     },
                 }}
                 options={searchResults}
-                inputValue={inputValue}
-                onInputChange={(event, newInputValue) => {
+                inputValue={inputValue || ""}
+                onChange={async (event, value) => {
+                    if (value) {
+                        if (cancelToken) {
+                            await cancelToken.cancel();
+                        }
+                        await formRef.current.submit();
+                    }
+                }}
+                onInputChange={async (event, newInputValue) => {
+                    setInputValue(newInputValue);
                     if (newInputValue.trim().length > 2) {
+                        if (cancelToken) {
+                            cancelToken.cancel();
+                        }
+                        const newCancelToken = axios.CancelToken.source();
+                        setCancelToken(newCancelToken);
                         axios
-                            .post("http://localhost:3001/api/search", {
-                                q: newInputValue,
-                            })
-                            .then(function (response) {
-                                setSearchResults(response.data.videos);
+                            .post(
+                                "http://localhost:3001/api/search",
+                                {
+                                    q: newInputValue,
+                                },
+                                { cancelToken: newCancelToken.token }
+                            )
+                            .then((response) => {
                                 if (response.data.topChannelName) {
                                     setSearchResults([
                                         response.data.topChannelName,
                                         ...response.data.videos,
                                     ]);
+                                    return;
                                 }
+                                setSearchResults(response.data.videos);
                             })
-                            .catch(function (error) {
-                                console.log(error);
+                            .catch((error) => {
+                                if (!axios.isCancel(error)) {
+                                    console.log(error);
+                                }
                             });
                     }
-                    setInputValue(newInputValue);
                 }}
                 filterOptions={filterOptions}
                 renderInput={(params) => (
@@ -92,7 +118,7 @@ export default function SearchBar() {
                         id="outlined-basic"
                         variant="outlined"
                         {...params}
-                        placeholder="Recherche"
+                        placeholder="Rechercher"
                         name="search_query"
                     />
                 )}

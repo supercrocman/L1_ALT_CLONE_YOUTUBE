@@ -27,7 +27,9 @@ const dateTimeToHowLongAgo = (date) => {
 };
 
 export const VideoVuesAndDate = ({ video, small = false }) => {
-    const [date, setDate] = React.useState(dateTimeToHowLongAgo(video.date));
+    const [date, setDate] = React.useState(
+        dateTimeToHowLongAgo(video.uploaded_at)
+    );
     return (
         <Description
             sx={{
