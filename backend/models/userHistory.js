@@ -23,6 +23,10 @@ module.exports = (sequelize, DataTypes) =>
                 allowNull: false,
                 defaultValue: 0,
             },
+            createdAt: {
+                field: 'created_at',
+                type: DataTypes.DATE,
+            },
         },
         {
             sequelize,
@@ -33,7 +37,7 @@ module.exports = (sequelize, DataTypes) =>
                     name: 'PRIMARY',
                     unique: true,
                     using: 'BTREE',
-                    fields: [{ name: 'user_id' }, { name: 'video_id' }],
+                    fields: [{ name: 'user_id' }, { name: 'video_id' }, { name: 'created_at' }],
                 },
                 {
                     name: 'user_id',
