@@ -5,9 +5,15 @@ const { Op } = require('sequelize');
 
 router.post('/timeline', async (req, res) => {
     if(!req.body.user) {
-        return res.status(400).send('No user provided');
+        //case where user is not logged in
+        res.send("User not logged in");
     }
-    res.send('ok user id : ' + req.body.user);
+    const user = await db.User.findOne({
+        where: {
+            id: req.body.user,
+        },
+    });
+    res.send(await user.getPreferredTags());
 });
 
 module.exports = router;
