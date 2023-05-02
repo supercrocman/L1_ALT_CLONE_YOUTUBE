@@ -67,34 +67,35 @@ const Results = ({ search_query = "", data = [] }) => {
                         );
                     return <VideoCard key={"searchVideo" + i} video={video} />;
                 })}
-                {data.length === 0 && (
-                    <Container
-                        sx={{
-                            display: "flex",
-                            flexDirection: "column",
-                            alignItems: "center",
-                            mt: "32px",
-                        }}
-                    >
-                        <Image
-                            src="/results.svg"
-                            alt="Logo"
-                            width={424}
-                            height={239}
-                        />
-                        <Typography
-                            variant="h4"
-                            component="h4"
-                            margin="16px 0px"
+                {data.videos_found.length === 0 &&
+                    data.topChannelVideos_found.length === 0 && (
+                        <Container
+                            sx={{
+                                display: "flex",
+                                flexDirection: "column",
+                                alignItems: "center",
+                                mt: "32px",
+                            }}
                         >
-                            Aucun résultat trouvé
-                        </Typography>
-                        <Typography textAlign="center">
-                            Essayez d'autres mots clés ou supprimez les filtres
-                            de recherche
-                        </Typography>
-                    </Container>
-                )}
+                            <Image
+                                src="/results.svg"
+                                alt="Logo"
+                                width={424}
+                                height={239}
+                            />
+                            <Typography
+                                variant="h4"
+                                component="h4"
+                                margin="16px 0px"
+                            >
+                                Aucun résultat trouvé
+                            </Typography>
+                            <Typography textAlign="center">
+                                Essayez d'autres mots clés ou supprimez les
+                                filtres de recherche
+                            </Typography>
+                        </Container>
+                    )}
             </Container>
         </>
     );

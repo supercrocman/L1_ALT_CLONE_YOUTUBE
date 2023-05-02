@@ -1,4 +1,4 @@
-import { CardMedia, Divider, IconButton, Stack } from "@mui/material";
+import { Avatar, CardMedia, Divider, IconButton, Stack } from "@mui/material";
 import { ChannelName, Description } from "@/components/AuthorCard";
 
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
@@ -86,9 +86,10 @@ export const VideoCard = ({ video, small = false, vertical = false }) => {
                     display: "inline-flex",
                 },
                 mr: vertical ? 1 : 0,
-                maxWidth: vertical ? "21%" : "unset",
+                maxWidth:
+                    vertical && small ? "21%" : vertical ? "33%" : "unset",
             }}
-            flex={vertical && "1 0 21%"}
+            flex={vertical && small ? "1 0 21%" : vertical ? "1 0 33%" : ""}
             onClick={() => router.push(`/watch/${video.identifier}`)}
             flexDirection={vertical ? "column" : "row"}
         >
@@ -121,35 +122,52 @@ export const VideoCard = ({ video, small = false, vertical = false }) => {
                 display={vertical && "flex"}
                 flexDirection={vertical && "row"}
                 xs={vertical ? "" : small ? 6 : 7.5}
-                sx={small && { pt: 1, pb: 1, pl: 1, pr: vertical ? "34px" : 0 }}
+                sx={{
+                    pt: small && 1,
+                    pb: small && 1,
+                    pl: small && 1,
+                    pr: vertical && "34px",
+                }}
                 position={vertical && "relative"}
             >
+                {vertical && !small && (
+                    <TitleLink href={`/channel/@${video.author.identifier}`}>
+                        <Avatar
+                            alt={video.author.name}
+                            src={video.author.avatar}
+                            sx={{
+                                width: 36,
+                                height: 36,
+                                marginRight: "12px",
+                            }}
+                        />
+                    </TitleLink>
+                )}
                 <Stack>
                     <ChannelName sx={{ marginBottom: 0.25 }}>
                         <TitleLink
                             href={`/watch/${video.identifier}`}
                             color="inherit"
                             underline="none"
-                            sx={
-                                small && {
-                                    display: "block",
-                                    maxHeight: "2rem",
-                                    overflow: "hidden",
-                                    textOverflow: "ellipsis",
-                                    whiteSpace: "normal",
-                                    display: "-webkit-box",
-                                    WebkitLineClamp: "2",
-                                    WebkitBoxOrient: "vertical",
-                                }
-                            }
+                            sx={{
+                                display: "block",
+                                maxHeight: "2rem",
+                                overflow: "hidden",
+                                textOverflow: "ellipsis",
+                                whiteSpace: "normal",
+                                display: "-webkit-box",
+                                WebkitLineClamp: "2",
+                                WebkitBoxOrient: "vertical",
+                                mt: !vertical && 1,
+                            }}
                         >
                             {video.title}
                         </TitleLink>
                     </ChannelName>
 
-                    {vertical ? (
+                    {vertical && small ? (
                         <VideoVuesAndDate video={video} />
-                    ) : small ? (
+                    ) : small || vertical ? (
                         <>
                             <AuthorName author={video.author} small />
                             <VideoVuesAndDate video={video} small />
