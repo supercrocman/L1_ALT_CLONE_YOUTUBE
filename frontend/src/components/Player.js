@@ -7,7 +7,7 @@ export const Player = () => {
         <VideoPlayer
             src="static/videos/rick.mp4"
             poster="/your-path/poster.jpg"
-            controls
+            controls = {true}
             loop={false}
             volume={1}
             width={600}
