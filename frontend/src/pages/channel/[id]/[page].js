@@ -1,33 +1,33 @@
-import AccountMenu from "../../../components/AccountMenu";
-import AppBar from "@mui/material/AppBar";
-import Avatar from "@mui/material/Avatar";
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import Fab from "@mui/material/Fab";
-import FavoriteIcon from "@mui/icons-material/Favorite";
-import { Grid } from "@mui/material";
-import Link from "next/link";
-import PersonPinIcon from "@mui/icons-material/PersonPin";
-import React from "react";
-import { Roboto } from "next/font/google";
-import Router from "next/router";
-import SwipeableViews from "react-swipeable-views";
-import Tab from "@mui/material/Tab";
-import Tabs from "@mui/material/Tabs";
-import Typography from "@mui/material/Typography";
-import { VideoCard } from "../../../components/VideoCard";
-import axios from "axios";
-import { deepOrange } from "@mui/material/colors";
-import { useEffect } from "react";
-import { useRouter } from "next/router";
-import { useTheme } from "@mui/material/styles";
+import AccountMenu from '../../../components/AccountMenu';
+import AppBar from '@mui/material/AppBar';
+import Avatar from '@mui/material/Avatar';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Fab from '@mui/material/Fab';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import { Grid } from '@mui/material';
+import Link from 'next/link';
+import PersonPinIcon from '@mui/icons-material/PersonPin';
+import React from 'react';
+import { Roboto } from 'next/font/google';
+import Router from 'next/router';
+import SwipeableViews from 'react-swipeable-views';
+import Tab from '@mui/material/Tab';
+import Tabs from '@mui/material/Tabs';
+import Typography from '@mui/material/Typography';
+import { VideoCard } from '../../../components/VideoCard';
+import { deepOrange } from '@mui/material/colors';
+import { useEffect } from 'react';
+import { useRouter } from 'next/router';
+import { useTheme } from '@mui/material/styles';
+import axiosInstance from '@/utils/axiosInterceptor';
 
 const roboto = Roboto({
-    weight: "400",
-    subsets: ["latin"],
+    weight: '400',
+    subsets: ['latin'],
 });
 
-var about = "";
+var about = '';
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -52,7 +52,7 @@ function TabPanel(props) {
 function a11yProps(index) {
     return {
         id: `full-width-tab-${index}`,
-        "aria-controls": `full-width-tabpanel-${index}`,
+        'aria-controls': `full-width-tabpanel-${index}`,
     };
 }
 
@@ -67,32 +67,31 @@ export default function ChannelPage() {
             return;
         }
 
-        if (!id.startsWith("@")) {
-            Router.push("/404");
+        if (!id.startsWith('@')) {
+            Router.push('/404');
         }
     }, [id]);
-
 
     let baseindex = 0;
 
     const [value, setValue] = React.useState(baseindex);
-    const [name, setName] = React.useState("");
-    const [description, setDescription] = React.useState("");
+    const [name, setName] = React.useState('');
+    const [description, setDescription] = React.useState('');
     const [subscribers, setSubscribers] = React.useState(0);
     const [videoCount, setVideoCount] = React.useState(0);
     const [videos, setVideos] = React.useState([]);
-    const [avatar, setAvatar] = React.useState("");
+    const [avatar, setAvatar] = React.useState('');
 
     useEffect(() => {
-        if (page === "home") {
+        if (page === 'home') {
             baseindex = 0;
-        } else if (page === "about") {
+        } else if (page === 'about') {
             baseindex = 3;
-        } else if (page === "videos") {
+        } else if (page === 'videos') {
             baseindex = 1;
-        } else if (page === "playlists") {
+        } else if (page === 'playlists') {
             baseindex = 2;
-        } else if (page === "likes") {
+        } else if (page === 'likes') {
             baseindex = 4;
         }
 
@@ -112,20 +111,19 @@ export default function ChannelPage() {
     useEffect(() => {
         const fetchData = async () => {
             if (id) {
-                const baseURL =
-                    "http://localhost:3001/api/user/" + id.split("@")[1];
+                const baseURL = '/api/user/' + id.split('@')[1];
                 try {
-                    const response = await axios.get(baseURL);
-                    setName(response.data["user"].name);
-                    setDescription(response.data["user"].description);
-                    setSubscribers(response.data["user"]["subCount"]);
-                    setVideoCount(response.data["user"]["videoCount"]);
-                    setAvatar(response.data["user"]["avatar"]);
-                    setVideos(response.data["user"]["videos"]);
+                    const response = await axiosInstance.get(baseURL);
+                    setName(response.data['user'].name);
+                    setDescription(response.data['user'].description);
+                    setSubscribers(response.data['user']['subCount']);
+                    setVideoCount(response.data['user']['videoCount']);
+                    setAvatar(response.data['user']['avatar']);
+                    setVideos(response.data['user']['videos']);
                 } catch (error) {
                     console.log(error.response.data);
-                    if (error.response.data === "User not found") {
-                        Router.push("/404");
+                    if (error.response.data === 'User not found') {
+                        Router.push('/404');
                     }
                 }
             }
@@ -139,18 +137,18 @@ export default function ChannelPage() {
             <AccountMenu></AccountMenu>
             <div
                 style={{
-                    display: "flex",
-                    justifyContent: "space-evenly",
-                    width: "100%",
-                    marginBottom: "25px",
+                    display: 'flex',
+                    justifyContent: 'space-evenly',
+                    width: '100%',
+                    marginBottom: '25px',
                 }}
             >
                 <div
                     style={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "space-evenly",
-                        width: "25%",
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-evenly',
+                        width: '25%',
                     }}
                 >
                     <Avatar
@@ -158,7 +156,7 @@ export default function ChannelPage() {
                             bgcolor: deepOrange[500],
                             width: 128,
                             height: 128,
-                            marginRight: "5%",
+                            marginRight: '5%',
                         }}
                         alt="Remy Sharp"
                         src="/broken-image.jpg"
@@ -167,24 +165,24 @@ export default function ChannelPage() {
                     </Avatar>
                     <div
                         style={{
-                            display: "flex",
-                            flexDirection: "column",
-                            alignItems: "stretch",
-                            justifyContent: "space-evenly",
-                            height: "100%",
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'stretch',
+                            justifyContent: 'space-evenly',
+                            height: '100%',
                         }}
                     >
                         <p style={{}}>{name}</p>
                         <div
                             style={{
-                                display: "flex",
-                                flexDirection: "row",
-                                flexWrap: "wrap",
-                                color: "#606060",
-                                fontSize: "small",
+                                display: 'flex',
+                                flexDirection: 'row',
+                                flexWrap: 'wrap',
+                                color: '#606060',
+                                fontSize: 'small',
                             }}
                         >
-                            <p style={{ marginRight: 8, fontWeight: "800" }}>
+                            <p style={{ marginRight: 8, fontWeight: '800' }}>
                                 {id}
                             </p>
                             <p style={{ marginRight: 8 }}>{videoCount} vidéo</p>
@@ -192,20 +190,19 @@ export default function ChannelPage() {
                                 {subscribers} abonné
                             </p>
                         </div>
-                        <Link href={"/channel/" + id + "/about"}>
+                        <Link href={'/channel/' + id + '/about'}>
                             {description && description.length > 0
                                 ? description.substring(0, 20)
-                                : ""}
+                                : ''}
                         </Link>
-
                     </div>
                 </div>
                 <div
                     style={{
-                        display: "flex",
-                        alignItems: "center",
-                        width: "25%",
-                        justifyContent: "space-evenly",
+                        display: 'flex',
+                        alignItems: 'center',
+                        width: '25%',
+                        justifyContent: 'space-evenly',
                     }}
                 >
                     <Fab
@@ -220,7 +217,7 @@ export default function ChannelPage() {
                 </div>
             </div>
             <Box>
-                <AppBar position="static" style={{ backgroundColor: "#000" }}>
+                <AppBar position="static" style={{ backgroundColor: '#000' }}>
                     <Tabs
                         value={value}
                         onChange={handleChange}
@@ -233,21 +230,21 @@ export default function ChannelPage() {
                             label="Home"
                             {...a11yProps(0)}
                             onClick={() =>
-                                Router.push("/channel/" + id + "/home")
+                                Router.push('/channel/' + id + '/home')
                             }
                         />
                         <Tab
                             label="Videos"
                             {...a11yProps(1)}
                             onClick={() =>
-                                Router.push("/channel/" + id + "/videos")
+                                Router.push('/channel/' + id + '/videos')
                             }
                         />
                         <Tab
                             label="Playlists"
                             {...a11yProps(2)}
                             onClick={() =>
-                                Router.push("/channel/" + id + "/playlists")
+                                Router.push('/channel/' + id + '/playlists')
                             }
                         />
                         <Tab
@@ -255,7 +252,7 @@ export default function ChannelPage() {
                             {...about}
                             {...a11yProps(3)}
                             onClick={() =>
-                                Router.push("/channel/" + id + "/about")
+                                Router.push('/channel/' + id + '/about')
                             }
                         />
                         <Tab
@@ -263,13 +260,13 @@ export default function ChannelPage() {
                             label=""
                             {...a11yProps(4)}
                             onClick={() =>
-                                Router.push("/channel/" + id + "/likes")
+                                Router.push('/channel/' + id + '/likes')
                             }
                         />
                     </Tabs>
                 </AppBar>
                 <SwipeableViews
-                    axis={theme.direction === "rtl" ? "x-reverse" : "x"}
+                    axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
                     index={value}
                     onChangeIndex={handleChangeIndex}
                 >
@@ -277,7 +274,7 @@ export default function ChannelPage() {
                         Empty
                     </TabPanel>
                     <TabPanel value={value} index={1} dir={theme.direction}>
-                        <Grid container justifyContent={"center"}>
+                        <Grid container justifyContent={'center'}>
                             {videos.map((video, i) => {
                                 video = {
                                     thumbnail: video.thumbnail,
@@ -292,12 +289,12 @@ export default function ChannelPage() {
                                         avatar: avatar,
                                         subCount: subscribers,
                                         description: description,
-                                        identifier: id.split("@")[1],
+                                        identifier: id.split('@')[1],
                                     },
                                 };
                                 return (
                                     <VideoCard
-                                        key={"card" + i}
+                                        key={'card' + i}
                                         video={video}
                                         small
                                         vertical

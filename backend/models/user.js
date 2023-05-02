@@ -31,7 +31,7 @@ module.exports = (sequelize, DataTypes) =>
                 allowNull: false,
             },
             password_reminder_token: {
-                type: DataTypes.STRING(50),
+                type: DataTypes.STRING(250),
                 allowNull: true,
             },
             password_reminder_expire: {
@@ -39,7 +39,7 @@ module.exports = (sequelize, DataTypes) =>
                 allowNull: true,
             },
             avatar: {
-                type: DataTypes.STRING(50),
+                type: DataTypes.STRING(100),
                 allowNull: true,
             },
             verified: {

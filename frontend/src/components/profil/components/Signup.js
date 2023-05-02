@@ -14,7 +14,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useState } from 'react';
 import profilStyles from '../../../styles/profil.module.css';
 import Popup from './Popup';
-import axios from 'axios';
+import axiosInstance from '@/utils/axiosInterceptor';
 
 function Signup({ open, setOpen, setFenetre }) {
     const [data, setData] = useState({});
@@ -34,9 +34,9 @@ function Signup({ open, setOpen, setFenetre }) {
     }
     async function saveUser(formData) {
         try {
-            const result = await axios({
+            const result = await axiosInstance({
                 method: 'post',
-                url: 'http://localhost:3001/profil/signup',
+                url: '/profil/signup',
                 data: formData,
             });
             setData(result);

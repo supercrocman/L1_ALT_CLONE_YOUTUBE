@@ -22,7 +22,7 @@ exports.signup = (req, res) => {
             const valueArray = parseInt(hex, 16);
             const token = jwt.sign(
                 { email: req.body.email },
-                valueArray.toString()
+                process.env.SECRET_KEY_ACCESS
             );
             const transporter = nodemailer.createTransport({
                 host: process.env.EMAIL_HOST,
@@ -100,39 +100,112 @@ exports.verifyUser = async (req, res) => {
 
 exports.login = async (req, res) => {
     try {
-        const { userMail, userPassword } = req.body;
+        const { userMail, userPassword, remember } = req.body;
         const user = await User.findOne({ where: { email: userMail } });
         if (!user) {
             return res
                 .status(401)
                 .json({ message: 'Email ou mot de passe incorrect.' });
         }
+        if (user.verified === 0) {
+            return res
+                .status(401)
+                .json({ message: "Le compte n'a pas été activée" });
+        }
 
         // eslint-disable-next-line consistent-return
-        bcrypt.compare(userPassword, user.password).then((result, err) => {
-            if (err || !result) {
-                return res
-                    .status(401)
-                    .json({ message: 'Email ou mot de passe incorrect.' });
-            }
-            const buf = crypto.randomBytes(8);
-            const hex = buf.toString('hex');
-            const secretkey = parseInt(hex, 16);
+        bcrypt
+            .compare(userPassword, user.password)
+            .then(async (result, err) => {
+                if (err || !result) {
+                    return res
+                        .status(401)
+                        .json({ message: 'Email ou mot de passe incorrect.' });
+                }
+                const accessToken = jwt.sign(
+                    { identifier: user.identifier },
+                    process.env.SECRET_KEY_ACCESS,
+                    { expiresIn: 4 }
+                );
+                if (remember) {
+                    const refreshToken = jwt.sign(
+                        { identifier: user.identifier },
+                        process.env.SECRET_KEY_REFRESH,
+                        { expiresIn: '7d' }
+                    );
+                    const expirationDate = new Date();
+                    expirationDate.setDate(expirationDate.getDate() + 7);
+                    await User.update(
+                        {
+                            password_reminder_token: refreshToken,
+                            password_reminder_expire: expirationDate,
+                        },
+                        {
+                            where: {
+                                email: userMail,
+                            },
+                        }
+                    );
+                } else {
+                    await User.update(
+                        {
+                            password_reminder_token: null,
+                            password_reminder_expire: null,
+                        },
+                        {
+                            where: {
+                                email: userMail,
+                            },
+                        }
+                    );
+                }
 
-            const token = jwt.sign(
-                { identifier: user.identifier },
-                secretkey.toString()
-            );
-
-            return res.status(200).json({
-                token,
-                avatar: user.avatar,
-                identifier: user.identifier,
-                pseudo: user.name,
-                userId: user.id,
+                return res.status(200).json({
+                    accessToken,
+                    avatar: user.avatar,
+                    identifier: user.identifier,
+                    pseudo: user.name,
+                    userId: user.id,
+                });
             });
-        });
     } catch (error) {
         return res.status(500).json({ message: 'Erreur serveur' });
+    }
+};
+
+exports.refresh = async (req, res) => {
+    try {
+        const { userIdentifier } = req.body;
+        const user = await User.findOne({
+            attibutes: ['password_reminder_token'],
+            where: { identifier: userIdentifier },
+        });
+        if (!user) {
+            return res.status(401).json({ message: 'Identifiant mauvais' });
+        }
+        jwt.verify(
+            user.password_reminder_token,
+            process.env.SECRET_KEY_REFRESH,
+            (err, decodedToken) => {
+                if (err) {
+                    console.log(err);
+                    return res
+                        .status(401)
+                        .json({ message: 'Refresh token invalide ou expiré' });
+                }
+                const { identifier } = decodedToken;
+                const accessToken = jwt.sign(
+                    { identifier },
+                    process.env.SECRET_KEY_ACCESS,
+                    {
+                        expiresIn: 4,
+                    }
+                );
+                return res.status(201).json({ accessToken });
+            }
+        );
+    } catch (e) {
+        console.log(e);
+        return res.status(401).json({ message: 'Problème de connexion' });
     }
 };

@@ -1,20 +1,41 @@
-// Importation du package jsonwebtoken
-// eslint-disable-next-line import/no-extraneous-dependencies
-const { verify } = require('jsonwebtoken');
+/* eslint-disable no-console */
+/* eslint-disable consistent-return */
+require('dotenv').config();
+const jwt = require('jsonwebtoken');
 
-export default (req, res, next) => {
-    // Exportation du middleware d'authentification
+exports.auth = (req, res, next) => {
     try {
-        const token = req.headers.authorization.split(' ')[1]; // Récupérer le token dans le header de la requête
-        const decodedToken = verify(token, 'RANDOM_TOKEN_SECRET'); // Décoder le token
-        const { userId } = decodedToken; // Extraire l'ID utilisateur du token
-        req.auth = {
-            // Ajouter l'ID utilisateur à la requête
-            userId, // Cela permettra à la route authentifiée d'accéder à l'ID utilisateur
-        };
-        next(); // Passer l'exécution à la prochaine fonction middleware
-    } catch (error) {
-        // Erreur d'authentification
-        res.status(401).json({ error }); // Renvoyer une erreur
+        if (req.headers.authorization) {
+            const token = req.headers.authorization.split(' ')[1];
+            jwt.verify(
+                token,
+                process.env.SECRET_KEY_ACCESS,
+                async (err, decodedToken) => {
+                    if (err) {
+                        if (err.name === 'TokenExpiredError') {
+                            return res.status(401).json({
+                                message: "Token d'accès expiré",
+                                error: 'refresh',
+                            });
+                        }
+                        return res.status(401).json({
+                            message: "Token d'accès invalide ou expiré",
+                        });
+                    }
+                    const { identifier } = decodedToken;
+                    req.auth = {
+                        identifier,
+                    };
+                    next();
+                }
+            );
+        } else {
+            return res.status(401).json({
+                message: "Token d'accès invalide ou expiré",
+            });
+        }
+    } catch (e) {
+        console.log(e);
+        res.status(500).json({ message: 'Problème serveur' });
     }
 };

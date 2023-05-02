@@ -1,35 +1,42 @@
-/*Création de formulaire de connexion avec un mail unique et un mot de passe unique en pop-up */
 import Popup from './Popup';
 import React from 'react';
 import { useState } from 'react';
-import axios from 'axios';
-import { useCookies } from 'react-cookie';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
-import { Alert, Stack, Typography } from '@mui/material';
+import {
+    Alert,
+    FormControlLabel,
+    Stack,
+    Switch,
+    Typography,
+} from '@mui/material';
 import profilStyles from '../../../styles/profil.module.css';
+import axiosInstance from '@/utils/axiosInterceptor';
+import { setCookie } from 'cookies-next';
 
 const Login = ({ open, setOpen, setFenetre }) => {
     const [userMail, setuserMail] = useState('');
     const [userPassword, setuserPassword] = useState('');
     const [error, setError] = useState('');
-    const [cookies, setCookie, removeCookie] = useCookies(['user']);
+    const [remember, setRemember] = useState(true);
+    console.log(remember);
 
     async function handleSubmit(event) {
         event.preventDefault();
         setError('');
         try {
-            const response = await axios({
+            const response = await axiosInstance({
                 method: 'POST',
-                url: 'http://localhost:3001/profil/login',
-                data: { userMail, userPassword },
+                url: '/profil/login',
+                data: { userMail, userPassword, remember },
             });
-
             if (response.data) {
                 setCookie('user', JSON.stringify(response.data), { path: '/' });
                 setOpen(false);
-                console.log(response.data);
+                axiosInstance.defaults.headers.common[
+                    'Authorization'
+                ] = `Bearer ${response.data.accessToken}`;
             } else {
                 setError('Identifiants invalides');
             }
@@ -76,6 +83,17 @@ const Login = ({ open, setOpen, setFenetre }) => {
                     <Button color="secondary" onClick={handleSubmit}>
                         Se connecter
                     </Button>
+                    <FormControlLabel
+                        control={
+                            <Switch
+                                defaultChecked
+                                onChange={() => {
+                                    setRemember((o) => !o);
+                                }}
+                            />
+                        }
+                        label="Se souvenir de moi"
+                    />
                 </Box>
                 <Typography
                     variant="a"

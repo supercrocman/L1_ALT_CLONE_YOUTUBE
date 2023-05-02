@@ -1,5 +1,5 @@
+import axiosInstance from '@/utils/axiosInterceptor';
 import { Box, Button, Paper, Typography } from '@mui/material';
-import axios from 'axios';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
@@ -17,9 +17,9 @@ function Confirmation() {
                     return;
                 }
                 const { confirmation } = router.query;
-                const result = await axios({
+                const result = await axiosInstance({
                     method: 'get',
-                    url: `http://localhost:3001/profil/verify/${confirmation}`,
+                    url: `/profil/verify/${confirmation}`,
                 });
                 setData(result);
             } catch (e) {
