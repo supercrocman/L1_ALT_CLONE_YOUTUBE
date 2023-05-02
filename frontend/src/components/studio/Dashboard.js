@@ -47,10 +47,13 @@ export default function Dashboard({ user }) {
                 <div>
                     <Button variant="contained" color="primary" sx={{ borderRadius: 50 }}>
                         <UploadIcon sx={{ fontSize: "2rem" }} />
+                        <Typography sx={{ fontSize: 12, paddingLeft: 1 }} color="text.secondary">
+                            Transferer une vidéo
+                        </Typography>
                     </Button>
-                    <Button variant="contained" sx={{ marginLeft: 2, borderRadius: 50 }} color="secondary">
+                    {/* <Button variant="contained" sx={{ marginLeft: 2, borderRadius: 50 }} color="secondary" disabled>
                         <StreamIcon sx={{ fontSize: "2rem" }} />
-                    </Button>
+                    </Button> */}
                 </div>
             </div>
             <Box sx={{ minWidth: 275, maxWidth: 545 }}>
