@@ -30,6 +30,12 @@ module.exports = (sequelize, DataTypes) =>
             timestamps: false,
             indexes: [
                 {
+                    name: 'PRIMARY',
+                    unique: true,
+                    using: 'BTREE',
+                    fields: [{ name: 'user_id' }, { name: 'video_id' }],
+                },
+                {
                     name: 'user_id',
                     using: 'BTREE',
                     fields: [{ name: 'user_id' }],

@@ -17,6 +17,10 @@ module.exports = (sequelize, DataTypes) =>
                     model: 'video',
                     key: 'id',
                 },
+            ord: {
+                type: DataTypes.INTEGER,
+                allowNull: false,
+            }
             },
         },
         {
@@ -24,6 +28,12 @@ module.exports = (sequelize, DataTypes) =>
             tableName: 'playlist_video',
             timestamps: false,
             indexes: [
+                {
+                    name: 'PRIMARY',
+                    unique: true,
+                    using: 'BTREE',
+                    fields: [{ name: 'playlist_id' }, { name: 'video_id' }],
+                },
                 {
                     name: 'playlist_id',
                     using: 'BTREE',
