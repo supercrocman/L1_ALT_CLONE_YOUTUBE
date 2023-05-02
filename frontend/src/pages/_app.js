@@ -2,6 +2,9 @@ import { ThemeProvider, createTheme } from "@mui/material/styles";
 
 import CssBaseline from "@mui/material/CssBaseline";
 
+import LeftMenu from "@/components/leftMenu";
+
+
 const darkTheme = createTheme({
     palette: {
         mode: "dark",
@@ -11,8 +14,10 @@ const darkTheme = createTheme({
 export default function App({ Component, pageProps }) {
     return (
         <ThemeProvider theme={darkTheme}>
-            <CssBaseline />
+            <CssBaseline />            
+            <LeftMenu>
             <Component {...pageProps} />
+            </LeftMenu>
         </ThemeProvider>
     );
 }

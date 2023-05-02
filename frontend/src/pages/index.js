@@ -1,16 +1,9 @@
-import AccountMenu from "@/components/AccountMenu";
 import { Container } from "@mui/material";
-import SearchBar from "@/components/SearchBar";
 import { VideoCard } from "@/components/VideoCard";
-import styleHeader from "@/styles/header.module.css";
 
 export default function Home() {
     return (
         <>
-            <div className={styleHeader.HeaderContainer}>
-                <SearchBar />
-                <AccountMenu></AccountMenu>
-            </div>
             <Container
                 sx={{
                     display: "flex",

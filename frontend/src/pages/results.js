@@ -35,7 +35,6 @@ const Results = ({ search_query = "", data = [] }) => {
     );
     return (
         <>
-            <SearchBar defaultValue={search_query} />
             <Container>
                 <LowerButton variant="action" startIcon={<TuneIcon />}>
                     Filtres
