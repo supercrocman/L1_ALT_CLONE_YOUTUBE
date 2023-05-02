@@ -10,9 +10,11 @@ export const Player = () => {
             controls
             loop={false}
             volume={1}
-            // more props...
-
-            // more events...
+            width={600}
+            borderRadius={25}
+            height={300}
+            marginTop={50}
         />
+
     )
 }
