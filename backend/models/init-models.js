@@ -74,6 +74,15 @@ function initModels(sequelize) {
     VideoTag.belongsTo(Video, { as: 'Video', foreignKey: 'Video_id' });
     Video.hasMany(VideoTag, { as: 'VideoTags', foreignKey: 'Video_id' });
 
+    Video.prototype.getCommentCount = async function () { 
+        const videoCommentCount = await Comments.count({
+            where: {
+                video_id: this.id,
+            }
+        });
+        return videoCommentCount;
+     }
+
     User.prototype.getSubCount = async function () { 
         const userSubCount = await UserSubscription.count({
             where: {

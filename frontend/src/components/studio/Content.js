@@ -21,6 +21,7 @@ import Switch from '@mui/material/Switch';
 import DeleteIcon from '@mui/icons-material/Delete';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
+import Link from 'next/link';
 
 function createData(video, visibility, restrictions, date, vues, commentary, likes) {
     return {
@@ -209,7 +210,7 @@ function EnhancedTableToolbar(props) {
                     id="tableTitle"
                     component="div"
                 >
-                    Nutrition
+                    Vidéos
                 </Typography>
             )}
 
@@ -234,7 +235,7 @@ EnhancedTableToolbar.propTypes = {
     numSelected: PropTypes.number.isRequired,
 };
 
-export default function Content({user}) {
+export default function Content({ user }) {
     const [order, setOrder] = React.useState('desc');
     const [orderBy, setOrderBy] = React.useState('date');
     const [selected, setSelected] = React.useState([]);
@@ -258,19 +259,19 @@ export default function Content({user}) {
 
     const handleSelectAllClick = (event) => {
         if (event.target.checked) {
-            const newSelected = videos.map((n) => n.name);
+            const newSelected = videos.map((n) => n.title);
             setSelected(newSelected);
             return;
         }
         setSelected([]);
     };
 
-    const handleClick = (event, name) => {
-        const selectedIndex = selected.indexOf(name);
+    const handleClick = (event, title) => {
+        const selectedIndex = selected.indexOf(title);
         let newSelected = [];
 
         if (selectedIndex === -1) {
-            newSelected = newSelected.concat(selected, name);
+            newSelected = newSelected.concat(selected, title);
         } else if (selectedIndex === 0) {
             newSelected = newSelected.concat(selected.slice(1));
         } else if (selectedIndex === selected.length - 1) {
@@ -298,7 +299,7 @@ export default function Content({user}) {
         setDense(event.target.checked);
     };
 
-    const isSelected = (name) => selected.indexOf(name) !== -1;
+    const isSelected = (title) => selected.indexOf(title) !== -1;
 
     // Avoid a layout jump when reaching the last page with empty rows.
     const emptyRows =
@@ -335,6 +336,8 @@ export default function Content({user}) {
                             {videos.map((row, index) => {
                                 const isItemSelected = isSelected(row.title);
                                 const labelId = `enhanced-table-checkbox-${index}`;
+                                const event = new Date(row.uploaded_at);
+                                const options = { year: 'numeric', month: 'long', day: 'numeric' };
 
                                 return (
                                     <TableRow
@@ -362,14 +365,21 @@ export default function Content({user}) {
                                             scope="row"
                                             padding="none"
                                         >
-                                            {row.title}
+                                            <div style={{ display: "flex", alignItems: "center"}}>
+                                                <img src={row.thumbnail} alt={row.title} style={{ borderRadius: 2, width: 120, marginRight: 16 }} />
+                                                <p>{row.title}</p>
+                                            </div>
                                         </TableCell>
                                         <TableCell align="right">{row.visibility}</TableCell>
                                         <TableCell align="right">{row.restrictions}</TableCell>
-                                        <TableCell align="right">{row.uploaded_at}</TableCell>
+                                        <TableCell align="right">{event.toLocaleDateString('fr-fr', options)}</TableCell>
                                         <TableCell align="right">{row.views}</TableCell>
-                                        <TableCell align="right">{row.commentsCount}</TableCell>
-                                        <TableCell align="right">{((row.upvote / (row.downvote + row.upvote)) * 100).toFixed(2)} %</TableCell>
+                                        <TableCell align="right">{row.commentCount}</TableCell>
+                                        <TableCell align="right">
+                                            {/* <Link href={"#"}> */}
+                                            {((row.upvote / (row.downvote + row.upvote)) * 100).toFixed(2)} %
+                                            {/* </Link> */}
+                                        </TableCell>
                                     </TableRow>
                                 );
                             })}
@@ -386,7 +396,7 @@ export default function Content({user}) {
                     </Table>
                 </TableContainer>
                 <TablePagination
-                    rowsPerPageOptions={[5, 10, 25]}
+                    rowsPerPageOptions={[10, 30, 50, 150]}
                     component="div"
                     count={videos.length}
                     rowsPerPage={rowsPerPage}
@@ -395,10 +405,6 @@ export default function Content({user}) {
                     onRowsPerPageChange={handleChangeRowsPerPage}
                 />
             </Paper>
-            <FormControlLabel
-                control={<Switch checked={dense} onChange={handleChangeDense} />}
-                label="Dense padding"
-            />
         </Box>
     );
 }

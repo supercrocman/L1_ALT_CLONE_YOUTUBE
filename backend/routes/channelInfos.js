@@ -37,31 +37,13 @@ router.get('/user/:identifier', async (req, res) => {
       }
     );
 
-    let videosfinal = {};
-    let videos_informations = {};
 
-    videos.map(async (video) => {
-      video.commentsCount = await db.Comments.count(
-        {
-          where: {
-            video_id: video.id
-          },
-        }
-      );
-      videos_informations = {
-        video.title,
-        video.description,
-        video.views,
-        video.thumbnail,
-        video.length,
-        video.uploaded_at,
-        video.identifier,
-        video.upvote,
-        video.downvote,
-        video.commentsCount
-      }
-      videosfinal.push(videos_informations)
-    });
+    for (let i = 0; i < videos.length; i++) {
+      const video = videos[i];
+      const commentCount = await video.getCommentCount();
+      video.dataValues.commentCount = commentCount;  
+      delete video.dataValues.id; 
+    }
 
     const VueCount = await db.Video.sum('views', {
       where: {
@@ -70,6 +52,8 @@ router.get('/user/:identifier', async (req, res) => {
     });
 
     if (user) {
+      delete user.dataValues.id;
+
       const user_informations = {
         identifier: user.identifier,
         name: user.name,
@@ -78,7 +62,7 @@ router.get('/user/:identifier', async (req, res) => {
 
       res.json({
         user: {
-          ...user_informations,
+          ...user.dataValues,
           subCount,
           videoCount,
           videos,
