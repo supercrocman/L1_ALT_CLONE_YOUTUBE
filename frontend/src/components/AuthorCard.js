@@ -59,7 +59,6 @@ export const AuthorCard = ({ author }) => (
         </Grid>
         <Grid
             display="flex"
-            justifyContent="center"
             alignItems="center"
             xs={6.5}
         >
