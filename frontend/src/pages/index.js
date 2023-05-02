@@ -5,7 +5,7 @@ import VideoPlayerPage from "./VideoPlayerPage";
 export default function Home() {
     return (
     <div>
-      <VideoPlayerPage />
+      <VideoPlayerPage/>
     </div>
   );
 }

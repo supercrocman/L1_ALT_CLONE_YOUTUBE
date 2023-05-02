@@ -13,12 +13,11 @@ export default function VideoPlayerPage() {
         left: 0,
         display: "flex",
     };
-
     return (
-        <div style={styles}>
-            <Player></Player>
-            {/*<VideoComments />*/}
-            {/*<VideoInformation />*/}
-        </div>
-    );
+            <div style={styles}>
+                <Player></Player >
+                <VideoComments />
+                {/*<VideoInformation />*/}
+            </div>
+        );
 }
