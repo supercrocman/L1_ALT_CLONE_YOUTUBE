@@ -55,6 +55,8 @@ app.get('/', (req, res) => {
     res.send('Hello World!');
 });
 
+app.use('/api', require('./routes/timeline'));
+
 app.use('/api', require('./routes/search'));
 
 app.use('/api', require('./routes/channelinfos'));
