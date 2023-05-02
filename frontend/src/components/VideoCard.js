@@ -139,6 +139,7 @@ export const VideoCard = ({ video, small = false, vertical = false }) => {
                                 width: 36,
                                 height: 36,
                                 marginRight: "12px",
+                                ml: 1,
                             }}
                         />
                     </TitleLink>

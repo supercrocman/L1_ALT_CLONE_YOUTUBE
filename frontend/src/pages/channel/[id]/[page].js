@@ -135,7 +135,6 @@ export default function ChannelPage() {
 
     return (
         <div className={roboto.className}>
-            <AccountMenu></AccountMenu>
             <div
                 style={{
                     display: "flex",
