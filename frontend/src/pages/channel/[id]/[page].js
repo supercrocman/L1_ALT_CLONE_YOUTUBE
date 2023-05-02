@@ -278,13 +278,7 @@ export default function ChannelPage() {
                         <Grid container justifyContent={"center"}>
                             {videos.map((video, i) => {
                                 video = {
-                                    thumbnail: video.thumbnail,
-                                    title: video.title,
-                                    views: video.views,
-                                    date: video.uploaded_at,
-                                    duration: video.length,
-                                    identifier: video.identifier,
-                                    description: video.description,
+                                    ...video,
                                     author: {
                                         name: name,
                                         avatar: avatar,
