@@ -2,6 +2,12 @@ module.exports = (sequelize, DataTypes) =>
     sequelize.define(
         'user_history',
         {
+            id: {
+                autoIncrement: true,
+                type: DataTypes.INTEGER,
+                allowNull: false,
+                primaryKey: true,
+            },
             user_id: {
                 type: DataTypes.INTEGER,
                 allowNull: false,
@@ -37,7 +43,7 @@ module.exports = (sequelize, DataTypes) =>
                     name: 'PRIMARY',
                     unique: true,
                     using: 'BTREE',
-                    fields: [{ name: 'user_id' }, { name: 'video_id' }, { name: 'created_at' }],
+                    fields: [{ name: 'id' }],
                 },
                 {
                     name: 'user_id',
