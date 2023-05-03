@@ -8,8 +8,8 @@ export default function VideoPlayerPage() {
     return (
             <div>
                 <Container/>
-                <Player></Player>
-                <VideoComments />
+                <Player/>
+                <VideoComments/>
                 {/*<VideoInformation />*/}
             </div>
     );
