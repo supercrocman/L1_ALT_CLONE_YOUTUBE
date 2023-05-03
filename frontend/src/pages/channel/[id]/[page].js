@@ -24,11 +24,11 @@ import stringToColor from '../../../utils/stringToColor';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 const roboto = Roboto({
-    weight: '400',
-    subsets: ['latin'],
-})
+    weight: "400",
+    subsets: ["latin"],
+});
 
-var about = '';
+var about = "";
 
 
 
@@ -56,15 +56,15 @@ function TabPanel(props) {
 function a11yProps(index) {
     return {
         id: `full-width-tab-${index}`,
-        'aria-controls': `full-width-tabpanel-${index}`,
+        "aria-controls": `full-width-tabpanel-${index}`,
     };
 }
 
 export default function ChannelPage() {
     const theme = useTheme();
 
-    const router = useRouter()
-    const { id, page } = router.query
+    const router = useRouter();
+    const { id, page } = router.query;
     useEffect(() => {
         if (id === undefined) {
             // Ne faites rien si id n'est pas encore défini
@@ -72,15 +72,15 @@ export default function ChannelPage() {
         }
 
         if (!id.startsWith("@")) {
-            Router.push('/404');
+            Router.push("/404");
         }
     }, [id]);
 
     let baseindex = 0;
 
     const [value, setValue] = React.useState(baseindex);
-    const [name, setName] = React.useState('');
-    const [description, setDescription] = React.useState('');
+    const [name, setName] = React.useState("");
+    const [description, setDescription] = React.useState("");
     const [subscribers, setSubscribers] = React.useState(0);
     const [videoCount, setVideoCount] = React.useState(0);
     const [videos, setVideos] = React.useState([]);
@@ -116,7 +116,8 @@ export default function ChannelPage() {
     useEffect(() => {
         const fetchData = async () => {
             if (id) {
-                const baseURL = 'http://localhost:3001/api/user/' + id.split("@")[1];
+                const baseURL =
+                    "http://localhost:3001/api/user/" + id.split("@")[1];
                 try {
                     const response = await axios.get(baseURL);
                     console.log(response.data);
@@ -124,12 +125,13 @@ export default function ChannelPage() {
                     setDescription(response.data["user"].description);
                     setSubscribers(response.data["user"]["subCount"]);
                     setVideoCount(response.data["user"]["videoCount"]);
+                    setAvatar(response.data["user"]["avatar"]);
                     setVideos(response.data["user"]["videos"]);
                     setAvatar(response.data["user"]["avatar"]);
                 } catch (error) {
                     console.log(error.response.data);
                     if (error.response.data === "User not found") {
-                        Router.push('/404');
+                        Router.push("/404");
                     }
                 }
             }
@@ -158,15 +160,30 @@ export default function ChannelPage() {
                         <div style={{ display: "flex", flexDirection: "row", flexWrap: "wrap", color: "#606060", fontSize: "small" }}>
                             <p style={{ marginRight: 8, fontWeight: "800" }}>{id}</p>
                             <p style={{ marginRight: 8 }}>{videoCount} vidéo</p>
-                            <p style={{ marginRight: 8 }}>{subscribers} abonné</p>
+                            <p style={{ marginRight: 8 }}>
+                                {subscribers} abonné
+                            </p>
                         </div>
                         <Link href={"/channel/" + id + '/about'} style={{ color: "white", textDecoration: "none" }}>
                             {description && description.length > 0 ? description.substring(0, 20) : ""} {description && description.length > 20 ? "..." : ""}
                         </Link>
                     </div>
                 </div>
-                <div style={{ display: "flex", alignItems: "center", width: "25%", justifyContent: "space-evenly" }}>
-                    <Fab color="primary" aria-label="Personalize" variant="extended" size='medium' onClick={() => Router.push(`/studio/${id}`)}>
+                <div
+                    style={{
+                        display: "flex",
+                        alignItems: "center",
+                        width: "25%",
+                        justifyContent: "space-evenly",
+                    }}
+                >
+                    <Fab
+                        color="primary"
+                        aria-label="Personalize"
+                        variant="extended"
+                        size="medium"
+                        onClick={() => Router.push(`/studio/${id}`)}
+                    >
                         Personalize
                     </Fab>
                 </div>
@@ -182,15 +199,47 @@ export default function ChannelPage() {
                         variant="fullWidth"
                         centered
                     >
-                        <Tab label="Home" {...a11yProps(0)} onClick={() => Router.push('/channel/' + id + '/home')} />
-                        <Tab label="Videos" {...a11yProps(1)} onClick={() => Router.push('/channel/' + id + '/videos')} />
-                        <Tab label="Playlists" {...a11yProps(2)} onClick={() => Router.push('/channel/' + id + '/playlists')} />
-                        <Tab label="About" {...about} {...a11yProps(3)} onClick={() => Router.push('/channel/' + id + '/about')} />
-                        <Tab icon={<FavoriteIcon />} label="" {...a11yProps(4)} onClick={() => Router.push('/channel/' + id + '/likes')} />
+                        <Tab
+                            label="Home"
+                            {...a11yProps(0)}
+                            onClick={() =>
+                                Router.push("/channel/" + id + "/home")
+                            }
+                        />
+                        <Tab
+                            label="Videos"
+                            {...a11yProps(1)}
+                            onClick={() =>
+                                Router.push("/channel/" + id + "/videos")
+                            }
+                        />
+                        <Tab
+                            label="Playlists"
+                            {...a11yProps(2)}
+                            onClick={() =>
+                                Router.push("/channel/" + id + "/playlists")
+                            }
+                        />
+                        <Tab
+                            label="About"
+                            {...about}
+                            {...a11yProps(3)}
+                            onClick={() =>
+                                Router.push("/channel/" + id + "/about")
+                            }
+                        />
+                        <Tab
+                            icon={<FavoriteIcon />}
+                            label=""
+                            {...a11yProps(4)}
+                            onClick={() =>
+                                Router.push("/channel/" + id + "/likes")
+                            }
+                        />
                     </Tabs>
                 </AppBar>
                 <SwipeableViews
-                    axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
+                    axis={theme.direction === "rtl" ? "x-reverse" : "x"}
                     index={value}
                     onChangeIndex={handleChangeIndex}
                 >
@@ -202,13 +251,7 @@ export default function ChannelPage() {
                             {videos.map((video) => (
                                 // thumbnail, title, views, date, duration
                                 video = {
-                                    thumbnail: video.thumbnail,
-                                    title: video.title,
-                                    views: video.views,
-                                    date: video.uploaded_at,
-                                    duration: video.length,
-                                    identifier: video.identifier,
-                                    description: video.description,
+                                    ...video,
                                     author: {
                                         name: name,
                                         avatar: avatar,
@@ -236,6 +279,5 @@ export default function ChannelPage() {
                 </SwipeableViews>
             </Box>
         </div>
-    )
-
+    );
 }

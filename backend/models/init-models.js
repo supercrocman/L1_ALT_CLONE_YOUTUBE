@@ -36,8 +36,6 @@ function initModels(sequelize) {
         as: 'PlaylistVideos',
         foreignKey: 'Playlist_id',
     });
-    VideoTag.belongsTo(Tag, { as: 'Tag', foreignKey: 'Tag_id' });
-    Tag.hasMany(VideoTag, { as: 'VideoTags', foreignKey: 'Tag_id' });
     Comments.belongsTo(User, { as: 'User', foreignKey: 'User_id' });
     User.hasMany(Comments, { as: 'Comments', foreignKey: 'User_id' });
     Playlist.belongsTo(User, { as: 'User', foreignKey: 'User_id' });
@@ -71,8 +69,9 @@ function initModels(sequelize) {
         as: 'User_histories',
         foreignKey: 'Video_id',
     });
-    VideoTag.belongsTo(Video, { as: 'Video', foreignKey: 'Video_id' });
-    Video.hasMany(VideoTag, { as: 'VideoTags', foreignKey: 'Video_id' });
+    
+    Video.belongsToMany(Tag, { through: 'video_tag', foreignKey: 'video_id' });
+    Tag.belongsToMany(Video, { through: 'video_tag', foreignKey: 'tag_id' });
 
     Video.prototype.getCommentCount = async function () { 
         const videoCommentCount = await Comments.count({
@@ -87,26 +86,64 @@ function initModels(sequelize) {
         const userSubCount = await UserSubscription.count({
             where: {
                 user_subscribe_id: this.id,
-            }
+            },
         });
         return userSubCount;
-     }
+     };
     
-     User.prototype.getSubscriptions = async function () { 
+    User.prototype.getSubscriptions = async function () { 
         const userSubscriptions = await UserSubscription.findAll(
             {
             attributes: ['user_id', 'user_subscribe_id'],
             where: {
                 user_id: this.id,
-            }
+            },
         });
         const subscriptions = [];
         for (const userSubscription of userSubscriptions) {
-            const user = await User.findByPk(userSubscription.user_subscribe_id);
+            const user = await User.findByPk(
+                userSubscription.user_subscribe_id
+            );
             subscriptions.push(user);
         }
         return subscriptions;
-     }
+    };
+
+    User.prototype.getVideos = async function () {
+        const videos = await Video.findAll({
+            attributes: [
+                'id',
+                'user_id',
+                'identifier',
+                'uploaded_at',
+                'thumbnail',
+                'title',
+                'description',
+                'views',
+                'length',
+              ],
+            where: {
+                user_id: this.id,
+            }
+        });
+        return videos;
+    }
+
+    Video.prototype.getAuthor = async function () {
+        const user = await User.findOne({
+            attributes: [
+                'id',
+                'identifier',
+                'name',
+                'description',
+                'avatar',
+              ],
+            where: {
+                id: this.user_id,
+            }
+        });
+        return user;
+    }
 
     return {
         Comments,

@@ -1,8 +1,8 @@
 // routes/channelinfos.js
 const express = require('express');
+const db = require('../services/sequelize'); // Importez le modèle User
+
 const router = express.Router();
-const db = require('../services/sequelize');// Importez le modèle User
-const { Op } = require('sequelize');
 
 router.get('/user/:identifier', async (req, res) => {
   try {
@@ -12,20 +12,18 @@ router.get('/user/:identifier', async (req, res) => {
       attributes: ['id', 'identifier', 'name', 'description', 'avatar', 'createdAt']
     });
 
-    if (!user) {
-      res.status(404).send('User not found');
-      return;
-    }
+        if (!user) {
+            res.status(404).send('User not found');
+            return;
+        }
 
-    const subCount = await user.getSubCount()
+        const subCount = await user.getSubCount();
 
-    const videoCount = await db.Video.count(
-      {
-        where: {
-          user_id: user.id
-        },
-      }
-    );
+        const videoCount = await db.Video.count({
+            where: {
+                user_id: user.id,
+            },
+        });
 
     let videos = await db.Video.findAll(
       {
@@ -67,16 +65,14 @@ router.get('/user/:identifier', async (req, res) => {
           videoCount,
           videos,
           VueCount
+            }});
+        } else {
+            res.status(404).send('Utilisateur non trouvé');
         }
-      });
-
-    } else {
-      res.status(404).send('Utilisateur non trouvé');
+    } catch (error) {
+        console.log(error);
+        res.status(500).send("Erreur lors de la récupération de l'utilisateur");
     }
-  } catch (error) {
-    console.log(error);
-    res.status(500).send('Erreur lors de la récupération de l\'utilisateur');
-  }
 });
 
 module.exports = router;

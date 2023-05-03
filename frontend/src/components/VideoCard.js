@@ -1,4 +1,4 @@
-import { CardMedia, Divider, IconButton, Stack } from "@mui/material";
+import { Avatar, CardMedia, Divider, IconButton, Stack } from "@mui/material";
 import { ChannelName, Description } from "@/components/AuthorCard";
 
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
@@ -46,6 +46,11 @@ const Timer = styled("span")(({ theme }) => ({
     fontWeight: "bold",
 }));
 
+const ButtonContainer = styled("div")(({ theme }) => ({
+    position: "absolute",
+    right: 0,
+}));
+
 const secondToTime = (duration) => {
     let seconds = parseInt(duration % 60);
     let minutes = parseInt((duration / 60) % 60);
@@ -55,10 +60,10 @@ const secondToTime = (duration) => {
     }`;
 };
 
-export const VideoCard = ({ video, small = false }) => {
+export const VideoCard = ({ video, small = false, vertical = false }) => {
     const router = useRouter();
     const [anchorEl, setAnchorEl] = React.useState(null);
-    const [time, setTime] = React.useState(secondToTime(video.duration));
+    const [time, setTime] = React.useState(secondToTime(video.length));
 
     const open = Boolean(anchorEl);
     const handleClick = (event) => {
@@ -80,18 +85,24 @@ export const VideoCard = ({ video, small = false }) => {
                 "&:hover .MuiIconButton-root": {
                     display: "inline-flex",
                 },
+                mr: vertical ? 1 : 0,
+                maxWidth:
+                    vertical && small ? "21%" : vertical ? "33%" : "unset",
             }}
+            flex={vertical && small ? "1 0 21%" : vertical ? "1 0 33%" : ""}
             onClick={() => router.push(`/watch/${video.identifier}`)}
+            flexDirection={vertical ? "column" : "row"}
         >
             <Grid
-                xs={small ? 5 : 4}
+                xs={vertical ? "" : small ? 5 : 4}
                 display="flex"
                 justifyContent="center"
                 alignItems="center"
             >
                 <ThumbnailContainer
                     sx={
-                        small && {
+                        small &&
+                        !vertical && {
                             height: "94px",
                             width: "168px",
                         }
@@ -107,30 +118,56 @@ export const VideoCard = ({ video, small = false }) => {
                     />
                 </ThumbnailContainer>
             </Grid>
-            <Grid xs={small ? 6 : 7.5} sx={small && { pt: 1, pb: 1, pl: 1 }}>
+            <Grid
+                display={vertical && "flex"}
+                flexDirection={vertical && "row"}
+                xs={vertical ? "" : small ? 6 : 7.5}
+                sx={{
+                    pt: small && 1,
+                    pb: small && 1,
+                    pl: small && 1,
+                    pr: vertical && "34px",
+                }}
+                position={vertical && "relative"}
+            >
+                {vertical && !small && (
+                    <TitleLink href={`/channel/@${video.author.identifier}`}>
+                        <Avatar
+                            alt={video.author.name}
+                            src={video.author.avatar}
+                            sx={{
+                                width: 36,
+                                height: 36,
+                                marginRight: "12px",
+                            }}
+                        />
+                    </TitleLink>
+                )}
                 <Stack>
                     <ChannelName sx={{ marginBottom: 0.25 }}>
                         <TitleLink
                             href={`/watch/${video.identifier}`}
                             color="inherit"
                             underline="none"
-                            sx={
-                                small && {
-                                    display: "block",
-                                    maxHeight: "2rem",
-                                    overflow: "hidden",
-                                    textOverflow: "ellipsis",
-                                    whiteSpace: "normal",
-                                    display: "-webkit-box",
-                                    WebkitLineClamp: "2",
-                                    WebkitBoxOrient: "vertical",
-                                }
-                            }
+                            sx={{
+                                display: "block",
+                                maxHeight: "2rem",
+                                overflow: "hidden",
+                                textOverflow: "ellipsis",
+                                whiteSpace: "normal",
+                                display: "-webkit-box",
+                                WebkitLineClamp: "2",
+                                WebkitBoxOrient: "vertical",
+                                mt: !vertical && 1,
+                            }}
                         >
                             {video.title}
                         </TitleLink>
                     </ChannelName>
-                    {small ? (
+
+                    {vertical && small ? (
+                        <VideoVuesAndDate video={video} />
+                    ) : small || vertical ? (
                         <>
                             <AuthorName author={video.author} small />
                             <VideoVuesAndDate video={video} small />
@@ -145,19 +182,35 @@ export const VideoCard = ({ video, small = false }) => {
                         </>
                     )}
                 </Stack>
+                {vertical && (
+                    <ButtonContainer>
+                        <IconButton
+                            onClick={handleClick}
+                            size="small"
+                            aria-controls={open ? "video-options" : undefined}
+                            aria-haspopup="true"
+                            aria-expanded={open ? "true" : undefined}
+                            sx={{ display: open ? "inline-flex" : "none" }}
+                        >
+                            <MoreVertIcon />
+                        </IconButton>
+                    </ButtonContainer>
+                )}
             </Grid>
-            <Grid xs={0.5}>
-                <IconButton
-                    onClick={handleClick}
-                    size="small"
-                    aria-controls={open ? "video-options" : undefined}
-                    aria-haspopup="true"
-                    aria-expanded={open ? "true" : undefined}
-                    sx={{ display: open ? "inline-flex" : "none" }}
-                >
-                    <MoreVertIcon />
-                </IconButton>
-            </Grid>
+            {!vertical && (
+                <Grid xs={0.5}>
+                    <IconButton
+                        onClick={handleClick}
+                        size="small"
+                        aria-controls={open ? "video-options" : undefined}
+                        aria-haspopup="true"
+                        aria-expanded={open ? "true" : undefined}
+                        sx={{ display: open ? "inline-flex" : "none" }}
+                    >
+                        <MoreVertIcon />
+                    </IconButton>
+                </Grid>
+            )}
             <Menu
                 anchorEl={anchorEl}
                 id="video-options"
