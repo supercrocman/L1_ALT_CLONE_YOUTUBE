@@ -16,14 +16,11 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import MailIcon from '@mui/icons-material/Mail';
 import SpaceDashboard from '@mui/icons-material/SpaceDashboard';
 import SettingsIcon from '@mui/icons-material/Settings';
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
 import VideoLibraryIcon from '@mui/icons-material/VideoLibrary';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import PlaylistPlayIcon from '@mui/icons-material/PlaylistPlay';
+import UploadIcon from '@mui/icons-material/Upload';
 import CommentIcon from '@mui/icons-material/Comment';
 import EqualizerIcon from '@mui/icons-material/Equalizer';
 import Router from 'next/router';
@@ -132,7 +129,7 @@ export default function StudioLeftNavBar({ user, page }) {
     const navItems = [
         { label: 'Dashboard', icon: <SpaceDashboard />, page: 'dashboard' },
         { label: 'Contenu', icon: <VideoLibraryIcon />, page: 'content' },
-        { label: 'Playlists', icon: <PlaylistPlayIcon />, page: 'playlists' },
+        { label: 'Upload', icon: <UploadIcon />, page: 'upload' },
         { label: 'Commentaires', icon: <CommentIcon />, page: 'commentaires' },
         { label: 'Analytics', icon: <EqualizerIcon />, page: 'analytics' },
     ];
