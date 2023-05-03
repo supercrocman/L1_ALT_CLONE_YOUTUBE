@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { deleteCookie, getCookie, setCookie } from 'cookies-next';
+import { deleteCookie, getCookie } from 'cookies-next';
 
 const axiosInstance = axios.create({
     baseURL: 'http://localhost:3001/',
@@ -33,8 +33,7 @@ axiosInstance.interceptors.response.use(
                     withCredentials: true,
                 });
                 if (response.status === 201) {
-                    const newAccessToken = response.data.accessToken;
-                    setCookie('AccessToken', newAccessToken);
+                    const newAccessToken = getCookie('AccessToken');
                     originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
                     return axiosInstance(originalRequest);
                 }
@@ -42,7 +41,10 @@ axiosInstance.interceptors.response.use(
                 console.log('axios', error);
                 return Promise.reject(error);
             }
-        } else if (error.response.status === 401) {
+        } else if (
+            error.response.status === 401 &&
+            error.response.data.error === 'reconnexion'
+        ) {
             deleteCookie('user');
             deleteCookie('AccessToken');
             setCookie('isLoggIn', false);

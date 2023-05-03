@@ -109,11 +109,11 @@ exports.login = async (req, res) => {
         };
         const user = await User.findOne({ where: { email: userMail } });
         if (!user) {
-            return res
-                .status(401)
-                .json({ message: 'Email ou mot de passe incorrect.' });
+            return res.status(401).json({
+                message: 'Identifiants invalides, veuillez réessayer',
+            });
         }
-        if (user.verified === 0) {
+        if (!user.verified) {
             return res
                 .status(401)
                 .json({ message: "Le compte n'a pas été activée" });
@@ -123,9 +123,10 @@ exports.login = async (req, res) => {
             .compare(userPassword, user.password)
             .then(async (result, err) => {
                 if (err || !result) {
-                    return res
-                        .status(401)
-                        .json({ message: 'Email ou mot de passe incorrect.' });
+                    console.log('mot');
+                    return res.status(401).json({
+                        message: 'Identifiants invalides, veuillez réessayer',
+                    });
                 }
                 const accessToken = jwt.sign(
                     { identifier: user.identifier },
@@ -144,14 +145,19 @@ exports.login = async (req, res) => {
                         refreshTokenCookieOptions
                     );
                 }
+                res.cookie('AccessToken', accessToken, {
+                    path: '/',
+                    expiresIn: 30 * 24 * 60 * 60 * 1000,
+                });
                 return res.status(200).json({
-                    accessToken,
                     avatar: user.avatar,
                     pseudo: user.name,
                 });
             });
     } catch (error) {
-        return res.status(500).json({ message: 'Erreur serveur' });
+        return res.status(500).json({
+            message: 'Problème de connexion, veuillez réessayer plus tard',
+        });
     }
 };
 
@@ -159,9 +165,10 @@ exports.refresh = async (req, res) => {
     try {
         const { refreshToken } = req.cookies;
         if (!refreshToken) {
-            return res
-                .status(401)
-                .json({ message: 'Refresh token invalide ou expiré' });
+            return res.status(401).json({
+                message: 'Refresh token invalide ou expiré',
+                error: 'reconnexion',
+            });
         }
         const decodedToken = jwt.verify(
             refreshToken,
@@ -183,13 +190,17 @@ exports.refresh = async (req, res) => {
                 expiresIn: '25m',
             }
         );
-
-        return res.status(201).json({ accessToken });
+        res.cookie('AccessToken', accessToken, {
+            path: '/',
+            expiresIn: 30 * 24 * 60 * 60 * 1000,
+        });
+        return res.sendStatus(201);
     } catch (error) {
         res.clearCookie('refreshToken');
-        return res
-            .status(401)
-            .json({ message: 'Refresh token invalide ou expiré' });
+        return res.status(401).json({
+            message: 'Refresh token invalide ou expiré',
+            error: 'reconnexion',
+        });
     }
 };
 
@@ -202,5 +213,18 @@ exports.logout = (req, res) => {
     } catch (e) {
         console.log(e);
         return res.sendStatus(500);
+    }
+};
+exports.dataUser = async (req, res) => {
+    try {
+        const user = await User.findOne({
+            attributes: ['identifier', 'avatar', 'name'],
+            where: { identifier: req.auth.identifier },
+        });
+        res.status(200).json(user);
+    } catch (e) {
+        res.status(400).json({
+            message: "il y a un problème avec l'utilisateur",
+        });
     }
 };

@@ -12,10 +12,11 @@ import PersonAdd from '@mui/icons-material/PersonAdd';
 import Settings from '@mui/icons-material/Settings';
 import Logout from '@mui/icons-material/Logout';
 import Router from 'next/router';
-import { getCookie } from 'cookies-next';
-
+import axiosInstance from '@/utils/axiosInterceptor';
 export default function AccountMenu({ handleLogout }) {
     const [anchorEl, setAnchorEl] = React.useState(null);
+    const [user, setUser] = React.useState({});
+
     const open = Boolean(anchorEl);
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
@@ -23,7 +24,19 @@ export default function AccountMenu({ handleLogout }) {
     const handleClose = () => {
         setAnchorEl(null);
     };
-    const user = JSON.parse(getCookie('user'));
+    React.useEffect(() => {
+        async function fetchData() {
+            try {
+                const response = await axiosInstance.get('/profil/user');
+                setUser(response.data);
+            } catch (err) {
+                console.log(err);
+            }
+        }
+        return () => {
+            fetchData();
+        };
+    }, []);
     return (
         <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
             <React.Fragment>
@@ -43,8 +56,12 @@ export default function AccountMenu({ handleLogout }) {
                             aria-haspopup="true"
                             aria-expanded={open ? 'true' : undefined}
                         >
-                            <Avatar sx={{ width: 45, height: 45 }}>
-                                {user.pseudo.split('')[0]}
+                            <Avatar src={user.avatar ? user.avatar : null}>
+                                {user.avatar
+                                    ? null
+                                    : user.name
+                                    ? user.name.split('')[0]
+                                    : null}
                             </Avatar>
                         </IconButton>
                     </Tooltip>
@@ -85,16 +102,18 @@ export default function AccountMenu({ handleLogout }) {
                     anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
                 >
                     <MenuItem
-                        onClick={() => Router.push('/channel/@user1/home')}
+                        onClick={() =>
+                            Router.push(`/channel/${user.identifier}/home`)
+                        }
                     >
-                        <Avatar
-                            src={
-                                user.avatar
-                                    ? user.avatar
-                                    : user.pseudo.split('')[0]
-                            }
-                        />
-                        {user.pseudo}
+                        <Avatar src={user.avatar ? user.avatar : null}>
+                            {user.avatar
+                                ? null
+                                : user.name
+                                ? user.name.split('')[0]
+                                : null}
+                        </Avatar>
+                        {user.name ? user.name : null}
                     </MenuItem>
                     <Divider />
                     <MenuItem onClick={handleClose}>

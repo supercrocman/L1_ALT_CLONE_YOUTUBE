@@ -20,6 +20,7 @@ exports.auth = (req, res, next) => {
                         }
                         return res.status(401).json({
                             message: "Token d'accès invalide ou expiré",
+                            error: 'reconnexion',
                         });
                     }
                     const { identifier } = decodedToken;
@@ -32,6 +33,7 @@ exports.auth = (req, res, next) => {
         } else {
             return res.status(401).json({
                 message: "Token d'accès invalide ou expiré",
+                error: 'reconnexion',
             });
         }
     } catch (e) {

@@ -56,7 +56,7 @@ function a11yProps(index) {
     };
 }
 
-export default function ChannelPage() {
+export default function ChannelPage({ user }) {
     const theme = useTheme();
 
     const router = useRouter();
@@ -67,9 +67,9 @@ export default function ChannelPage() {
             return;
         }
 
-        if (!id.startsWith('@')) {
-            Router.push('/404');
-        }
+        // if (!id.startsWith('@')) {
+        //     Router.push('/404');
+        // }
     }, [id]);
 
     let baseindex = 0;
@@ -111,7 +111,8 @@ export default function ChannelPage() {
     useEffect(() => {
         const fetchData = async () => {
             if (id) {
-                const baseURL = '/api/user/' + id.split('@')[1];
+                const baseURL = '/api/user/' + id;
+                // const baseURL = '/api/user/' + id.split('@')[1];
                 try {
                     const response = await axiosInstance.get(baseURL);
                     setName(response.data['user'].name);
@@ -130,7 +131,7 @@ export default function ChannelPage() {
         };
 
         fetchData();
-    }, [id, page]);
+    }, []);
 
     return (
         <div className={roboto.className}>
@@ -159,9 +160,9 @@ export default function ChannelPage() {
                             marginRight: '5%',
                         }}
                         alt="Remy Sharp"
-                        src="/broken-image.jpg"
+                        src={avatar ? avatar : null}
                     >
-                        R
+                        {avatar ? null : name ? name.split('')[0] : null}
                     </Avatar>
                     <div
                         style={{
@@ -183,7 +184,7 @@ export default function ChannelPage() {
                             }}
                         >
                             <p style={{ marginRight: 8, fontWeight: '800' }}>
-                                {id}
+                                {'@' + id}
                             </p>
                             <p style={{ marginRight: 8 }}>{videoCount} vidéo</p>
                             <p style={{ marginRight: 8 }}>

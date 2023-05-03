@@ -30,20 +30,6 @@ const Login = ({ open, setOpen, setFenetre }) => {
                 data: { userMail, userPassword, remember },
             });
             if (response.data) {
-                setCookie('AccessToken', response.data.accessToken, {
-                    path: '/',
-                });
-                setCookie(
-                    'user',
-                    JSON.stringify({
-                        avatar: response.data.avatar,
-                        pseudo: response.data.pseudo,
-                        remember,
-                    }),
-                    {
-                        path: '/',
-                    }
-                );
                 setOpen(false);
                 setCookie('isLoggIn', true);
             } else {
@@ -51,7 +37,7 @@ const Login = ({ open, setOpen, setFenetre }) => {
             }
         } catch (error) {
             console.log(error);
-            setError('Identifiants invalides, veuillez réessayer');
+            setError(error.response.data.message);
         } finally {
             setRemember(true);
         }
