@@ -1,81 +1,83 @@
-import { Box, Container } from "@mui/material";
+import { Box, CircularProgress, Container } from "@mui/material";
 
 import { NextVideos } from "@/components/NextVideos";
 import React from "react";
 import VideoComments from "../components/VideoComments";
 import VideoInformation from "../components/VideoInformation";
 import { VideoJS } from "../components/Player";
+import axios from "axios";
 import { styled } from "@mui/material/styles";
-
-const relatedVideos = [
-    {
-        title: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-        description:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-        thumbnail:
-            "https://i.ytimg.com/vi/FIVzREhIhUY/hq720.jpg?sqp=-oaymwEcCNAFEJQDSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLDUeOp3smg7sq5WJDXwlf_LA2MtQQ",
-        views: 1000,
-        duration: 232323,
-        uploaded_at: "2023-02-10",
-        identifier: "fivzrehihuy",
-        upvote: 1000,
-        author: {
-            name: "John Doe",
-            avatar: "/images/avatar.jpg",
-            subCount: 1000,
-            description:
-                "Lorem ipsum dolor sit amet, consectetur adipiscing elit. lorem ipsum dolor sit amet, consectetur adipiscing elit. lorem ipsum dolor sit amet, consectetur adipiscing elit. lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-            identifier: "johndoe",
-        },
-    },
-    {
-        title: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-        description:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-        thumbnail:
-            "https://i.ytimg.com/vi/FIVzREhIhUY/hq720.jpg?sqp=-oaymwEcCNAFEJQDSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLDUeOp3smg7sq5WJDXwlf_LA2MtQQ",
-        views: 1000,
-        length: 232323,
-        uploaded_at: "2023-02-10",
-        identifier: "fivzrehihuy",
-        author: {
-            name: "John Doe",
-            avatar: "/images/avatar.jpg",
-            subCount: 1000,
-            description:
-                "Lorem ipsum dolor sit amet, consectetur adipiscing elit. lorem ipsum dolor sit amet, consectetur adipiscing elit. lorem ipsum dolor sit amet, consectetur adipiscing elit. lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-            identifier: "johndoe",
-        },
-    },
-];
+import { useRouter } from "next/router";
 
 export default function VideoPlayerPage() {
-    const videoJsOptions = {
+    // use router
+    const router = useRouter();
+    // get video id
+    const { v } = router.query;
+    const [video, setVideo] = React.useState(null);
+    const [relatedVideos, setRelatedVideos] = React.useState(null);
+    const [videoJsOptions, setvideoJsOptions] = React.useState({
         autoplay: false,
         controls: true,
         responsive: true,
         fluid: false,
         fill: true,
-        sources: [
-            {
-                src: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
-                type: "video/mp4",
-            },
-        ],
-        poster: "https://i.ytimg.com/vi/FIVzREhIhUY/hq720.jpg?sqp=-oaymwEcCNAFEJQDSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLDUeOp3smg7sq5WJDXwlf_LA2MtQQ",
-    };
-
+    });
+    React.useEffect(() => {
+        const getRelatedVideos = async (v) => {
+            if (!v) return;
+            setVideo(null);
+            setRelatedVideos(null);
+            try {
+                const vid = await axios.get(
+                    `http://localhost:3001/api/video/${v}`
+                );
+                setVideo(vid.data);
+                setvideoJsOptions({
+                    ...videoJsOptions,
+                    sources: [
+                        {
+                            src: vid.data.path,
+                            type: "video/mp4",
+                        },
+                    ],
+                    poster: vid.data.thumbnail,
+                });
+                const res = await axios.get(
+                    `http://localhost:3001/api/video/${v}/related`
+                );
+                setRelatedVideos(res.data);
+            } catch (e) {
+                router.push("/404");
+            }
+        };
+        getRelatedVideos(v);
+    }, [v]);
     return (
         <Box
             sx={{
                 display: "flex",
             }}
         >
-            <Container>
-                <VideoJS options={videoJsOptions} />
-                <VideoInformation video={relatedVideos[0]} />
-                {/* <VideoComments /> */}
-            </Container>
+            {video ? (
+                <Container>
+                    <VideoJS options={videoJsOptions} />
+                    <VideoInformation video={video} />
+                </Container>
+            ) : (
+                <Box
+                    sx={{
+                        display: "flex",
+                        width: "100%",
+                        height: "100vh",
+                        justifyContent: "center",
+                        alignItems: "center",
+                    }}
+                >
+                    <CircularProgress />
+                </Box>
+            )}
+            {/* <VideoComments /> */}
             <NextVideos videos={relatedVideos} />
         </Box>
     );

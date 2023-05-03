@@ -44,7 +44,6 @@ export const VideoJS = (props) => {
                 videoElement,
                 options,
                 () => {
-                    videojs.log("player is ready");
                     onReady && onReady(player);
                 }
             ));
@@ -56,6 +55,7 @@ export const VideoJS = (props) => {
 
             player.autoplay(options.autoplay);
             player.src(options.sources);
+            player.poster(options.poster);
         }
     }, [options, videoRef]);
 
@@ -79,5 +79,3 @@ export const VideoJS = (props) => {
 };
 
 export default VideoJS;
-
-// http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4

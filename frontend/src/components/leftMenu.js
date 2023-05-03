@@ -28,6 +28,7 @@ import SubscriptionsIcon from "@mui/icons-material/Subscriptions";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
+import { useRouter } from "next/router";
 
 const drawerWidth = 240;
 
@@ -98,15 +99,14 @@ const Drawer = styled(MuiDrawer, {
 
 export default function MiniDrawer(props) {
     const [searchQuery, setSearchQuery] = useState("");
-
     const theme = useTheme();
     const [open, setOpen] = React.useState(true);
+    const router = useRouter();
+    const sQ = router.query?.search_query;
     useEffect(() => {
-        const params = new URLSearchParams(window.location.search);
-        if (window.location.pathname === "/watch") setOpen(false);
-        const searchQuery = params.get("search_query");
-        setSearchQuery(searchQuery);
-    }, []);
+        if (router.pathname === "/watch") setOpen(false);
+        if (sQ) setSearchQuery(sQ);
+    }, [router.pathname]);
 
     const handleDrawerOpen = () => {
         setOpen(true);

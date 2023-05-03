@@ -1,5 +1,13 @@
-import { Avatar, CardMedia, Divider, IconButton, Stack } from "@mui/material";
+import {
+    Avatar,
+    CardMedia,
+    Divider,
+    IconButton,
+    Skeleton,
+    Stack,
+} from "@mui/material";
 import { ChannelName, Description } from "@/components/AuthorCard";
+import React, { useEffect } from "react";
 
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import { AuthorName } from "./AuthorName";
@@ -10,7 +18,6 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
-import React from "react";
 import ReplyIcon from "@mui/icons-material/Reply";
 import { VideoVuesAndDate } from "./VideoVuesAndDate";
 import { styled } from "@mui/material/styles";
@@ -63,7 +70,12 @@ const secondToTime = (duration) => {
 export const VideoCard = ({ video, small = false, vertical = false }) => {
     const router = useRouter();
     const [anchorEl, setAnchorEl] = React.useState(null);
-    const [time, setTime] = React.useState(secondToTime(video.length));
+    const [time, setTime] = React.useState("");
+    useEffect(() => {
+        if (video) {
+            setTime(secondToTime(video.length));
+        }
+    }, [video]);
 
     const open = Boolean(anchorEl);
     const handleClick = (event) => {
@@ -90,7 +102,11 @@ export const VideoCard = ({ video, small = false, vertical = false }) => {
                     vertical && small ? "21%" : vertical ? "33%" : "unset",
             }}
             flex={vertical && small ? "1 0 21%" : vertical ? "1 0 33%" : ""}
-            onClick={() => router.push(`/watch/${video.identifier}`)}
+            onClick={
+                video
+                    ? () => router.push(`/watch?v=${video.identifier}`)
+                    : () => {}
+            }
             flexDirection={vertical ? "column" : "row"}
         >
             <Grid
@@ -105,66 +121,97 @@ export const VideoCard = ({ video, small = false, vertical = false }) => {
                         !vertical && {
                             height: "94px",
                             width: "168px",
+                            pointerEvents: video ? "auto" : "none",
                         }
                     }
-                    href={`/watch/${video.identifier}`}
+                    href={`/watch?v=${video?.identifier}`}
                 >
-                    <Timer>{time}</Timer>
-                    <CardMedia
-                        sx={{ borderRadius: "12px" }}
-                        component="img"
-                        image={video.thumbnail}
-                        alt="Thumbnail"
-                    />
+                    {video ? (
+                        <>
+                            <Timer>{time}</Timer>
+                            <CardMedia
+                                sx={{ borderRadius: "12px" }}
+                                component="img"
+                                image={video.thumbnail}
+                                alt="Thumbnail"
+                            />
+                        </>
+                    ) : (
+                        <Skeleton
+                            variant="rounded"
+                            width={"100%"}
+                            height={"100%"}
+                        />
+                    )}
                 </ThumbnailContainer>
             </Grid>
             <Grid
                 display={vertical && "flex"}
                 flexDirection={vertical && "row"}
-                xs={vertical ? "" : small ? 6 : 7.5}
+                xs={vertical ? "" : 7}
                 sx={{
                     pt: small && 1,
                     pb: small && 1,
                     pl: small && 1,
-                    pr: vertical && "34px",
+                    pr: /* vertical && */ "34px",
                 }}
-                position={vertical && "relative"}
+                position={/* vertical &&  */ "relative"}
             >
                 {vertical && !small && (
-                    <TitleLink href={`/channel/@${video.author.identifier}`}>
-                        <Avatar
-                            alt={video.author.name}
-                            src={video.author.avatar}
-                            sx={{
-                                width: 36,
-                                height: 36,
-                                marginRight: "12px",
-                            }}
-                        />
-                    </TitleLink>
+                    <>
+                        {video ? (
+                            <TitleLink
+                                href={`/channel/@${video?.author.identifier}`}
+                                onClick={(e) => e.stopPropagation()}
+                            >
+                                <Avatar
+                                    alt={video?.author.name}
+                                    src={video?.author.avatar}
+                                    sx={{
+                                        width: 36,
+                                        height: 36,
+                                        marginRight: "12px",
+                                    }}
+                                />
+                            </TitleLink>
+                        ) : (
+                            <Skeleton
+                                variant="circular"
+                                width={36}
+                                height={36}
+                            />
+                        )}
+                    </>
                 )}
                 <Stack>
-                    <ChannelName sx={{ marginBottom: 0.25 }}>
-                        <TitleLink
-                            href={`/watch/${video.identifier}`}
-                            color="inherit"
-                            underline="none"
-                            sx={{
-                                display: "block",
-                                maxHeight: "2rem",
-                                overflow: "hidden",
-                                textOverflow: "ellipsis",
-                                whiteSpace: "normal",
-                                display: "-webkit-box",
-                                WebkitLineClamp: "2",
-                                WebkitBoxOrient: "vertical",
-                                mt: !vertical && 1,
-                            }}
-                        >
-                            {video.title}
-                        </TitleLink>
-                    </ChannelName>
-
+                    {video ? (
+                        <ChannelName sx={{ marginBottom: 0.25 }}>
+                            <TitleLink
+                                href={`/watch?v=${video.identifier}`}
+                                color="inherit"
+                                underline="none"
+                                sx={{
+                                    display: "block",
+                                    maxHeight: "2rem",
+                                    overflow: "hidden",
+                                    textOverflow: "ellipsis",
+                                    whiteSpace: "normal",
+                                    display: "-webkit-box",
+                                    WebkitLineClamp: "2",
+                                    WebkitBoxOrient: "vertical",
+                                    mt: !vertical && 1,
+                                }}
+                            >
+                                {video.title}
+                            </TitleLink>
+                        </ChannelName>
+                    ) : (
+                        <Skeleton
+                            variant="text"
+                            width={small ? "100%" : "80%"}
+                            height={"2rem"}
+                        />
+                    )}
                     {vertical && small ? (
                         <VideoVuesAndDate video={video} />
                     ) : small || vertical ? (
@@ -182,8 +229,10 @@ export const VideoCard = ({ video, small = false, vertical = false }) => {
                         </>
                     )}
                 </Stack>
-                {vertical && (
-                    <ButtonContainer>
+                {video && (
+                    <ButtonContainer
+                        sx={!vertical && { top: small ? "12px" : "4px" }}
+                    >
                         <IconButton
                             onClick={handleClick}
                             size="small"
@@ -197,7 +246,7 @@ export const VideoCard = ({ video, small = false, vertical = false }) => {
                     </ButtonContainer>
                 )}
             </Grid>
-            {!vertical && (
+            {/*             {!vertical && (
                 <Grid xs={0.5}>
                     <IconButton
                         onClick={handleClick}
@@ -210,7 +259,7 @@ export const VideoCard = ({ video, small = false, vertical = false }) => {
                         <MoreVertIcon />
                     </IconButton>
                 </Grid>
-            )}
+            )} */}
             <Menu
                 anchorEl={anchorEl}
                 id="video-options"
