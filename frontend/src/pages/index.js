@@ -36,17 +36,14 @@ export default function Home() {
     return (
         <>
         {console.log(videos)}
-                {user_reco && <Typography variant="h5" component="h4" marginLeft="30px">
+                {user_reco && <Typography variant="h5" component="h4" marginLeft="25px" marginTop="10px">
                     Vidéos recommandées
                 </Typography>}
                 <Container
                 sx={{
                     display: "flex",
                     flexWrap: "wrap",
-                    justifyContent: "center",
-                    "& > *": {
-                        mt: 4,
-                    },
+                    justifyContent: "space between",
                 }}
             >
               
@@ -76,17 +73,14 @@ export default function Home() {
                 )})}
             </Container>
 
-<Typography variant="h5" component="h4" marginLeft="30px">
+<Typography variant="h5" component="h4" marginLeft="25px" marginTop="10px">
                     Vidéos populaires
                 </Typography>
             <Container
                 sx={{
                     display: "flex",
                     flexWrap: "wrap",
-                    justifyContent: "center",
-                    "& > *": {
-                        mt: 4,
-                    },
+                    justifyContent: "space-between",
                 }}
             >
               
