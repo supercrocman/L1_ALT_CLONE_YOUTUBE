@@ -1,5 +1,0 @@
-DB_HOST= "elmani.net"
-DB_PORT= "3306"
-DB_DATABASE= "watchspace"
-DB_USERNAME= "channel"
-DB_PASSWORD= "G)!E]!kdx3e9xQbY"
