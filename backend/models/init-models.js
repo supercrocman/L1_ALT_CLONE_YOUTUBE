@@ -71,31 +71,30 @@ function initModels(sequelize) {
     });
     Video.belongsToMany(Tag, { through: 'video_tag', foreignKey: 'video_id' });
     Tag.belongsToMany(Video, { through: 'video_tag', foreignKey: 'tag_id' });
-    User.prototype.getSubCount = async function () { 
+    User.prototype.getSubCount = async function () {
         const userSubCount = await UserSubscription.count({
             where: {
                 user_subscribe_id: this.id,
             },
         });
         return userSubCount;
-     };
-    
-    User.prototype.getSubscriptions = async function () { 
-        const userSubscriptions = await UserSubscription.findAll(
-            {
-            attributes: ['user_id', 'user_subscribe_id'],
-            where: {
-                user_id: this.id,
-            },
+    };
+
+    User.prototype.getSubscriptions = async function () {
+        const userSubscriptions = await User.findAll({
+            attributes: ['identifier', 'name', 'avatar'],
+            include: [
+                {
+                    model: UserSubscription,
+                    as: 'User_subscribe_UserSubscriptions',
+                    attributes: [],
+                    where: {
+                        user_id: this.id,
+                    },
+                },
+            ],
         });
-        const subscriptions = [];
-        for (const userSubscription of userSubscriptions) {
-            const user = await User.findByPk(
-                userSubscription.user_subscribe_id
-            );
-            subscriptions.push(user);
-        }
-        return subscriptions;
+        return userSubscriptions;
     };
 
     User.prototype.getVideos = async function () {
@@ -110,29 +109,23 @@ function initModels(sequelize) {
                 'description',
                 'views',
                 'length',
-              ],
+            ],
             where: {
                 user_id: this.id,
-            }
+            },
         });
         return videos;
-    }
+    };
 
     Video.prototype.getAuthor = async function () {
         const user = await User.findOne({
-            attributes: [
-                'id',
-                'identifier',
-                'name',
-                'description',
-                'avatar',
-              ],
+            attributes: ['id', 'identifier', 'name', 'description', 'avatar'],
             where: {
                 id: this.user_id,
-            }
+            },
         });
         return user;
-    }
+    };
 
     return {
         Comments,

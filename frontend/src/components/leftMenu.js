@@ -30,6 +30,7 @@ import SubscriptionsIcon from "@mui/icons-material/Subscriptions";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
+import axios from "axios";
 
 const drawerWidth = 240;
 
@@ -98,14 +99,27 @@ const Drawer = styled(MuiDrawer, {
     }),
 }));
 
-export default function MiniDrawer(props) {
+export default function MiniDrawer({ children }) {
     const [searchQuery, setSearchQuery] = useState("");
+    const [subscribes, setSubscribes] = useState(null);
     useEffect(() => {
-        const params = new URLSearchParams(window.location.search);
-        const searchQuery = params.get("search_query");
-        setSearchQuery(searchQuery);
-    }, []);
-
+        const func = async () => {
+            if (subscribes === null) {
+                try {
+                    const response = await axios.get(
+                        "http://localhost:3001/api/user/user1/subscriptions"
+                    );
+                    setSubscribes(response?.data?.subscriptions);
+                } catch (error) {
+                    console.log(error);
+                }
+            }
+            const params = new URLSearchParams(window.location.search);
+            const searchQuery = params.get("search_query");
+            setSearchQuery(searchQuery);
+        };
+        func();
+    }, [subscribes]);
     const theme = useTheme();
     const [open, setOpen] = React.useState(true);
 
@@ -290,82 +304,70 @@ export default function MiniDrawer(props) {
                                 </ListSubheader>
                             }
                         >
-                            {[
-                                {
-                                    name: "Chaîne 1 la plus longue du monde",
-                                    avatar: "https://yt3.ggpht.com/-iExfmFHJgNMQfi2doXa2aIKtAHPBfkMSrFuaCEILoVScIRqk_83lZw48IydjwWxZmFHtYNB8A=s68-c-k-c0x00ffffff-no-rj",
-                                    identifier: "UCSJ4gkVC6NrvII8umztf0Ow",
-                                },
-                                {
-                                    name: "Chaîne 2",
-                                    avatar: "https://yt3.ggpht.com/-iExfmFHJgNMQfi2doXa2aIKtAHPBfkMSrFuaCEILoVScIRqk_83lZw48IydjwWxZmFHtYNB8A=s68-c-k-c0x00ffffff-no-rj",
-                                    identifier: "UCSJ4gkVC6NrvII8umztf0Ow",
-                                },
-                                {
-                                    name: "Chaîne 3",
-                                    avatar: "https://yt3.ggpht.com/-iExfmFHJgNMQfi2doXa2aIKtAHPBfkMSrFuaCEILoVScIRqk_83lZw48IydjwWxZmFHtYNB8A=s68-c-k-c0x00ffffff-no-rj",
-                                    identifier: "UCSJ4gkVC6NrvII8umztf0Ow",
-                                },
-                            ].map((item) => (
-                                <ListItem
-                                    key={item.text}
-                                    disablePadding
-                                    sx={{ display: "block" }}
-                                >
-                                    <Link
-                                        href={`/channel/${item.identifier}`}
-                                        style={{
-                                            color: "inherit",
-                                            textDecoration: "none",
-                                        }}
+                            {subscribes &&
+                                subscribes.map((item) => (
+                                    <ListItem
+                                        key={item.identifier}
+                                        disablePadding
+                                        sx={{ display: "block" }}
                                     >
-                                        <ListItemButton
-                                            sx={{
-                                                minHeight: 48,
-                                                justifyContent: "initial",
-                                                px: 2.5,
+                                        <Link
+                                            href={`/channel/${item.identifier}`}
+                                            style={{
+                                                color: "inherit",
+                                                textDecoration: "none",
                                             }}
                                         >
-                                            <ListItemIcon
+                                            <ListItemButton
                                                 sx={{
-                                                    minWidth: 0,
-                                                    mr: 3,
-                                                    justifyContent: "center",
+                                                    minHeight: 48,
+                                                    justifyContent: "initial",
+                                                    px: 2.5,
                                                 }}
                                             >
-                                                <Avatar
-                                                    alt={item.name}
-                                                    src={item.avatar}
+                                                <ListItemIcon
                                                     sx={{
-                                                        width: 24,
-                                                        height: 24,
+                                                        minWidth: 0,
+                                                        mr: 3,
+                                                        justifyContent:
+                                                            "center",
+                                                    }}
+                                                >
+                                                    <Avatar
+                                                        alt={item.name}
+                                                        src={item.avatar}
+                                                        sx={{
+                                                            width: 24,
+                                                            height: 24,
+                                                        }}
+                                                    />
+                                                </ListItemIcon>
+                                                <ListItemText
+                                                    primary={item.name}
+                                                    sx={{
+                                                        display: "block",
+                                                        overflow: "hidden",
+                                                        textOverflow:
+                                                            "ellipsis",
+                                                        whiteSpace: "normal",
+                                                        display: "-webkit-box",
+                                                        WebkitLineClamp: "1",
+                                                        WebkitBoxOrient:
+                                                            "vertical",
+                                                        opacity: 1,
                                                     }}
                                                 />
-                                            </ListItemIcon>
-                                            <ListItemText
-                                                primary={item.name}
-                                                sx={{
-                                                    display: "block",
-                                                    overflow: "hidden",
-                                                    textOverflow: "ellipsis",
-                                                    whiteSpace: "normal",
-                                                    display: "-webkit-box",
-                                                    WebkitLineClamp: "1",
-                                                    WebkitBoxOrient: "vertical",
-                                                    opacity: 1,
-                                                }}
-                                            />
-                                        </ListItemButton>
-                                    </Link>
-                                </ListItem>
-                            ))}
+                                            </ListItemButton>
+                                        </Link>
+                                    </ListItem>
+                                ))}
                         </List>
                     </>
                 )}
             </Drawer>
             <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
                 <DrawerHeader />
-                {props.children}
+                {children}
             </Box>
         </Box>
     );

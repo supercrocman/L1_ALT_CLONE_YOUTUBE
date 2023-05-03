@@ -29,7 +29,7 @@ export default function Home() {
                             author: {
                                 identifier: "Test",
                                 name: "Test",
-                                avatar: "Test",
+                                avatar: null,
                                 subCount: 0,
                             },
                         }}
