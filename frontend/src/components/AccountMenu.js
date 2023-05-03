@@ -13,6 +13,9 @@ import Settings from '@mui/icons-material/Settings';
 import Logout from '@mui/icons-material/Logout';
 import Router from 'next/router';
 import axiosInstance from '@/utils/axiosInterceptor';
+import { Roboto } from 'next/font/google';
+import { deepOrange } from '@mui/material/colors';
+
 export default function AccountMenu({ handleLogout }) {
     const [anchorEl, setAnchorEl] = React.useState(null);
     const [user, setUser] = React.useState({});
@@ -56,7 +59,11 @@ export default function AccountMenu({ handleLogout }) {
                             aria-haspopup="true"
                             aria-expanded={open ? 'true' : undefined}
                         >
-                            <Avatar src={user.avatar ? user.avatar : null}>
+                            <Avatar
+                                sx={{ bgcolor: deepOrange[500] }}
+                                alt={user.name}
+                                src={user.avatar ? user.avatar : null}
+                            >
                                 {user.avatar
                                     ? null
                                     : user.name
@@ -106,7 +113,11 @@ export default function AccountMenu({ handleLogout }) {
                             Router.push(`/channel/${user.identifier}/home`)
                         }
                     >
-                        <Avatar src={user.avatar ? user.avatar : null}>
+                        <Avatar
+                            sx={{ bgcolor: deepOrange[500] }}
+                            alt={user.name}
+                            src={user.avatar ? user.avatar : null}
+                        >
                             {user.avatar
                                 ? null
                                 : user.name

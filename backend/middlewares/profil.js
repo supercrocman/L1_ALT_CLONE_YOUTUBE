@@ -25,6 +25,21 @@ exports.signup = (req, res) => {
                 process.env.SECRET_KEY_ACCESS,
                 { expiresIn: '7d' }
             );
+            const identifier = `${req.body.name
+                .split(' ')
+                .join('_')}${valueArray}`;
+
+            await User.create({
+                ...req.body,
+                identifier,
+                password: hash,
+                avatar: req.file
+                    ? `${req.protocol}://${req.get('host')}/src/avatar/${
+                          req.file.filename
+                      }`
+                    : null,
+                email_confirmation_token: token,
+            });
             const transporter = nodemailer.createTransport({
                 host: process.env.EMAIL_HOST,
                 port: process.env.EMAIL_PORT,
@@ -50,20 +65,6 @@ exports.signup = (req, res) => {
                         res.status(400).json({ error });
                     } else {
                         console.log(`Email sent: ${info.response}`);
-                        const identifier = `${req.body.name
-                            .split(' ')
-                            .join('_')}${valueArray}`;
-                        await User.create({
-                            ...req.body,
-                            identifier,
-                            password: hash,
-                            avatar: req.file
-                                ? `${req.protocol}://${req.get(
-                                      'host'
-                                  )}/src/avatar/${req.file.filename}`
-                                : null,
-                            email_confirmation_token: token,
-                        });
                         return res.status(200).json({
                             message:
                                 "L'utilisateur a été créé. Allez vérifier vos e-mails.",

@@ -7,8 +7,6 @@ const profilRouter = require('./routes/profils');
 
 const app = express();
 
-app.use(cookieParser());
-
 const logger = winston.createLogger({
     level: 'info',
     format: winston.format.json(),
@@ -49,6 +47,8 @@ const corsOptions = {
     credentials: true,
     optionSuccessStatus: 200,
 };
+app.use(cookieParser());
+app.use(express.static(`/src/avatar/`));
 app.use(cors(corsOptions));
 app.use(express.json());
 

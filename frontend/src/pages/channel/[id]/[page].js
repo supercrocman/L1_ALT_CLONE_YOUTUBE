@@ -2,16 +2,13 @@ import AccountMenu from '../../../components/AccountMenu';
 import AppBar from '@mui/material/AppBar';
 import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
 import Fab from '@mui/material/Fab';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import { Grid } from '@mui/material';
 import Link from 'next/link';
-import PersonPinIcon from '@mui/icons-material/PersonPin';
 import React from 'react';
 import { Roboto } from 'next/font/google';
 import Router from 'next/router';
-import SwipeableViews from 'react-swipeable-views';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import Typography from '@mui/material/Typography';
@@ -42,7 +39,7 @@ function TabPanel(props) {
         >
             {value === index && (
                 <Box sx={{ p: 3 }}>
-                    <Typography>{children}</Typography>
+                    <Typography variant="span">{children}</Typography>
                 </Box>
             )}
         </div>
@@ -131,8 +128,7 @@ export default function ChannelPage({ user }) {
         };
 
         fetchData();
-    }, []);
-
+    }, [id, page]);
     return (
         <div className={roboto.className}>
             <AccountMenu></AccountMenu>
@@ -159,7 +155,7 @@ export default function ChannelPage({ user }) {
                             height: 128,
                             marginRight: '5%',
                         }}
-                        alt="Remy Sharp"
+                        alt={name}
                         src={avatar ? avatar : null}
                     >
                         {avatar ? null : name ? name.split('')[0] : null}
@@ -266,54 +262,48 @@ export default function ChannelPage({ user }) {
                         />
                     </Tabs>
                 </AppBar>
-                <SwipeableViews
-                    axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
-                    index={value}
-                    onChangeIndex={handleChangeIndex}
-                >
-                    <TabPanel value={value} index={0} dir={theme.direction}>
-                        Empty
-                    </TabPanel>
-                    <TabPanel value={value} index={1} dir={theme.direction}>
-                        <Grid container justifyContent={'center'}>
-                            {videos.map((video, i) => {
-                                video = {
-                                    thumbnail: video.thumbnail,
-                                    title: video.title,
-                                    views: video.views,
-                                    date: video.uploaded_at,
-                                    duration: video.length,
-                                    identifier: video.identifier,
-                                    description: video.description,
-                                    author: {
-                                        name: name,
-                                        avatar: avatar,
-                                        subCount: subscribers,
-                                        description: description,
-                                        identifier: id.split('@')[1],
-                                    },
-                                };
-                                return (
-                                    <VideoCard
-                                        key={'card' + i}
-                                        video={video}
-                                        small
-                                        vertical
-                                    />
-                                );
-                            })}
-                        </Grid>
-                    </TabPanel>
-                    <TabPanel value={value} index={2} dir={theme.direction}>
-                        Empty
-                    </TabPanel>
-                    <TabPanel value={value} index={3} dir={theme.direction}>
-                        {description}
-                    </TabPanel>
-                    <TabPanel value={value} index={4} dir={theme.direction}>
-                        Empty
-                    </TabPanel>
-                </SwipeableViews>
+                <TabPanel value={value} index={0}>
+                    Item One
+                </TabPanel>
+                <TabPanel value={value} index={1} dir={theme.direction}>
+                    <Grid container justifyContent={'center'}>
+                        {videos.map((video, i) => {
+                            video = {
+                                thumbnail: video.thumbnail,
+                                title: video.title,
+                                views: video.views,
+                                date: video.uploaded_at,
+                                duration: video.length,
+                                identifier: video.identifier,
+                                description: video.description,
+                                author: {
+                                    name: name,
+                                    avatar: avatar,
+                                    subCount: subscribers,
+                                    description: description,
+                                    identifier: id.split('@')[1],
+                                },
+                            };
+                            return (
+                                <VideoCard
+                                    key={'card' + i}
+                                    video={video}
+                                    small
+                                    vertical
+                                />
+                            );
+                        })}
+                    </Grid>
+                </TabPanel>
+                <TabPanel value={value} index={2} dir={theme.direction}>
+                    Empty
+                </TabPanel>
+                <TabPanel value={value} index={3} dir={theme.direction}>
+                    {description}
+                </TabPanel>
+                <TabPanel value={value} index={4} dir={theme.direction}>
+                    Empty
+                </TabPanel>
             </Box>
         </div>
     );
