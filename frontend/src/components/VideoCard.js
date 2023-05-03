@@ -163,6 +163,9 @@ export const VideoCard = ({ video, small = false, vertical = false }) => {
                             <TitleLink
                                 href={`/channel/@${video?.author.identifier}`}
                                 onClick={(e) => e.stopPropagation()}
+                                sx={{
+                                    pl: 1,
+                                }}
                             >
                                 <Avatar
                                     alt={video?.author.name}
