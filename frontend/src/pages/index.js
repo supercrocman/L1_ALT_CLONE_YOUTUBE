@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { Container, Typography } from "@mui/material";
 import { VideoCard } from "@/components/VideoCard";
-import Divider from '@mui/material/Divider';
 
 
 
@@ -28,10 +27,58 @@ export default function Home() {
   if(videos.user_reco){
     user_reco = true;
   }
-  const vids = videos.videos;
-  const auths = videos.authors;
+  const vids = videos?.defaultvids?.videos;
+  const auths = videos?.defaultvids?.authors;
+
+  const vids_reco = videos?.videos_reco;
+  const auths_reco = videos?.authors_reco;
+
     return (
         <>
+        {console.log(videos)}
+                {user_reco && <Typography variant="h5" component="h4" marginLeft="30px">
+                    Vidéos recommandées
+                </Typography>}
+                <Container
+                sx={{
+                    display: "flex",
+                    flexWrap: "wrap",
+                    justifyContent: "center",
+                    "& > *": {
+                        mt: 4,
+                    },
+                }}
+            >
+              
+                {Array.isArray(vids_reco) && vids_reco.map((video, index) => 
+                {
+                  const author = auths_reco.find((author) => author.identifier === video.author);
+                return(
+                    <VideoCard
+                        key={index}
+                        video={{
+                          title: video.title,
+                          description: video.description,
+                          views: video.views,
+                          length: video.length,
+                          thumbnail: video.thumbnail,
+                          identifier: video.identifier,
+                          uploaded_at: video.uploaded_at,
+                          author: {
+                            identifier: author.identifier,
+                            name: author.name,
+                            avatar: author.avatar,
+                            subCount: author.subCount,
+                          },
+                        }}
+                        vertical
+                    />
+                )})}
+            </Container>
+
+<Typography variant="h5" component="h4" marginLeft="30px">
+                    Vidéos populaires
+                </Typography>
             <Container
                 sx={{
                     display: "flex",
@@ -42,6 +89,7 @@ export default function Home() {
                     },
                 }}
             >
+              
                 {Array.isArray(vids) && vids.map((video, index) => 
                 {
                   const author = auths.find((author) => author.identifier === video.author);
