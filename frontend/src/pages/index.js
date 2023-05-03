@@ -54,13 +54,7 @@ export default function Home() {
                     <VideoCard
                         key={index}
                         video={{
-                          title: video.title,
-                          description: video.description,
-                          views: video.views,
-                          length: video.length,
-                          thumbnail: video.thumbnail,
-                          identifier: video.identifier,
-                          uploaded_at: video.uploaded_at,
+                          ...video,
                           author: {
                             identifier: author.identifier,
                             name: author.name,
@@ -91,13 +85,7 @@ export default function Home() {
                     <VideoCard
                         key={index}
                         video={{
-                          title: video.title,
-                          description: video.description,
-                          views: video.views,
-                          length: video.length,
-                          thumbnail: video.thumbnail,
-                          identifier: video.identifier,
-                          uploaded_at: video.uploaded_at,
+                          ...video,
                           author: {
                             identifier: author.identifier,
                             name: author.name,
