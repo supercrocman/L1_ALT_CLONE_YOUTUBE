@@ -103,7 +103,7 @@ function Signup({ open, setOpen, setFenetre }) {
         <Box>
             <Popup open={open} setOpen={setOpen} setFenetre={setFenetre}>
                 <Box
-                    className={`${profilStyles.profilContainer}`}
+                    className={profilStyles.profilContainer}
                     component="form"
                     noValidate
                     autoComplete="off"
@@ -217,7 +217,7 @@ function Signup({ open, setOpen, setFenetre }) {
                 </Box>
                 <Typography
                     variant="a"
-                    className={`${profilStyles.lien}`}
+                    className={profilStyles.lien}
                     onClick={() => {
                         setFenetre(1);
                     }}

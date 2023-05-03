@@ -32,13 +32,13 @@ function Confirmation() {
 
     return (
         <>
-            <Box className={`${profilStyles.profilContainer}`}>
+            <Box className={profilStyles.profilContainer}>
                 <Paper
                     sx={{
                         padding: 20,
                         maxWidth: 800,
                     }}
-                    className={`${profilStyles.profilContainer}`}
+                    className={profilStyles.profilContainer}
                 >
                     <h1>
                         {error ? 'Sorry...😅' : 'Compte confirmé et validé!'}

@@ -22,7 +22,8 @@ exports.signup = (req, res) => {
             const valueArray = parseInt(hex, 16);
             const token = jwt.sign(
                 { email: req.body.email },
-                process.env.SECRET_KEY_ACCESS
+                process.env.SECRET_KEY_ACCESS,
+                { expiresIn: '7d' }
             );
             const transporter = nodemailer.createTransport({
                 host: process.env.EMAIL_HOST,
@@ -65,7 +66,7 @@ exports.signup = (req, res) => {
                         });
                         return res.status(200).json({
                             message:
-                                "L'utilisateur a été crée. Aller checker vos mails",
+                                "L'utilisateur a été créé. Allez vérifier vos e-mails.",
                         });
                     }
                 }
@@ -101,6 +102,11 @@ exports.verifyUser = async (req, res) => {
 exports.login = async (req, res) => {
     try {
         const { userMail, userPassword, remember } = req.body;
+        const refreshTokenCookieOptions = {
+            httpOnly: true,
+            maxAge: 30 * 24 * 60 * 60 * 1000,
+            path: '/',
+        };
         const user = await User.findOne({ where: { email: userMail } });
         if (!user) {
             return res
@@ -112,7 +118,6 @@ exports.login = async (req, res) => {
                 .status(401)
                 .json({ message: "Le compte n'a pas été activée" });
         }
-
         // eslint-disable-next-line consistent-return
         bcrypt
             .compare(userPassword, user.password)
@@ -125,47 +130,24 @@ exports.login = async (req, res) => {
                 const accessToken = jwt.sign(
                     { identifier: user.identifier },
                     process.env.SECRET_KEY_ACCESS,
-                    { expiresIn: 4 }
+                    { expiresIn: '25m' }
                 );
                 if (remember) {
                     const refreshToken = jwt.sign(
                         { identifier: user.identifier },
                         process.env.SECRET_KEY_REFRESH,
-                        { expiresIn: '7d' }
+                        { expiresIn: 30 * 24 * 60 * 60 * 1000 }
                     );
-                    const expirationDate = new Date();
-                    expirationDate.setDate(expirationDate.getDate() + 7);
-                    await User.update(
-                        {
-                            password_reminder_token: refreshToken,
-                            password_reminder_expire: expirationDate,
-                        },
-                        {
-                            where: {
-                                email: userMail,
-                            },
-                        }
-                    );
-                } else {
-                    await User.update(
-                        {
-                            password_reminder_token: null,
-                            password_reminder_expire: null,
-                        },
-                        {
-                            where: {
-                                email: userMail,
-                            },
-                        }
+                    res.cookie(
+                        'refreshToken',
+                        refreshToken,
+                        refreshTokenCookieOptions
                     );
                 }
-
                 return res.status(200).json({
                     accessToken,
                     avatar: user.avatar,
-                    identifier: user.identifier,
                     pseudo: user.name,
-                    userId: user.id,
                 });
             });
     } catch (error) {
@@ -175,37 +157,50 @@ exports.login = async (req, res) => {
 
 exports.refresh = async (req, res) => {
     try {
-        const { userIdentifier } = req.body;
+        const { refreshToken } = req.cookies;
+        if (!refreshToken) {
+            return res
+                .status(401)
+                .json({ message: 'Refresh token invalide ou expiré' });
+        }
+        const decodedToken = jwt.verify(
+            refreshToken,
+            process.env.SECRET_KEY_REFRESH
+        );
+        const { identifier } = decodedToken;
         const user = await User.findOne({
             attibutes: ['password_reminder_token'],
-            where: { identifier: userIdentifier },
+            where: { identifier },
         });
         if (!user) {
-            return res.status(401).json({ message: 'Identifiant mauvais' });
+            res.clearCookie('refreshToken');
+            return res.status(401).json({ message: 'Token mauvais' });
         }
-        jwt.verify(
-            user.password_reminder_token,
-            process.env.SECRET_KEY_REFRESH,
-            (err, decodedToken) => {
-                if (err) {
-                    console.log(err);
-                    return res
-                        .status(401)
-                        .json({ message: 'Refresh token invalide ou expiré' });
-                }
-                const { identifier } = decodedToken;
-                const accessToken = jwt.sign(
-                    { identifier },
-                    process.env.SECRET_KEY_ACCESS,
-                    {
-                        expiresIn: 4,
-                    }
-                );
-                return res.status(201).json({ accessToken });
+        const accessToken = jwt.sign(
+            { identifier },
+            process.env.SECRET_KEY_ACCESS,
+            {
+                expiresIn: '25m',
             }
         );
+
+        return res.status(201).json({ accessToken });
+    } catch (error) {
+        res.clearCookie('refreshToken');
+        return res
+            .status(401)
+            .json({ message: 'Refresh token invalide ou expiré' });
+    }
+};
+
+exports.logout = (req, res) => {
+    try {
+        res.clearCookie('refreshToken');
+        res.clearCookie('user');
+        res.clearCookie('AccessToken');
+        res.sendStatus(200);
     } catch (e) {
         console.log(e);
-        return res.status(401).json({ message: 'Problème de connexion' });
+        return res.sendStatus(500);
     }
 };

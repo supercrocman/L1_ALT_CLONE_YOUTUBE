@@ -1,5 +1,4 @@
 import Popup from './Popup';
-import React from 'react';
 import { useState } from 'react';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
@@ -20,7 +19,6 @@ const Login = ({ open, setOpen, setFenetre }) => {
     const [userPassword, setuserPassword] = useState('');
     const [error, setError] = useState('');
     const [remember, setRemember] = useState(true);
-    console.log(remember);
 
     async function handleSubmit(event) {
         event.preventDefault();
@@ -32,17 +30,30 @@ const Login = ({ open, setOpen, setFenetre }) => {
                 data: { userMail, userPassword, remember },
             });
             if (response.data) {
-                setCookie('user', JSON.stringify(response.data), { path: '/' });
+                setCookie('AccessToken', response.data.accessToken, {
+                    path: '/',
+                });
+                setCookie(
+                    'user',
+                    JSON.stringify({
+                        avatar: response.data.avatar,
+                        pseudo: response.data.pseudo,
+                        remember,
+                    }),
+                    {
+                        path: '/',
+                    }
+                );
                 setOpen(false);
-                axiosInstance.defaults.headers.common[
-                    'Authorization'
-                ] = `Bearer ${response.data.accessToken}`;
+                setCookie('isLoggIn', true);
             } else {
                 setError('Identifiants invalides');
             }
         } catch (error) {
             console.log(error);
             setError('Identifiants invalides, veuillez réessayer');
+        } finally {
+            setRemember(true);
         }
     }
 
@@ -50,7 +61,7 @@ const Login = ({ open, setOpen, setFenetre }) => {
         <Box sx={{ justifyContent: 'space-between' }}>
             <Popup open={open} setOpen={setOpen} setFenetre={setFenetre}>
                 <Box
-                    className={`${profilStyles.profilContainer}`}
+                    className={profilStyles.profilContainer}
                     component="form"
                     noValidate
                     autoComplete="off"
@@ -97,7 +108,7 @@ const Login = ({ open, setOpen, setFenetre }) => {
                 </Box>
                 <Typography
                     variant="a"
-                    className={`${profilStyles.lien}`}
+                    className={profilStyles.lien}
                     onClick={() => {
                         setFenetre(0);
                     }}
