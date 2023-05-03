@@ -29,6 +29,7 @@ import EqualizerIcon from '@mui/icons-material/Equalizer';
 import Router from 'next/router';
 import Avatar from '@mui/material/Avatar';
 import stringToColor from "@/utils/stringToColor";
+import AccountMenu from "@/components/AccountMenu";
 
 const drawerWidth = 240;
 
@@ -153,9 +154,12 @@ export default function StudioLeftNavBar({ user, page }) {
                     >
                         <MenuIcon />
                     </IconButton>
-                    <Typography variant="h6" noWrap component="div">
-                        WatchSpace Studio
-                    </Typography>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+                        <Typography variant="h6" noWrap component="div">
+                            WatchSpace Studio
+                        </Typography>
+                        <AccountMenu />
+                    </Box>
                 </Toolbar>
             </AppBar>
             <Drawer variant="permanent" open={open}>

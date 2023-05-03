@@ -13,7 +13,6 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import PersonPinIcon from '@mui/icons-material/PersonPin';
 import Router from 'next/router';
 import { deepOrange } from '@mui/material/colors';
-import AccountMenu from '../../../components/AccountMenu';
 import { Roboto } from 'next/font/google';
 import { useRouter } from 'next/router';
 import { useTheme } from '@mui/material/styles';
@@ -151,7 +150,6 @@ export default function ChannelPage() {
 
     return (
         <div className={roboto.className}>
-            <AccountMenu></AccountMenu>
             <div style={{ display: "flex", justifyContent: "space-evenly", width: "100%", marginBottom: "25px" }}>
                 <div style={{ display: "flex", alignItems: "center", justifyContent: "space-evenly", width: "25%" }}>
                     <Avatar alt={name} sx={{ bgcolor: stringToColor(name), width: 128, height: 128, marginRight: "5%" }} src="/broken-image.jpg" />
