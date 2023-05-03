@@ -10,7 +10,7 @@ export default function VideoPlayerPage() {
                 <Container/>
                 <Player/>
                 <VideoComments/>
-                {/*<VideoInformation />*/}
+                {/* <VideoInformation/> */}
             </div>
     );
 }
