@@ -7,6 +7,8 @@ const axiosInstance = axios.create({
     withCredentials: true,
 });
 
+axiosInstance.CancelToken = axios.CancelToken;
+
 axiosInstance.interceptors.request.use((config) => {
     const accessToken = getCookie('AccessToken');
     if (accessToken) {
