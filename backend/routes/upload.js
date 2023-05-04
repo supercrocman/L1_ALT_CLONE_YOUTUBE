@@ -4,7 +4,6 @@ const db = require('../services/sequelize');
 const ffprobe = require('ffprobe-client');
 const { v4: uuidv4 } = require('uuid');
 
-
 const router = express.Router();
 
 async function GenerateGUID() {
@@ -21,18 +20,20 @@ async function GenerateGUID() {
     } else {
       return guid;
     }
-  }catch(error){
+  } catch (error) {
     console.error('Error generating GUID:', error);
   }
 }
 
+const now = Date.now();
+
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, '../frontend/src/videos');
+    cb(null, './src/videos');
   },
   filename: (req, file, cb) => {
     const OriginalNameWith_ = file.originalname.replace(/ /g, '_').replace(/:/g, '_').replace(/-/g, '_');
-    cb(null, `${Date.now()}_${OriginalNameWith_}`);
+    cb(null, `${now}_${OriginalNameWith_}`);
   }
 });
 
@@ -52,8 +53,9 @@ const upload = multer({
 router.post('/upload', upload.single('inputFile'), async (req, res) => {
 
   const file = req.file;
-  console.log(file.path);
   const UserIdentifier = req.query.UserIdentifier;
+  const title = req.query.title;
+  const description = req.query.description;
   //   console.log(UserIdentifier);
 
   if (!file) {
@@ -61,11 +63,7 @@ router.post('/upload', upload.single('inputFile'), async (req, res) => {
     return;
   }
 
-  const guid = uuidv4();
-  console.log('Generated GUID:', guid);
-
-  const GUID = GenerateGUID();
-  console.log('Generated GUID:', GUID);
+  const GUID = await GenerateGUID();
 
   try {
     const metadata = await ffprobe(file.path);
@@ -73,11 +71,28 @@ router.post('/upload', upload.single('inputFile'), async (req, res) => {
     const duration = videoStream.duration;
     const bitrate = videoStream.bit_rate;
     const bits_per_raw_sample = videoStream.bits_per_raw_sample;
-    const title = file.originalname.replace(/ /g, '_').replace(/:/g, '_').replace(/-/g, '_').split('.')[0];
 
-    // const hdr = bits_per_raw_sample > 8 : true ? videoStream.hdr : false;
+    const user = await db.User.findOne({
+      where: {
+        identifier: UserIdentifier,
+      },
+    });
 
-    console.log('Video duration:', `${duration} seconds`);
+    const userId = user.id;
+
+    const newVideo = await db.Video.create({
+      path: `http://localhost:3001/static/videos/${now}_${file.originalname.replace(/ /g, '_').replace(/:/g, '_').replace(/-/g, '_')}`,
+      title: title,
+      description: description,
+      thumbnail: 'http://dummyimage.com/1280x720.png/dddddd/000000',
+      bitrate: bitrate,
+      searchable_title: title.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, ''),
+      identifier: GUID,
+      user_id: user.id,
+      length: duration, // Ajouter cette ligne pour définir la valeur de l'attribut length
+    });
+
+    res.json({ success: true, message: 'Video uploaded successfully', GUID });
 
     // Your remaining code...
 
@@ -85,26 +100,6 @@ router.post('/upload', upload.single('inputFile'), async (req, res) => {
     console.error('Error extracting video metadata:', error);
     res.status(500).json({ error: 'Error extracting video metadata.' });
   }
-  const user = await db.User.findOne({
-    where: {
-      identifier: UserIdentifier,
-    },
-  });
-  const userId = user.id;
-  // console.log(userId);
-
-  //    const newVideo = await db.Video.create({
-  //     path: file.path,
-  //     title: `${Date.now()} ${file.originalname}`,
-  //     thumbnail: 'http://dummyimage.com/1280x720.png/dddddd/000000',
-  //     duration: duration,
-  //     bitrate: bitrate,
-  //     searchable_title: `${Date.now()} ${title}`.toLowerCase(),
-  //     identifier: ,
-  //     user_id: 1,
-  //   });
-
-  res.status(200).json({ success: true, message: 'Video uploaded successfully', file });
 });
 
 module.exports = router;

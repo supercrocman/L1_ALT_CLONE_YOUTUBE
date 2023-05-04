@@ -3,8 +3,10 @@ const winston = require('winston');
 const db = require('./services/sequelize');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const path = require('path');
 
 const app = express();
+
 
 app.use(
     cors({
@@ -64,6 +66,10 @@ app.use('/api', require('./routes/ChannelInfos'));
 app.use('/api', require('./routes/video'));
 
 app.use('/api', require('./routes/upload'));
+
+
+const videoPath = path.join(__dirname, './src/videos');
+app.use('/static/videos', express.static(videoPath));
 
 app.listen(port, () => {
     logger.info(`Example app listening on port ${port}`);
