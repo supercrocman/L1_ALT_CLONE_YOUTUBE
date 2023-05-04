@@ -37,7 +37,6 @@ export default function Dashboard({ user }) {
         }
     }, [user]);
 
-    console.log(name);
     return (
         <div>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>

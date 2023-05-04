@@ -29,7 +29,6 @@ export default function App({ Component, pageProps }) {
 
 
     if (lastUrlPart === "studio") {
-        console.log("lastUrlPart", lastUrlPart);
         return (
             <ThemeProvider theme={darkTheme}>
                 <CssBaseline />

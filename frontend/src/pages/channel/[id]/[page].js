@@ -119,7 +119,6 @@ export default function ChannelPage() {
                     "http://localhost:3001/api/user/" + id.split("@")[1];
                 try {
                     const response = await axios.get(baseURL);
-                    console.log(response.data);
                     setName(response.data["user"].name);
                     setDescription(response.data["user"].description);
                     setSubscribers(response.data["user"]["subCount"]);

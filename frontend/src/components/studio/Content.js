@@ -35,22 +35,6 @@ function createData(video, visibility, restrictions, date, vues, commentary, lik
     };
 }
 
-const rows = [
-    createData('Cupcake', "Aucune restriction", 3.7, 67, 4.3, 1, 2),
-    createData('Donut', "Aucune restriction", 25.0, 51, 4.9, 5, 3),
-    createData('Eclair', "Aucune restriction", 16.0, 24, 6.0, 2, 4),
-    createData('Frozen yoghurt', "Aucune restriction", 6.0, 24, 4.0, 3, 5),
-    createData('Gingerbread', "Aucune restriction", 16.0, 49, 3.9, 4, 6),
-    createData('Honeycomb', "Aucune restriction", 3.2, 87, 6.5, 5, 7),
-    createData('Ice cream sandwich', "Aucune restriction", 9.0, 37, 4.3, 6, 8),
-    createData('Jelly Bean', "Aucune restriction", 0.0, 94, 0.0, 7, 9),
-    createData('KitKat', "Aucune restriction", 26.0, 65, 7.0, 8, 10),
-    createData('Lollipop', "Aucune restriction", 0.2, 98, 0.0, 9, 11),
-    createData('Marshmallow', "Aucune restriction", 0, 81, 2.0, 10, 12),
-    createData('Nougat', "Aucune restriction", 19.0, 9, 37.0, 11, 13),
-    createData('Oreo', "Aucune restriction", 18.0, 63, 4.0, 12, 14),
-];
-
 function descendingComparator(a, b, orderBy) {
     if (b[orderBy] < a[orderBy]) {
         return -1;
