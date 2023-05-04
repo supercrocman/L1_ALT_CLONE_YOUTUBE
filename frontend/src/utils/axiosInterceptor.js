@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { deleteCookie, getCookie } from 'cookies-next';
+import { deleteCookie, getCookie, setCookie } from 'cookies-next';
 
 const axiosInstance = axios.create({
     baseURL: 'http://localhost:3001/',
@@ -8,6 +8,7 @@ const axiosInstance = axios.create({
 });
 
 axiosInstance.CancelToken = axios.CancelToken;
+axiosInstance.isCancel = axios.isCancel;
 
 axiosInstance.interceptors.request.use((config) => {
     const accessToken = getCookie('AccessToken');
