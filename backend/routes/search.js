@@ -1,8 +1,10 @@
 const express = require('express');
-const router = express.Router();
-const db = require('../services/sequelize');
 const { Op } = require('sequelize');
 const { body, validationResult } = require('express-validator');
+const db = require('../services/sequelize');
+const logger = require('../services/winston');
+
+const router = express.Router();
 
 router.post(
     '/search',
@@ -39,7 +41,7 @@ router.post(
             const titleList = videos.map((video) => video.title);
             res.json({ topChannelName, videos: titleList });
         } catch (error) {
-            console.error(error);
+            logger.error(error);
             res.status(500).send('Server error');
         }
     }
@@ -186,7 +188,7 @@ router.post(
             };
             res.json(data);
         } catch (error) {
-            console.error(error);
+            logger.error(error);
             res.status(500).send('Server error');
         }
     }

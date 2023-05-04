@@ -19,7 +19,7 @@ module.exports = (sequelize, DataTypes) =>
                 },
             },
             identifier: {
-                type: DataTypes.STRING(15),
+                type: DataTypes.STRING(100),
                 allowNull: false,
                 unique: 'identifier',
             },

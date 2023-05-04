@@ -1,3 +1,5 @@
+const Sequelize = require('sequelize');
+
 module.exports = (sequelize, DataTypes) =>
     sequelize.define(
         'user',
@@ -23,7 +25,7 @@ module.exports = (sequelize, DataTypes) =>
                 unique: 'email',
             },
             email_confirmation_token: {
-                type: DataTypes.STRING(50),
+                type: DataTypes.STRING(150),
                 allowNull: true,
             },
             password: {
@@ -31,7 +33,7 @@ module.exports = (sequelize, DataTypes) =>
                 allowNull: false,
             },
             password_reminder_token: {
-                type: DataTypes.STRING(50),
+                type: DataTypes.STRING(250),
                 allowNull: true,
             },
             password_reminder_expire: {
@@ -39,7 +41,7 @@ module.exports = (sequelize, DataTypes) =>
                 allowNull: true,
             },
             avatar: {
-                type: DataTypes.STRING(30),
+                type: DataTypes.STRING(100),
                 allowNull: true,
             },
             verified: {
@@ -57,10 +59,14 @@ module.exports = (sequelize, DataTypes) =>
             createdAt: {
                 field: 'created_at',
                 type: DataTypes.DATE,
+                allowNull: false,
+                defaultValue: Sequelize.Sequelize.fn('current_timestamp'),
             },
             updatedAt: {
                 field: 'updated_at',
                 type: DataTypes.DATE,
+                allowNull: false,
+                defaultValue: Sequelize.Sequelize.fn('current_timestamp'),
             },
         },
         {

@@ -1,30 +1,29 @@
-import { AuthorCard, LowerButton } from "@/components/AuthorCard";
-import { Container, Divider, Typography } from "@mui/material";
+import { AuthorCard, LowerButton } from '@/components/AuthorCard';
+import { Container, Divider, Typography } from '@mui/material';
 
-import Image from "next/image";
-import React from "react";
-import SearchBar from "@/components/SearchBar";
-import TuneIcon from "@mui/icons-material/Tune";
-import { VideoCard } from "@/components/VideoCard";
-import axios from "axios";
-import results from "../../public/results.svg";
-import { styled } from "@mui/material/styles";
-import { useRouter } from "next/router";
+import Image from 'next/image';
+import React from 'react';
+import SearchBar from '@/components/SearchBar';
+import TuneIcon from '@mui/icons-material/Tune';
+import { VideoCard } from '@/components/VideoCard';
+import results from '../../public/results.svg';
+import { styled } from '@mui/material/styles';
+import { useRouter } from 'next/router';
+import axiosInstance from '@/utils/axiosInterceptor';
 
-const LastAuthorVideo = styled("p")(({ theme }) => ({
+const LastAuthorVideo = styled('p')(({ theme }) => ({
     color: theme.palette.text.primary,
-    fontWeight: "bold",
+    fontWeight: 'bold',
     margin: 0,
     padding: 0,
-    marginTop: "24px",
-    marginBottom: "16px",
+    marginTop: '24px',
+    marginBottom: '16px',
 }));
 
-const Results = ({ search_query = "", data = [] }) => {
-    console.log(data);
+const Results = ({ search_query = '', data = [] }) => {
     const [featuredAuthor, setFeaturedAuthor] = React.useState(
         data?.topChannelVideos_found?.length > 0
-            ? typeof data.topChannelVideos_found[0].author === "string"
+            ? typeof data.topChannelVideos_found[0].author === 'string'
                 ? data.authors_found.find(
                       (author) =>
                           author.identifier ===
@@ -51,20 +50,20 @@ const Results = ({ search_query = "", data = [] }) => {
                             authorVideo.author = featuredAuthor;
                             return (
                                 <VideoCard
-                                    key={"authorVideo" + i}
+                                    key={'authorVideo' + i}
                                     video={authorVideo}
                                 />
                             );
                         })}
-                        <Divider sx={{ mt: "12px" }} />
+                        <Divider sx={{ mt: '12px' }} />
                     </>
                 )}
                 {data?.videos_found?.map((video, i) => {
-                    if (typeof video.author === "string")
+                    if (typeof video.author === 'string')
                         video.author = data.authors_found.find(
                             (author) => author.identifier === video.author
                         );
-                    return <VideoCard key={"searchVideo" + i} video={video} />;
+                    return <VideoCard key={'searchVideo' + i} video={video} />;
                 })}
                 {(data.length === 0 ||
                     (data.videos_found?.length === 0 &&
@@ -108,13 +107,9 @@ export async function getServerSideProps(context) {
     let data = [];
     try {
         // fetch data from the API based on the search_query
-        const response = await axios.post(
-            `http://localhost:3001/api/submit-search`,
-            {
-                q: search_query,
-            }
-        );
-        console.log(response.data);
+        const response = await axiosInstance.post(`/api/submit-search`, {
+            q: search_query,
+        });
         data = response.data;
     } catch (error) {
         console.log(error.message);
