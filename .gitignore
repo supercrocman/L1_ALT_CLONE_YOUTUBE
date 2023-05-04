@@ -222,5 +222,4 @@ sketch
 
 
 frontend\public\videos\thumbnails
-frontend\src\videos\*.mp4
 *.mp4
