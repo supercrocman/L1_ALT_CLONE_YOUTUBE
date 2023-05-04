@@ -93,8 +93,6 @@ router.post('/timeline', async (req, res) => {
             return author_without_id;
         });
 
-        const defaultvids = await defaultTimeline();
-        logger.info('timeline sent');
         return res.send({
             defaultvids,
             videos_reco: videos_found,
