@@ -13,7 +13,7 @@ import Slide from '@mui/material/Slide';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
-  });
+});
 
 export default function Upload({ user }) {
     const [title, setTitle] = React.useState('');
@@ -21,9 +21,9 @@ export default function Upload({ user }) {
     const [open, setOpen] = React.useState(false);
 
 
-  const handleClose = () => {
-    setOpen(false);
-  };
+    const handleClose = () => {
+        setOpen(false);
+    };
 
     const onUpload = async (event) => {
         event.preventDefault();
@@ -110,24 +110,24 @@ export default function Upload({ user }) {
                         </Button>
                 }
             </div>
-                            <Dialog
-                                open={open}
-                                TransitionComponent={Transition}
-                                keepMounted
-                                onClose={handleClose}
-                                aria-describedby="alert-dialog-slide-description"
-                                radius={25}
-                            >
-                                <DialogTitle>{"La vidéo a été importer avec succès !"}</DialogTitle>
-                                <DialogContent>
-                                    <DialogContentText id="alert-dialog-slide-description">
-                                        
-                                    </DialogContentText>
-                                </DialogContent>
-                                <DialogActions>
-                                    <Button onClick={handleClose}>Parfait</Button>
-                                </DialogActions>
-                            </Dialog>
+            <Dialog
+                open={open}
+                TransitionComponent={Transition}
+                keepMounted
+                onClose={handleClose}
+                aria-describedby="alert-dialog-slide-description"
+                radius={25}
+            >
+                <DialogTitle>{"La vidéo a été importer avec succès !"}</DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="alert-dialog-slide-description">
+
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleClose}>Parfait</Button>
+                </DialogActions>
+            </Dialog>
         </div >
     )
 }
