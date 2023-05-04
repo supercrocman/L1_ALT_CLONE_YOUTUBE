@@ -78,15 +78,30 @@ Dans le dossier backend
 
 ## Production
 
-Installer 
+Build
 
+Dans le dossier frontend
 ```bash
-    install
+  cd frontend
+  docker build -t nextjs-docker .
+```
+Dans le dossier backend
+```bash
+  cd backend
+  docker build -t express-docker .
 ```
 
-Production
+Lancement
+
+Dans le dossier frontend
 ```bash
-    install
+  cd frontend
+  sudo docker run -p 80:3000 nextjs-docker
+```
+Dans le dossier backend
+```bash
+  cd backend
+  sudo docker run -p 3001:3001 express-docker
 ```
 ## Crédit
 
