@@ -112,6 +112,37 @@ async function getRecentPopularVideos(max){
         limit: max,
         order: [['views', 'DESC']],
     });
+    if(videos.length < max){
+        const videos2 = await db.Video.findAll({
+            where: {
+                uploaded_at: {
+                    [Op.gte]: new Date(new Date() - 30 * 60 * 60 * 24 * 1000),
+                },
+            },
+            limit: max - videos.length,
+            order: [['views', 'DESC']],
+        });
+        videos.push(...videos2);
+    }
+    if(videos.length < max){
+        const videos3 = await db.Video.findAll({
+            where: {
+                uploaded_at: {
+                    [Op.gte]: new Date(new Date() - 365 * 60 * 60 * 24 * 1000),
+                },
+            },
+            limit: max - videos.length,
+            order: [['views', 'DESC']],
+        });
+        videos.push(...videos3);
+    }
+    if(videos.length < max){
+        const videos4 = await db.Video.findAll({
+            limit: max - videos.length,
+            order: [['views', 'DESC']],
+        });
+        videos.push(...videos4);
+    }
     return videos;
 }
 
