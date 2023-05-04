@@ -18,6 +18,7 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { useTheme } from '@mui/material/styles';
 import axiosInstance from '@/utils/axiosInterceptor';
+import stringToColor from '@/utils/stringToColor';
 
 const roboto = Roboto({
     weight: '400',
@@ -131,14 +132,6 @@ export default function ChannelPage({ user }) {
         fetchData();
     }, [id, page]);
 
-    const colorgentheme = createTheme({
-        palette: {
-            primary: {
-                main: stringToColor(name),
-            },
-        },
-    });
-
     return (
         <div className={roboto.className}>
             <div
@@ -165,8 +158,10 @@ export default function ChannelPage({ user }) {
                             height: 128,
                             marginRight: '5%',
                         }}
-                        src="/broken-image.jpg"
-                    />
+                        src={avatar ? avatar : null}
+                    >
+                        {avatar ? null : name ? name.split('')[0] : null}
+                    </Avatar>
                     <div
                         style={{
                             display: 'flex',

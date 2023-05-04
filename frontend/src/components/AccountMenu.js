@@ -15,6 +15,7 @@ import Router from 'next/router';
 import axiosInstance from '@/utils/axiosInterceptor';
 import { Roboto } from 'next/font/google';
 import { deepOrange } from '@mui/material/colors';
+import stringToColor from '@/utils/stringToColor';
 
 export default function AccountMenu({ handleLogout }) {
     const [anchorEl, setAnchorEl] = React.useState(null);
@@ -40,6 +41,7 @@ export default function AccountMenu({ handleLogout }) {
             fetchData();
         };
     }, []);
+
     return (
         <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
             <React.Fragment>
@@ -60,7 +62,11 @@ export default function AccountMenu({ handleLogout }) {
                             aria-expanded={open ? 'true' : undefined}
                         >
                             <Avatar
-                                sx={{ bgcolor: deepOrange[500] }}
+                                sx={{
+                                    bgcolor: user.name
+                                        ? stringToColor(user.name)
+                                        : deepOrange[500],
+                                }}
                                 alt={user.name}
                                 src={user.avatar ? user.avatar : null}
                             >
@@ -114,7 +120,11 @@ export default function AccountMenu({ handleLogout }) {
                         }
                     >
                         <Avatar
-                            sx={{ bgcolor: deepOrange[500] }}
+                            sx={{
+                                bgcolor: user.name
+                                    ? stringToColor(user.name)
+                                    : deepOrange[500],
+                            }}
                             alt={user.name}
                             src={user.avatar ? user.avatar : null}
                         >

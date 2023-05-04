@@ -4,7 +4,6 @@ import Autocomplete from '@mui/material/Autocomplete';
 import Button from '@mui/material/Button';
 import SearchIcon from '@mui/icons-material/Search';
 import TextField from '@mui/material/TextField';
-import styleSearch from '../styles/SearchBar.module.css';
 import { styled } from '@mui/material/styles';
 import axiosInstance from '@/utils/axiosInterceptor';
 
