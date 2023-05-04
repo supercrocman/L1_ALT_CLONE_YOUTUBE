@@ -3,6 +3,7 @@ import { styled, useTheme } from "@mui/material/styles";
 
 import Box from "@mui/material/Box";
 import Content from "@/components/studio/Content";
+import Upload from "@/components/studio/Upload";
 import Dashboard from "@/components/studio/Dashboard";
 import Router from "next/router";
 import StudioLeftNavBar from "../../../components/studio/StudioLeftNavBar";
@@ -58,6 +59,8 @@ export default function StudioPage() {
                 return "commentaires";
             case "content":
                 return <Content user={user} />;
+            case 'upload':
+                return <Upload user={user} />;
             case "playlists":
                 return "playlists";
             case "personnalisation":

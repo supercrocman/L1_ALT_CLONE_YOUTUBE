@@ -44,10 +44,10 @@ export default function Dashboard({ user }) {
                     Tableau de bord de {name}
                 </h1>
                 <div>
-                    <Button variant="contained" color="primary" sx={{ borderRadius: 50 }}>
+                    <Button variant="contained" color="primary" sx={{ borderRadius: 50 }} onClick={() => Router.push(`/studio/${identifier}/upload`)}>
                         <UploadIcon sx={{ fontSize: "2rem" }} />
                         <Typography sx={{ fontSize: 12, paddingLeft: 1 }} color="text.secondary">
-                            Transferer une vidéo
+                        Importer une vidéo
                         </Typography>
                     </Button>
                     {/* <Button variant="contained" sx={{ marginLeft: 2, borderRadius: 50 }} color="secondary" disabled>
