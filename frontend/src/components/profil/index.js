@@ -6,13 +6,27 @@ import AccountMenu from '../AccountMenu';
 import Login from './components/Login';
 import Signup from './components/Signup';
 import { useRouter } from 'next/router';
+import handleLogout from '@/utils/handleLogout';
 
 function Profil() {
     const [fenetre, setFenetre] = useState(1);
     const [open, setOpen] = useState(false);
     const [showProfil, setShowProfil] = useState(false);
     const router = useRouter();
-    const handleLogout = async () => {
+    // const handleLogout = async () => {
+    //     setCookie('isLoggIn', false);
+    //     setShowProfil(!!getCookie('isLoggIn'));
+    //     await clear();
+    //     router.push('/');
+    // };
+    // async function clear() {
+    //     try {
+    //         await axiosInstance.get('/profil/logout');
+    //     } catch (e) {
+    //         console.log(e);
+    //     }
+    // }
+    async function handleLogout (){
         setCookie('isLoggIn', false);
         setShowProfil(!!getCookie('isLoggIn'));
         await clear();

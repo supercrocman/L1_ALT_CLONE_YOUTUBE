@@ -24,10 +24,11 @@ axiosInstance.interceptors.response.use(
         return response;
     },
     async function (error) {
+        console.log('axdbhfzhefzhios', error);
         const originalRequest = error.config;
         if (
-            error.response.status === 401 &&
-            error.response.data.error === 'refresh'
+            error?.response?.status === 401 &&
+            error?.response?.data?.error === 'refresh'
         ) {
             try {
                 const response = await axiosInstance({
@@ -45,8 +46,8 @@ axiosInstance.interceptors.response.use(
                 return Promise.reject(error);
             }
         } else if (
-            error.response.status === 401 &&
-            error.response.data.error === 'reconnexion'
+            error?.response?.status === 401 &&
+            error?.response?.data?.error === 'reconnexion'
         ) {
             deleteCookie('user');
             deleteCookie('AccessToken');
@@ -54,7 +55,7 @@ axiosInstance.interceptors.response.use(
             if (typeof window === 'undefined') {
                 return Promise.reject(error);
             } else {
-                window.location.href = '/';
+                //window.location.href = '/';
             }
             return Promise.reject(error);
         }

@@ -195,7 +195,7 @@ export default function MiniDrawer({ children }) {
                         {
                             text: "Vos vidéos",
                             icon: <OndemandVideoIcon />,
-                            href: "/studio/@user1/content/videos",
+                            href: "/studio/@user1/content",
                         },
                     ].map((item) => (
                         <ListItem
