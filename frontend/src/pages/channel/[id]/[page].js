@@ -40,7 +40,7 @@ function TabPanel(props) {
         >
             {value === index && (
                 <Box sx={{ p: 3 }}>
-                    <Typography variant="span">{children}</Typography>
+                    {children}
                 </Box>
             )}
         </div>
@@ -104,8 +104,6 @@ export default function ChannelPage({ user }) {
     const handleChangeIndex = (index) => {
         setValue(index);
     };
-
-    // const baseURL = 'http://localhost:3001/api/user/' + id.split("@")[1];
 
     useEffect(() => {
         const fetchData = async () => {
