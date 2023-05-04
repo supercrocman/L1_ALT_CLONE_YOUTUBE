@@ -21,6 +21,7 @@ import axios from 'axios';
 import { VideoCard } from '../../../components/VideoCard';
 import stringToColor from '../../../utils/stringToColor';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { CleanLink } from "@/components/AuthorCard";
 
 const roboto = Roboto({
     weight: "400",
@@ -161,9 +162,14 @@ export default function ChannelPage() {
                                 {subscribers} abonné
                             </p>
                         </div>
-                        <Link href={"/channel/" + id + '/about'} style={{ color: "white", textDecoration: "none" }}>
-                            {description && description.length > 0 ? description.substring(0, 20) : ""} {description && description.length > 20 ? "..." : ""}
-                        </Link>
+                        <CleanLink
+                            sx={{ color: "#606060" }}
+                            href={"/channel/" + id + "/about"}
+                        >
+                            {description && description.length > 0
+                                ? description.substring(0, 20)
+                                : ""}
+                        </CleanLink>
                     </div>
                 </div>
                 <div

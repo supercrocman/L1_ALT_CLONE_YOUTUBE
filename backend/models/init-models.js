@@ -1,3 +1,5 @@
+const Sequelize = require('sequelize');
+
 const { DataTypes } = require('sequelize');
 const comments = require('./comments');
 const playlist = require('./playlist');
@@ -55,7 +57,7 @@ function initModels(sequelize) {
         as: 'User_subscribe_UserSubscriptions',
         foreignKey: 'User_subscribe_id',
     });
-    Video.belongsTo(User, { as: 'User', foreignKey: 'User_id' });
+    Video.belongsTo(User, { as: 'author', foreignKey: 'User_id' });
     User.hasMany(Video, { as: 'Videos', foreignKey: 'User_id' });
     Comments.belongsTo(Video, { as: 'Video', foreignKey: 'Video_id' });
     Video.hasMany(Comments, { as: 'Comments', foreignKey: 'Video_id' });
@@ -72,7 +74,7 @@ function initModels(sequelize) {
     
     Video.belongsToMany(Tag, { through: 'video_tag', foreignKey: 'video_id' });
     Tag.belongsToMany(Video, { through: 'video_tag', foreignKey: 'tag_id' });
-
+    
     Video.prototype.getCommentCount = async function () { 
         const videoCommentCount = await Comments.count({
             where: {
@@ -89,11 +91,10 @@ function initModels(sequelize) {
             },
         });
         return userSubCount;
-     };
-    
-    User.prototype.getSubscriptions = async function () { 
-        const userSubscriptions = await UserSubscription.findAll(
-            {
+    };
+
+    User.prototype.getSubscriptions = async function () {
+        const userSubscriptions = await UserSubscription.findAll({
             attributes: ['user_id', 'user_subscribe_id'],
             where: {
                 user_id: this.id,
@@ -121,30 +122,66 @@ function initModels(sequelize) {
                 'description',
                 'views',
                 'length',
-              ],
+            ],
             where: {
                 user_id: this.id,
-            }
+            },
         });
         return videos;
-    }
+    };
 
     Video.prototype.getAuthor = async function () {
         const user = await User.findOne({
-            attributes: [
-                'id',
-                'identifier',
-                'name',
-                'description',
-                'avatar',
-              ],
+            attributes: ['id', 'identifier', 'name', 'description', 'avatar'],
             where: {
                 id: this.user_id,
-            }
+            },
         });
         return user;
+    };
+    User.prototype.getHistory = async function () {
+        const videoHistory = await Video.findAll({
+            include: [
+                {
+                    model: UserHistory,
+                    as: 'User_histories',
+                    where: {
+                        user_id: this.id,
+                    },
+                }
+            ],
+        });
+        return videoHistory || [];
     }
 
+    User.prototype.getPreferredTags = async function () {
+        const history = await this.getHistory();
+        const favoriteTags = await Tag.findAll({
+            attributes: ['id', 'name', [Sequelize.fn('COUNT', Sequelize.col('videos.id')), 'occurrences']
+        ],
+            include: [
+                {
+                    model: Video,
+                    as: 'videos',
+                    where: {
+                        id: history.map((video) => video.id),
+                    },
+                },
+                
+            ],
+            group: ['Tag.id', 'Tag.name'],
+            order: [[Sequelize.literal('occurrences'), 'DESC']]
+        });
+
+        const tags = {};
+
+        for (const tag of favoriteTags) {
+            tags[tag.name] = tag.dataValues.occurrences;
+        }
+        
+        return tags || {};
+    }
+            
     return {
         Comments,
         Playlist,

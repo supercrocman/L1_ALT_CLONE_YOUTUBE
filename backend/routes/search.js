@@ -1,8 +1,9 @@
 const express = require('express');
-const router = express.Router();
-const db = require('../services/sequelize');
 const { Op } = require('sequelize');
 const { body, validationResult } = require('express-validator');
+const db = require('../services/sequelize');
+
+const router = express.Router();
 
 router.post(
     '/search',

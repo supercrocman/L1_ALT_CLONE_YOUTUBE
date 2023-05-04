@@ -1,4 +1,5 @@
-import { Avatar } from "@mui/material";
+import { Avatar, Skeleton } from "@mui/material";
+
 import Link from "next/link";
 import React from "react";
 import { styled } from "@mui/material/styles";
@@ -26,13 +27,17 @@ const ChannelNameVideo = styled(Link)(({ theme }) => ({
 }));
 
 export const AuthorName = ({ author, small = false }) => {
+    if (!author) return <Skeleton variant="text" width={"100%"} />;
     return (
         <ChannelCard sx={small && { pt: "4px", pb: 0 }}>
-            <ChannelNameVideo href={`/channel/@${author.identifier}`}>
+            <ChannelNameVideo
+                onClick={(e) => e.stopPropagation()}
+                href={`/channel/@${author?.identifier}`}
+            >
                 {!small && (
                     <Avatar
-                        alt={author.name}
-                        src={author.avatar}
+                        alt={author?.name}
+                        src={author?.avatar}
                         sx={{
                             width: 24,
                             height: 24,
@@ -40,7 +45,7 @@ export const AuthorName = ({ author, small = false }) => {
                         }}
                     />
                 )}
-                {author.name}
+                {author?.name}
             </ChannelNameVideo>
         </ChannelCard>
     );
