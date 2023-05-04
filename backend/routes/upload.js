@@ -3,6 +3,8 @@ const multer = require('multer');
 const db = require('../services/sequelize');
 const ffprobe = require('ffprobe-client');
 const { v4: uuidv4 } = require('uuid');
+const fs = require('fs');
+
 
 const router = express.Router();
 
@@ -29,13 +31,21 @@ const now = Date.now();
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, './src/videos');
+    const dir = './src/videos';
+
+    // Check if the directory exists, if not, create it
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir, { recursive: true });
+    }
+
+    cb(null, dir);
   },
   filename: (req, file, cb) => {
     const OriginalNameWith_ = file.originalname.replace(/ /g, '_').replace(/:/g, '_').replace(/-/g, '_');
     cb(null, `${now}_${OriginalNameWith_}`);
   }
 });
+
 
 const fileFilter = (req, file, cb) => {
   if (file.mimetype === 'video/mp4' || file.mimetype === 'video/avi') {
