@@ -14,7 +14,9 @@ WatchSpace est un projet de fin d'année réalisé dans le cadre de notre format
 
 - Serveur: NodeJS - Framework Express
 
-- Client: NextJS - Framework CSS Material UI
+- Client: ReactJS - Framework NextJS
+
+- Framework CSS - Material UI
 
 - Base de données: MySQL - ORM Sequelize
 
