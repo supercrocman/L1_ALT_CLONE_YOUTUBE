@@ -317,7 +317,7 @@ export default function MiniDrawer({ children }) {
                                         sx={{ display: "block" }}
                                     >
                                         <Link
-                                            href={`/channel/${item.identifier}`}
+                                            href={`/channel/@${item.identifier}`}
                                             style={{
                                                 color: "inherit",
                                                 textDecoration: "none",
