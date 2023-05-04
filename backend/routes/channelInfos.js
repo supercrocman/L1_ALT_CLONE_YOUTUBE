@@ -92,4 +92,30 @@ router.get('/user/:identifier', async (req, res) => {
     }
 });
 
+router.get('/user/:identifier/subscriptions', async (req, res) => {
+    try {
+        const userIdentifier = req.params.identifier;
+        const user = await db.User.findOne({
+            where: { identifier: userIdentifier },
+            attributes: ['id', 'identifier', 'name', 'description'],
+        });
+
+        if (!user) {
+            res.status(404).send('User not found');
+            return;
+        }
+
+        const subscriptions = await user.getSubscriptions({
+            attributes: ['id', 'identifier', 'name', 'avatar'],
+        });
+
+        res.json({
+            subscriptions,
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(500).send("Erreur lors de la récupération de l'utilisateur");
+    }
+});
+
 module.exports = router;

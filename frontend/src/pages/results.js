@@ -65,15 +65,15 @@ const Results = ({ search_query = '', data = [] }) => {
                         );
                     return <VideoCard key={'searchVideo' + i} video={video} />;
                 })}
-                {(data?.length === 0 ||
-                    (data?.videos_found?.length === 0 &&
-                        data?.topChannelVideos_found?.length === 0)) && (
+                {(data.length === 0 ||
+                    (data.videos_found?.length === 0 &&
+                        data.topChannelVideos_found?.length === 0)) && (
                     <Container
                         sx={{
-                            display: 'flex',
-                            flexDirection: 'column',
-                            alignItems: 'center',
-                            mt: '32px',
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "center",
+                            mt: "32px",
                         }}
                     >
                         <Image

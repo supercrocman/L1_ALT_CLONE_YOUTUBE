@@ -30,16 +30,17 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import { useRouter } from 'next/router';
 import Profil from './profil';
+import axios from "axios";
 
 const drawerWidth = 240;
 
 const openedMixin = (theme) => ({
     width: drawerWidth,
-    transition: theme.transitions.create('width', {
+    transition: theme.transitions.create("width", {
         easing: theme.transitions.easing.sharp,
         duration: theme.transitions.duration.enteringScreen,
     }),
-    overflowX: 'hidden',
+    overflowX: "hidden",
 });
 
 const closedMixin = (theme) => ({
@@ -86,20 +87,39 @@ const Drawer = styled(MuiDrawer, {
 })(({ theme, open }) => ({
     width: drawerWidth,
     flexShrink: 0,
-    whiteSpace: 'nowrap',
-    boxSizing: 'border-box',
+    whiteSpace: "nowrap",
+    boxSizing: "border-box",
     ...(open && {
         ...openedMixin(theme),
-        '& .MuiDrawer-paper': openedMixin(theme),
+        "& .MuiDrawer-paper": openedMixin(theme),
     }),
     ...(!open && {
         ...closedMixin(theme),
-        '& .MuiDrawer-paper': closedMixin(theme),
+        "& .MuiDrawer-paper": closedMixin(theme),
     }),
 }));
 
-export default function MiniDrawer(props) {
-    const [searchQuery, setSearchQuery] = useState('');
+export default function MiniDrawer({ children }) {
+    const [searchQuery, setSearchQuery] = useState("");
+    const [subscribes, setSubscribes] = useState(null);
+    useEffect(() => {
+        const func = async () => {
+            if (subscribes === null) {
+                try {
+                    const response = await axios.get(
+                        "http://localhost:3001/api/user/user1/subscriptions"
+                    );
+                    setSubscribes(response?.data?.subscriptions);
+                } catch (error) {
+                    console.log(error);
+                }
+            }
+            const params = new URLSearchParams(window.location.search);
+            const searchQuery = params.get("search_query");
+            setSearchQuery(searchQuery);
+        };
+        func();
+    }, [subscribes]);
     const theme = useTheme();
     const [open, setOpen] = React.useState(true);
     const router = useRouter();
@@ -118,7 +138,7 @@ export default function MiniDrawer(props) {
     };
 
     return (
-        <Box sx={{ display: 'flex' }}>
+        <Box sx={{ display: "flex" }}>
             <CssBaseline />
             <AppBar position="fixed" open={open}>
                 <Toolbar>
@@ -129,7 +149,7 @@ export default function MiniDrawer(props) {
                         edge="start"
                         sx={{
                             marginRight: 5,
-                            ...(open && { display: 'none' }),
+                            ...(open && { display: "none" }),
                         }}
                     >
                         <MenuIcon />
@@ -163,44 +183,44 @@ export default function MiniDrawer(props) {
                 <Divider />
                 <List>
                     {[
-                        { text: 'Accueil', icon: <HomeIcon />, href: '/' },
+                        { text: "Accueil", icon: <HomeIcon />, href: "/" },
                         {
-                            text: 'Abonnements',
+                            text: "Abonnements",
                             icon: <SubscriptionsIcon />,
-                            href: '/subscriptions',
+                            href: "/subscriptions",
                         },
                         {
-                            text: 'Vos vidéos',
+                            text: "Vos vidéos",
                             icon: <OndemandVideoIcon />,
-                            href: '/my-channel',
+                            href: "/studio/@user1/content/videos",
                         },
                     ].map((item) => (
                         <ListItem
                             key={item.text}
                             disablePadding
-                            sx={{ display: 'block' }}
+                            sx={{ display: "block" }}
                         >
                             <Link
                                 href={item.href}
                                 style={{
-                                    color: 'inherit',
-                                    textDecoration: 'none',
+                                    color: "inherit",
+                                    textDecoration: "none",
                                 }}
                             >
                                 <ListItemButton
                                     sx={{
                                         minHeight: 48,
                                         justifyContent: open
-                                            ? 'initial'
-                                            : 'center',
+                                            ? "initial"
+                                            : "center",
                                         px: 2.5,
                                     }}
                                 >
                                     <ListItemIcon
                                         sx={{
                                             minWidth: 0,
-                                            mr: open ? 3 : 'auto',
-                                            justifyContent: 'center',
+                                            mr: open ? 3 : "auto",
+                                            justifyContent: "center",
                                         }}
                                     >
                                         {item.icon}
@@ -218,47 +238,47 @@ export default function MiniDrawer(props) {
                 <List>
                     {[
                         {
-                            text: 'Playlist',
-                            icon: <FeaturedPlayListIcon />,
-                            href: '/playlists',
-                        },
-                        {
-                            text: 'Historique',
+                            text: "Historique",
                             icon: <HistoryIcon />,
-                            href: '/history',
+                            href: "/feed/history",
                         },
                         {
-                            text: "Vidéos J'aime",
+                            text: "Regarder plus tard",
+                            icon: <AccessTime />,
+                            href: "/playlist?list=WL",
+                        },
+                        {
+                            text: `Vidéos "J'aime"`,
                             icon: <ThumbUpIcon />,
-                            href: '/likes',
+                            href: "/playlist?list=LL",
                         },
                     ].map((item) => (
                         <ListItem
                             key={item.text}
                             disablePadding
-                            sx={{ display: 'block' }}
+                            sx={{ display: "block" }}
                         >
                             <Link
                                 href={item.href}
                                 style={{
-                                    color: 'inherit',
-                                    textDecoration: 'none',
+                                    color: "inherit",
+                                    textDecoration: "none",
                                 }}
                             >
                                 <ListItemButton
                                     sx={{
                                         minHeight: 48,
                                         justifyContent: open
-                                            ? 'initial'
-                                            : 'center',
+                                            ? "initial"
+                                            : "center",
                                         px: 2.5,
                                     }}
                                 >
                                     <ListItemIcon
                                         sx={{
                                             minWidth: 0,
-                                            mr: open ? 3 : 'auto',
-                                            justifyContent: 'center',
+                                            mr: open ? 3 : "auto",
+                                            justifyContent: "center",
                                         }}
                                     >
                                         {item.icon}
@@ -272,10 +292,84 @@ export default function MiniDrawer(props) {
                         </ListItem>
                     ))}
                 </List>
+                {open && (
+                    <>
+                        <Divider />
+                        <List
+                            aria-labelledby="Abonnements"
+                            subheader={
+                                <ListSubheader
+                                    component="div"
+                                    id="Abonnements-subheader"
+                                >
+                                    Abonnements
+                                </ListSubheader>
+                            }
+                        >
+                            {subscribes &&
+                                subscribes.map((item) => (
+                                    <ListItem
+                                        key={item.identifier}
+                                        disablePadding
+                                        sx={{ display: "block" }}
+                                    >
+                                        <Link
+                                            href={`/channel/${item.identifier}`}
+                                            style={{
+                                                color: "inherit",
+                                                textDecoration: "none",
+                                            }}
+                                        >
+                                            <ListItemButton
+                                                sx={{
+                                                    minHeight: 48,
+                                                    justifyContent: "initial",
+                                                    px: 2.5,
+                                                }}
+                                            >
+                                                <ListItemIcon
+                                                    sx={{
+                                                        minWidth: 0,
+                                                        mr: 3,
+                                                        justifyContent:
+                                                            "center",
+                                                    }}
+                                                >
+                                                    <Avatar
+                                                        alt={item.name}
+                                                        src={item.avatar}
+                                                        sx={{
+                                                            width: 24,
+                                                            height: 24,
+                                                        }}
+                                                    />
+                                                </ListItemIcon>
+                                                <ListItemText
+                                                    primary={item.name}
+                                                    sx={{
+                                                        display: "block",
+                                                        overflow: "hidden",
+                                                        textOverflow:
+                                                            "ellipsis",
+                                                        whiteSpace: "normal",
+                                                        display: "-webkit-box",
+                                                        WebkitLineClamp: "1",
+                                                        WebkitBoxOrient:
+                                                            "vertical",
+                                                        opacity: 1,
+                                                    }}
+                                                />
+                                            </ListItemButton>
+                                        </Link>
+                                    </ListItem>
+                                ))}
+                        </List>
+                    </>
+                )}
             </Drawer>
             <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
                 <DrawerHeader />
-                {props.children}
+                {children}
             </Box>
         </Box>
     );

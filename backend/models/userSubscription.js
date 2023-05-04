@@ -5,19 +5,19 @@ module.exports = (sequelize, DataTypes) =>
             user_id: {
                 type: DataTypes.INTEGER,
                 allowNull: false,
+                primaryKey: true,
                 references: {
                     model: 'user',
                     key: 'id',
-                    primaryKey: true,
                 },
             },
             user_subscribe_id: {
                 type: DataTypes.INTEGER,
                 allowNull: false,
+                primaryKey: true,
                 references: {
                     model: 'user',
                     key: 'id',
-                    primaryKey: true,
                 },
             },
         },
