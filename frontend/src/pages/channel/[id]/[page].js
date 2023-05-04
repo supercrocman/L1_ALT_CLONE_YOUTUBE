@@ -3,6 +3,7 @@ import AppBar from "@mui/material/AppBar";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
+import { CleanLink } from "@/components/AuthorCard";
 import Fab from "@mui/material/Fab";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import { Grid } from "@mui/material";
@@ -135,7 +136,6 @@ export default function ChannelPage() {
 
     return (
         <div className={roboto.className}>
-            <AccountMenu></AccountMenu>
             <div
                 style={{
                     display: "flex",
@@ -191,11 +191,14 @@ export default function ChannelPage() {
                                 {subscribers} abonné
                             </p>
                         </div>
-                        <Link href={"/channel/" + id + "/about"}>
+                        <CleanLink
+                            sx={{ color: "#606060" }}
+                            href={"/channel/" + id + "/about"}
+                        >
                             {description && description.length > 0
                                 ? description.substring(0, 20)
                                 : ""}
-                        </Link>
+                        </CleanLink>
                     </div>
                 </div>
                 <div

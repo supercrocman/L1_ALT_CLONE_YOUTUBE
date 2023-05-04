@@ -17,10 +17,10 @@ module.exports = (sequelize, DataTypes) =>
                     model: 'video',
                     key: 'id',
                 },
-            ord: {
-                type: DataTypes.INTEGER,
-                allowNull: false,
-            }
+                ord: {
+                    type: DataTypes.INTEGER,
+                    allowNull: false,
+                },
             },
         },
         {

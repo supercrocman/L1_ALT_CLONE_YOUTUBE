@@ -57,7 +57,7 @@ function initModels(sequelize) {
         as: 'User_subscribe_UserSubscriptions',
         foreignKey: 'User_subscribe_id',
     });
-    Video.belongsTo(User, { as: 'User', foreignKey: 'User_id' });
+    Video.belongsTo(User, { as: 'author', foreignKey: 'User_id' });
     User.hasMany(Video, { as: 'Videos', foreignKey: 'User_id' });
     Comments.belongsTo(Video, { as: 'Video', foreignKey: 'Video_id' });
     Video.hasMany(Comments, { as: 'Comments', foreignKey: 'Video_id' });
@@ -80,11 +80,10 @@ function initModels(sequelize) {
             },
         });
         return userSubCount;
-     };
-    
-    User.prototype.getSubscriptions = async function () { 
-        const userSubscriptions = await UserSubscription.findAll(
-            {
+    };
+
+    User.prototype.getSubscriptions = async function () {
+        const userSubscriptions = await UserSubscription.findAll({
             attributes: ['user_id', 'user_subscribe_id'],
             where: {
                 user_id: this.id,
@@ -112,29 +111,23 @@ function initModels(sequelize) {
                 'description',
                 'views',
                 'length',
-              ],
+            ],
             where: {
                 user_id: this.id,
-            }
+            },
         });
         return videos;
-    }
+    };
 
     Video.prototype.getAuthor = async function () {
         const user = await User.findOne({
-            attributes: [
-                'id',
-                'identifier',
-                'name',
-                'description',
-                'avatar',
-              ],
+            attributes: ['id', 'identifier', 'name', 'description', 'avatar'],
             where: {
                 id: this.user_id,
-            }
+            },
         });
         return user;
-    }
+    };
     User.prototype.getHistory = async function () {
         const videoHistory = await Video.findAll({
             include: [
