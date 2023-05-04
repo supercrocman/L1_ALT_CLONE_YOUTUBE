@@ -11,16 +11,31 @@ import Tooltip from '@mui/material/Tooltip';
 import PersonAdd from '@mui/icons-material/PersonAdd';
 import Settings from '@mui/icons-material/Settings';
 import Logout from '@mui/icons-material/Logout';
-import Router from 'next/router';
+import Router, { useRouter } from 'next/router';
 import axiosInstance from '@/utils/axiosInterceptor';
 import { Roboto } from 'next/font/google';
 import { deepOrange } from '@mui/material/colors';
 import stringToColor from '@/utils/stringToColor';
+import { setCookie } from 'cookies-next';
 
-export default function AccountMenu({ handleLogout }) {
+export default function AccountMenu() {
     const [anchorEl, setAnchorEl] = React.useState(null);
     const [user, setUser] = React.useState({});
+    const router = useRouter();
 
+     async function handleLogout (){
+            setCookie('isLoggIn', false);
+            // setShowProfil(!!getCookie('isLoggIn'));
+            await clear();
+            router.push('/');
+        };
+        async function clear() {
+            try {
+                await axiosInstance.get('/profil/logout');
+            } catch (e) {
+                console.log(e);
+            }
+        }
     const open = Boolean(anchorEl);
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);

@@ -29,7 +29,7 @@ const Login = ({ open, setOpen, setFenetre }) => {
                 url: '/profil/login',
                 data: { userMail, userPassword, remember },
             });
-            if (response.data) {
+            if (response?.data) {
                 setOpen(false);
                 setCookie('isLoggIn', true);
                 setCookie('remember', remember);
@@ -38,7 +38,7 @@ const Login = ({ open, setOpen, setFenetre }) => {
             }
         } catch (error) {
             console.log(error);
-            setError(error.response.data.message);
+            setError(error?.response?.data?.message);
         } finally {
             setRemember(true);
         }
