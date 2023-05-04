@@ -59,7 +59,7 @@ app.use('/api', require('./routes/timeline'));
 
 app.use('/api', require('./routes/search'));
 
-app.use('/api', require('./routes/channelinfos'));
+app.use('/api', require('./routes/ChannelInfos'));
 
 app.use('/api', require('./routes/video'));
 

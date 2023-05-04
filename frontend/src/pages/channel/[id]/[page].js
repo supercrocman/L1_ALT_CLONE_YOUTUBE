@@ -1,27 +1,27 @@
-import AccountMenu from "../../../components/AccountMenu";
-import AppBar from "@mui/material/AppBar";
-import Avatar from "@mui/material/Avatar";
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
+import React from 'react';
+import Link from 'next/link';
+import Button from '@mui/material/Button';
+import Box from '@mui/material/Box';
+import Fab from '@mui/material/Fab'
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
+import AppBar from '@mui/material/AppBar';
+import Avatar from '@mui/material/Avatar';
+import SwipeableViews from 'react-swipeable-views';
+import Typography from '@mui/material/Typography';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import PersonPinIcon from '@mui/icons-material/PersonPin';
+import Router from 'next/router';
+import { deepOrange } from '@mui/material/colors';
+import { Roboto } from 'next/font/google';
+import { useRouter } from 'next/router';
+import { useTheme } from '@mui/material/styles';
+import { useEffect } from 'react';
+import axios from 'axios';
+import { VideoCard } from '../../../components/VideoCard';
+import stringToColor from '../../../utils/stringToColor';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { CleanLink } from "@/components/AuthorCard";
-import Fab from "@mui/material/Fab";
-import FavoriteIcon from "@mui/icons-material/Favorite";
-import { Grid } from "@mui/material";
-import Link from "next/link";
-import PersonPinIcon from "@mui/icons-material/PersonPin";
-import React from "react";
-import { Roboto } from "next/font/google";
-import Router from "next/router";
-import SwipeableViews from "react-swipeable-views";
-import Tab from "@mui/material/Tab";
-import Tabs from "@mui/material/Tabs";
-import Typography from "@mui/material/Typography";
-import { VideoCard } from "../../../components/VideoCard";
-import axios from "axios";
-import { deepOrange } from "@mui/material/colors";
-import { useEffect } from "react";
-import { useRouter } from "next/router";
-import { useTheme } from "@mui/material/styles";
 
 const roboto = Roboto({
     weight: "400",
@@ -29,6 +29,8 @@ const roboto = Roboto({
 });
 
 var about = "";
+
+
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -43,7 +45,8 @@ function TabPanel(props) {
         >
             {value === index && (
                 <Box sx={{ p: 3 }}>
-                    <Typography>{children}</Typography>
+                    {children}
+                    {/* <Typography>{children}</Typography> */}
                 </Box>
             )}
         </div>
@@ -81,7 +84,8 @@ export default function ChannelPage() {
     const [subscribers, setSubscribers] = React.useState(0);
     const [videoCount, setVideoCount] = React.useState(0);
     const [videos, setVideos] = React.useState([]);
-    const [avatar, setAvatar] = React.useState("");
+    const [avatar, setAvatar] = React.useState('');
+    const [date, setDate] = React.useState('');
 
     useEffect(() => {
         if (page === "home") {
@@ -122,6 +126,7 @@ export default function ChannelPage() {
                     setVideoCount(response.data["user"]["videoCount"]);
                     setAvatar(response.data["user"]["avatar"]);
                     setVideos(response.data["user"]["videos"]);
+                    setAvatar(response.data["user"]["avatar"]);
                 } catch (error) {
                     console.log(error.response.data);
                     if (error.response.data === "User not found") {
@@ -134,58 +139,24 @@ export default function ChannelPage() {
         fetchData();
     }, [id, page]);
 
+
+    const colorgentheme = createTheme({
+        palette: {
+            primary: {
+                main: stringToColor(name),
+            },
+        },
+    });
+
     return (
         <div className={roboto.className}>
-            <div
-                style={{
-                    display: "flex",
-                    justifyContent: "space-evenly",
-                    width: "100%",
-                    marginBottom: "25px",
-                }}
-            >
-                <div
-                    style={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "space-evenly",
-                        width: "25%",
-                    }}
-                >
-                    <Avatar
-                        sx={{
-                            bgcolor: deepOrange[500],
-                            width: 128,
-                            height: 128,
-                            marginRight: "5%",
-                        }}
-                        alt="Remy Sharp"
-                        src="/broken-image.jpg"
-                    >
-                        R
-                    </Avatar>
-                    <div
-                        style={{
-                            display: "flex",
-                            flexDirection: "column",
-                            alignItems: "stretch",
-                            justifyContent: "space-evenly",
-                            height: "100%",
-                        }}
-                    >
-                        <p style={{}}>{name}</p>
-                        <div
-                            style={{
-                                display: "flex",
-                                flexDirection: "row",
-                                flexWrap: "wrap",
-                                color: "#606060",
-                                fontSize: "small",
-                            }}
-                        >
-                            <p style={{ marginRight: 8, fontWeight: "800" }}>
-                                {id}
-                            </p>
+            <div style={{ display: "flex", justifyContent: "space-evenly", width: "100%", marginBottom: "25px" }}>
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-evenly", width: "25%" }}>
+                    <Avatar alt={name} sx={{ bgcolor: stringToColor(name), width: 128, height: 128, marginRight: "5%" }} src="/broken-image.jpg" />
+                    <div style={{ display: "flex", flexDirection: "column", alignItems: "stretch", justifyContent: "space-evenly", height: "100%" }}>
+                        <p>{name}</p>
+                        <div style={{ display: "flex", flexDirection: "row", flexWrap: "wrap", color: "#606060", fontSize: "small" }}>
+                            <p style={{ marginRight: 8, fontWeight: "800" }}>{id}</p>
                             <p style={{ marginRight: 8 }}>{videoCount} vidéo</p>
                             <p style={{ marginRight: 8 }}>
                                 {subscribers} abonné
@@ -221,12 +192,13 @@ export default function ChannelPage() {
                 </div>
             </div>
             <Box>
-                <AppBar position="static" style={{ backgroundColor: "#000" }}>
+                <AppBar position="static" style={{ backgroundColor: "#000" }} color="primary">
                     <Tabs
+                        // theme={colorgentheme}
                         value={value}
                         onChange={handleChange}
                         indicatorColor="secondary"
-                        textColor="inherit"
+                        textColor="secondary"
                         variant="fullWidth"
                         centered
                     >
@@ -277,9 +249,10 @@ export default function ChannelPage() {
                     <TabPanel value={value} index={0} dir={theme.direction}>
                         Empty
                     </TabPanel>
-                    <TabPanel value={value} index={1} dir={theme.direction}>
-                        <Grid container justifyContent={"center"}>
-                            {videos.map((video, i) => {
+                    <TabPanel value={value} index={1} dir={theme.direction} >
+                        <div style={{ display: "flex", flexWrap: "wrap", flexDirection: "row", justifyContent: "flex-start" }}>
+                            {videos.map((video) => (
+                                // thumbnail, title, views, date, duration
                                 video = {
                                     ...video,
                                     author: {
@@ -287,19 +260,15 @@ export default function ChannelPage() {
                                         avatar: avatar,
                                         subCount: subscribers,
                                         description: description,
-                                        identifier: id.split("@")[1],
-                                    },
-                                };
-                                return (
-                                    <VideoCard
-                                        key={"card" + i}
-                                        video={video}
-                                        small
-                                        vertical
-                                    />
-                                );
-                            })}
-                        </Grid>
+                                        identifier: id.split("@")[1]
+                                    }
+                                },
+                                <VideoCard
+                                    video={video}
+                                    small
+                                />
+                            ))}
+                        </div>
                     </TabPanel>
                     <TabPanel value={value} index={2} dir={theme.direction}>
                         Empty
