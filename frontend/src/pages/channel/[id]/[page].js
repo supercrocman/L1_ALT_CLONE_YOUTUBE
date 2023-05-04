@@ -223,7 +223,7 @@ export default function ChannelPage({ user }) {
                         variant="extended"
                         size="medium"
                         onClick={
-                            isLoggIn ? () => Router.push('/channel/' + id + '/personalize') : () => Router.push('/login')
+                            isLoggIn ? () => Router.push('/studio/' + id) : () => Router.push('/login')
                         }
                     >
                         {
