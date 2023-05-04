@@ -67,7 +67,6 @@ app.use('/api', require('./routes/video'));
 
 app.use('/api', require('./routes/upload'));
 
-
 const videoPath = path.join(__dirname, './src/videos');
 app.use('/static/videos', express.static(videoPath));
 

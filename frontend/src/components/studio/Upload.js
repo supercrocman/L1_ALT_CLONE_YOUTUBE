@@ -21,7 +21,6 @@ export default function Upload({ user }) {
             if (title){
                 if (file.type === "video/mp4" || file.type === "video/avi") {
                     formData.append('inputFile', file);
-                    console.log('Vidéos importées:', file);
                     try {
                         const response = await axios.post('http://localhost:3001/api/upload', formData, {
                             headers: {
@@ -34,7 +33,6 @@ export default function Upload({ user }) {
                             }
                         });
                         console.log('Video uploaded successfully:', response);
-                        console.log(user)
                     } catch (error) {
                         console.error('Error uploading video:', error);
                     }
