@@ -10,6 +10,7 @@ import { styled, useTheme } from '@mui/material/styles';
 import Dashboard from '@/components/studio/Dashboard';
 import Content from '@/components/studio/Content';
 import axiosInstance from '@/utils/axiosInterceptor';
+import Upload from '@/components/studio/Upload';
 
 const DrawerHeader = styled('div')(({ theme }) => ({
     display: 'flex',
