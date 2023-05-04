@@ -78,6 +78,7 @@ export default function ChannelPage({ user }) {
     const [videoCount, setVideoCount] = React.useState(0);
     const [videos, setVideos] = React.useState([]);
     const [avatar, setAvatar] = React.useState('');
+    const [date, setDate] = React.useState('');
 
     useEffect(() => {
         if (page === 'home') {
@@ -129,6 +130,15 @@ export default function ChannelPage({ user }) {
 
         fetchData();
     }, [id, page]);
+
+    const colorgentheme = createTheme({
+        palette: {
+            primary: {
+                main: stringToColor(name),
+            },
+        },
+    });
+
     return (
         <div className={roboto.className}>
             <div
@@ -148,17 +158,15 @@ export default function ChannelPage({ user }) {
                     }}
                 >
                     <Avatar
+                        alt={name}
                         sx={{
-                            bgcolor: deepOrange[500],
+                            bgcolor: stringToColor(name),
                             width: 128,
                             height: 128,
                             marginRight: '5%',
                         }}
-                        alt={name}
-                        src={avatar ? avatar : null}
-                    >
-                        {avatar ? null : name ? name.split('')[0] : null}
-                    </Avatar>
+                        src="/broken-image.jpg"
+                    />
                     <div
                         style={{
                             display: 'flex',
@@ -168,7 +176,7 @@ export default function ChannelPage({ user }) {
                             height: '100%',
                         }}
                     >
-                        <p style={{}}>{name}</p>
+                        <p>{name}</p>
                         <div
                             style={{
                                 display: 'flex',
@@ -179,7 +187,7 @@ export default function ChannelPage({ user }) {
                             }}
                         >
                             <p style={{ marginRight: 8, fontWeight: '800' }}>
-                                {'@' + id}
+                                {id}
                             </p>
                             <p style={{ marginRight: 8 }}>{videoCount} vidéo</p>
                             <p style={{ marginRight: 8 }}>
@@ -213,7 +221,11 @@ export default function ChannelPage({ user }) {
                 </div>
             </div>
             <Box>
-                <AppBar position="static" style={{ backgroundColor: '#000' }}>
+                <AppBar
+                    position="static"
+                    style={{ backgroundColor: '#000' }}
+                    color="primary"
+                >
                     <Tabs
                         value={value}
                         onChange={handleChange}

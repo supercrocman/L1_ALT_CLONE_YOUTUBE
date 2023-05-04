@@ -10,7 +10,24 @@ import axiosInstance from '@/utils/axiosInterceptor';
 
 const SearchForm = styled('form')(({ theme }) => ({
     height: '40px',
-    marginTop: 10,
+    color: 'black',
+    display: 'flex',
+    marginTop: '7px',
+}));
+
+const SearchIconThemed = styled(SearchIcon)(({ theme }) => ({
+    color: '#f1f1f1 !important',
+    width: '1.75rem',
+    height: '1.75rem',
+}));
+
+const SearchBox = styled('div')(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '100%',
+    height: '100%',
+    borderRadius: '4px',
 }));
 
 export default function SearchBar({ defaultValue = '' }) {
@@ -30,17 +47,13 @@ export default function SearchBar({ defaultValue = '' }) {
     };
 
     return (
-        <SearchForm
-            action="/results"
-            className={styleSearch.SearchBoxContainer}
-            ref={formRef}
-        >
+        <SearchForm action="/results" ref={formRef}>
             <Autocomplete
                 disablePortal
                 freeSolo
                 id="SearchBar-AutoComplete"
                 sx={{
-                    width: 600,
+                    width: 550,
                     '& .MuiOutlinedInput-root': {
                         borderRadius: '30px 0 0 30px',
                         color: 'white',
@@ -126,7 +139,6 @@ export default function SearchBar({ defaultValue = '' }) {
             />
             <Button
                 variant="contained"
-                className={styleSearch.buttonSearch}
                 type="submit"
                 sx={{
                     borderRadius: '0px 30px 30px 0px',
@@ -138,12 +150,9 @@ export default function SearchBar({ defaultValue = '' }) {
                     },
                 }}
             >
-                <div className={styleSearch.SearchIconBox}>
-                    <SearchIcon
-                        className={styleSearch.SearchIcon}
-                        fontSize="large"
-                    />
-                </div>
+                <SearchBox>
+                    <SearchIconThemed fontSize="large" />
+                </SearchBox>
             </Button>
         </SearchForm>
     );

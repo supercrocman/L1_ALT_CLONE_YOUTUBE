@@ -195,7 +195,7 @@ export const VideoCard = ({ video, small = false, vertical = false }) => {
                                 underline="none"
                                 sx={{
                                     display: 'block',
-                                    maxHeight: '2rem',
+                                    maxHeight: '2.5rem',
                                     overflow: 'hidden',
                                     textOverflow: 'ellipsis',
                                     whiteSpace: 'normal',

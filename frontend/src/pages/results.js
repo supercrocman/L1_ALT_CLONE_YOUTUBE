@@ -21,7 +21,6 @@ const LastAuthorVideo = styled('p')(({ theme }) => ({
 }));
 
 const Results = ({ search_query = '', data = [] }) => {
-    console.log(data);
     const [featuredAuthor, setFeaturedAuthor] = React.useState(
         data?.topChannelVideos_found?.length > 0
             ? typeof data.topChannelVideos_found[0].author === 'string'
@@ -111,7 +110,6 @@ export async function getServerSideProps(context) {
         const response = await axiosInstance.post(`/api/submit-search`, {
             q: search_query,
         });
-        console.log(response.data);
         data = response.data;
     } catch (error) {
         console.log(error.message);

@@ -35,7 +35,6 @@ export default function StudioPage() {
                         response.data.user.name
                     );
                     setUser(response.data.user);
-                    // console.log(response.data.user);
                 } catch (error) {
                     console.log(error);
                 }
@@ -57,6 +56,8 @@ export default function StudioPage() {
                 return 'commentaires';
             case 'content':
                 return <Content user={user} />;
+            case 'upload':
+                return <Upload user={user} />;
             case 'playlists':
                 return 'playlists';
             case 'personnalisation':

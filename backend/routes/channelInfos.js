@@ -1,6 +1,7 @@
 // routes/channelinfos.js
 const express = require('express');
 const db = require('../services/sequelize'); // Importez le modèle User
+const logger = require('../services/winston');
 
 const router = express.Router();
 
@@ -32,7 +33,7 @@ router.get('/user/:identifier', async (req, res) => {
             },
         });
 
-        let videos = await db.Video.findAll({
+        const videos = await db.Video.findAll({
             where: {
                 user_id: user.id,
             },
@@ -86,7 +87,7 @@ router.get('/user/:identifier', async (req, res) => {
             res.status(404).send('Utilisateur non trouvé');
         }
     } catch (error) {
-        console.log(error);
+        logger.error(error);
         res.status(500).send("Erreur lors de la récupération de l'utilisateur");
     }
 });

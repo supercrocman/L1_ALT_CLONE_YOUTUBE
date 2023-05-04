@@ -1,9 +1,7 @@
-import { useEffect, useState } from 'react';
 import { Container, Typography } from '@mui/material';
+import { useEffect, useState } from 'react';
+
 import { VideoCard } from '@/components/VideoCard';
-import SearchBar from '@/components/SearchBar';
-import styleHeader from '@/styles/header.module.css';
-import Profil from '@/components/profil';
 
 export default function Home() {
     let user_reco = false; // j'utilise ça pour l'instant, a voir avec la team profil
@@ -33,7 +31,6 @@ export default function Home() {
 
     return (
         <>
-            {console.log(videos)}
             {user_reco && (
                 <Typography
                     variant="h5"

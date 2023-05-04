@@ -2,6 +2,7 @@
 const express = require('express');
 const { Sequelize } = require('sequelize');
 const db = require('../services/sequelize'); // Importez le modèle User
+const logger = require('../services/winston');
 
 const router = express.Router();
 
@@ -48,7 +49,7 @@ router.get('/video/:identifier', async (req, res) => {
         res.json(video);
         return;
     } catch (error) {
-        console.log(error);
+        logger.error(error);
         res.status(500).send('Erreur lors de la récupération de la video');
     }
 });
@@ -77,7 +78,7 @@ router.get('/video/:identifier/related', async (req, res) => {
         });
         res.json(videos);
     } catch (error) {
-        console.log(error);
+        logger.error(error);
         res.status(500).send('Erreur lors de la récupération des videos');
     }
 });
