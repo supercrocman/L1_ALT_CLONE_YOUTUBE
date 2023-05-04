@@ -7,22 +7,22 @@ const { v4: uuidv4 } = require('uuid');
 
 const router = express.Router();
 
-function GenerateGUID() {
+async function GenerateGUID() {
   const guid = uuidv4();
   try {
-    const user = db.User.findOne({
+    const video = await db.Video.findOne({
       where: {
         identifier: guid,
       },
     });
-    if (user) {
-      return GenerateGUID(uuidv4());
+
+    if (video) {
+      return GenerateGUID();
     } else {
       return guid;
     }
   }catch(error){
     console.error('Error generating GUID:', error);
-    res.status(500).json({ error: 'Error generating GUID.' });
   }
 }
 
@@ -74,6 +74,7 @@ router.post('/upload', upload.single('inputFile'), async (req, res) => {
     const bitrate = videoStream.bit_rate;
     const bits_per_raw_sample = videoStream.bits_per_raw_sample;
     const title = file.originalname.replace(/ /g, '_').replace(/:/g, '_').replace(/-/g, '_').split('.')[0];
+
     // const hdr = bits_per_raw_sample > 8 : true ? videoStream.hdr : false;
 
     console.log('Video duration:', `${duration} seconds`);
@@ -94,11 +95,11 @@ router.post('/upload', upload.single('inputFile'), async (req, res) => {
 
   //    const newVideo = await db.Video.create({
   //     path: file.path,
-  //     title: 'Sample title',
+  //     title: `${Date.now()} ${file.originalname}`,
   //     thumbnail: 'http://dummyimage.com/1280x720.png/dddddd/000000',
   //     duration: duration,
   //     bitrate: bitrate,
-  //     searchable_title: title,
+  //     searchable_title: `${Date.now()} ${title}`.toLowerCase(),
   //     identifier: ,
   //     user_id: 1,
   //   });
