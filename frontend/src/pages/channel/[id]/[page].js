@@ -19,6 +19,9 @@ import { useRouter } from 'next/router';
 import { useTheme } from '@mui/material/styles';
 import axiosInstance from '@/utils/axiosInterceptor';
 import stringToColor from '@/utils/stringToColor';
+import Upload from '@/components/studio/Upload';
+import { getCookie, setCookie } from 'cookies-next';
+import jwt from 'jsonwebtoken';
 
 const roboto = Roboto({
     weight: '400',
@@ -40,7 +43,7 @@ function TabPanel(props) {
         >
             {value === index && (
                 <Box sx={{ p: 3 }}>
-                    <Typography variant="span">{children}</Typography>
+                    {children}
                 </Box>
             )}
         </div>
@@ -56,6 +59,15 @@ function a11yProps(index) {
 
 export default function ChannelPage({ user }) {
     const theme = useTheme();
+    const isLoggIn = getCookie('isLoggIn');
+
+    if (isLoggIn) {
+        const AccessToken = getCookie('AccessToken');
+        const RefreshToken = getCookie('RefreshToken');
+
+
+
+    }
 
     const router = useRouter();
     const { id, page } = router.query;
@@ -104,8 +116,6 @@ export default function ChannelPage({ user }) {
     const handleChangeIndex = (index) => {
         setValue(index);
     };
-
-    // const baseURL = 'http://localhost:3001/api/user/' + id.split("@")[1];
 
     useEffect(() => {
         const fetchData = async () => {
@@ -204,14 +214,21 @@ export default function ChannelPage({ user }) {
                         justifyContent: 'space-evenly',
                     }}
                 >
+
                     <Fab
-                        color="primary"
+                        color={
+                            isLoggIn ? 'primary' : 'secondary'
+                        }
                         aria-label="Personalize"
                         variant="extended"
                         size="medium"
-                        onClick={() => Router.push(`/studio/${id}`)}
+                        onClick={
+                            isLoggIn ? () => Router.push('/channel/' + id + '/personalize') : () => Router.push('/login')
+                        }
                     >
-                        Personalize
+                        {
+                            isLoggIn ? "Personnaliser" : "S'abonner"
+                        }
                     </Fab>
                 </div>
             </div>
