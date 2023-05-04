@@ -4,21 +4,33 @@ import IconButton from '@mui/material/IconButton';
 import UploadIcon from "@mui/icons-material/Upload";
 import TextField from '@mui/material/TextField';
 import axios from "axios";
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import Slide from '@mui/material/Slide';
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+    return <Slide direction="up" ref={ref} {...props} />;
+  });
 
 export default function Upload({ user }) {
     const [title, setTitle] = React.useState('');
     const [description, setDescription] = React.useState('');
+    const [open, setOpen] = React.useState(false);
 
-    useEffect(() => {
-        console.log(title);
-    }, [title]);
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
     const onUpload = async (event) => {
         event.preventDefault();
         const formData = new FormData();
         const file = event.target.files[0];
         if (file !== undefined) {
-            if (title){
+            if (title) {
                 if (file.type === "video/mp4" || file.type === "video/avi") {
                     formData.append('inputFile', file);
                     try {
@@ -32,7 +44,9 @@ export default function Upload({ user }) {
                                 description: description
                             }
                         });
-                        console.log('Video uploaded successfully:', response);
+                        if (response.status === 200) {
+                            setOpen(true);
+                        }
                     } catch (error) {
                         console.error('Error uploading video:', error);
                     }
@@ -96,6 +110,24 @@ export default function Upload({ user }) {
                         </Button>
                 }
             </div>
+                            <Dialog
+                                open={open}
+                                TransitionComponent={Transition}
+                                keepMounted
+                                onClose={handleClose}
+                                aria-describedby="alert-dialog-slide-description"
+                                radius={25}
+                            >
+                                <DialogTitle>{"La vidéo a été importer avec succès !"}</DialogTitle>
+                                <DialogContent>
+                                    <DialogContentText id="alert-dialog-slide-description">
+                                        
+                                    </DialogContentText>
+                                </DialogContent>
+                                <DialogActions>
+                                    <Button onClick={handleClose}>Parfait</Button>
+                                </DialogActions>
+                            </Dialog>
         </div >
     )
 }
