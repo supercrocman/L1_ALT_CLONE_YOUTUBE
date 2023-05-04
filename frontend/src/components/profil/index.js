@@ -5,15 +5,18 @@ import { useEffect, useState } from 'react';
 import AccountMenu from '../AccountMenu';
 import Login from './components/Login';
 import Signup from './components/Signup';
+import { useRouter } from 'next/router';
 
 function Profil() {
     const [fenetre, setFenetre] = useState(1);
     const [open, setOpen] = useState(false);
     const [showProfil, setShowProfil] = useState(false);
+    const router = useRouter();
     const handleLogout = async () => {
         setCookie('isLoggIn', false);
         setShowProfil(!!getCookie('isLoggIn'));
         await clear();
+        router.push('/');
     };
     async function clear() {
         try {
@@ -26,9 +29,8 @@ function Profil() {
         setFenetre(1);
         setOpen(false);
         const handleBeforeUnload = () => {
-            if (getCookie('user')) {
-                const userCookie = JSON.parse(getCookie('user'));
-                if (!userCookie.remember) {
+            if (getCookie('remember') !== null) {
+                if (!getCookie('remember')) {
                     handleLogout();
                 }
             }

@@ -210,6 +210,7 @@ exports.logout = (req, res) => {
         res.clearCookie('refreshToken');
         res.clearCookie('user');
         res.clearCookie('AccessToken');
+        res.clearCookie('remember');
         res.sendStatus(200);
     } catch (e) {
         console.log(e);

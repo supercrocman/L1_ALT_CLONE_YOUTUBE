@@ -4,9 +4,9 @@ import Autocomplete from '@mui/material/Autocomplete';
 import Button from '@mui/material/Button';
 import SearchIcon from '@mui/icons-material/Search';
 import TextField from '@mui/material/TextField';
-import axios from 'axios';
 import styleSearch from '../styles/SearchBar.module.css';
 import { styled } from '@mui/material/styles';
+import axiosInstance from '@/utils/axiosInterceptor';
 
 const SearchForm = styled('form')(({ theme }) => ({
     height: '40px',
@@ -85,9 +85,10 @@ export default function SearchBar({ defaultValue = '' }) {
                         if (cancelToken) {
                             cancelToken.cancel();
                         }
-                        const newCancelToken = axios.CancelToken.source();
+                        const newCancelToken =
+                            axiosInstance.CancelToken.source();
                         setCancelToken(newCancelToken);
-                        axios
+                        axiosInstance
                             .post(
                                 'http://localhost:3001/api/search',
                                 {
@@ -106,7 +107,7 @@ export default function SearchBar({ defaultValue = '' }) {
                                 setSearchResults(response.data.videos);
                             })
                             .catch((error) => {
-                                if (!axios.isCancel(error)) {
+                                if (!axiosInstance.isCancel(error)) {
                                     console.log(error);
                                 }
                             });

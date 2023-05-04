@@ -33,10 +33,6 @@ export default function Home() {
 
     return (
         <>
-            <div className={styleHeader.HeaderContainer}>
-                <SearchBar></SearchBar>
-                <Profil />
-            </div>
             {console.log(videos)}
             {user_reco && (
                 <Typography

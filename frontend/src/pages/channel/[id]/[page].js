@@ -64,9 +64,9 @@ export default function ChannelPage({ user }) {
             return;
         }
 
-        // if (!id.startsWith('@')) {
-        //     Router.push('/404');
-        // }
+        if (!id.startsWith('@')) {
+            Router.push('/404');
+        }
     }, [id]);
 
     let baseindex = 0;
@@ -108,8 +108,8 @@ export default function ChannelPage({ user }) {
     useEffect(() => {
         const fetchData = async () => {
             if (id) {
-                const baseURL = '/api/user/' + id;
-                // const baseURL = '/api/user/' + id.split('@')[1];
+                // const baseURL = '/api/user/' + id;
+                const baseURL = '/api/user/' + id.split('@')[1];
                 try {
                     const response = await axiosInstance.get(baseURL);
                     setName(response.data['user'].name);
@@ -131,7 +131,6 @@ export default function ChannelPage({ user }) {
     }, [id, page]);
     return (
         <div className={roboto.className}>
-            <AccountMenu></AccountMenu>
             <div
                 style={{
                     display: 'flex',

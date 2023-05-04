@@ -32,6 +32,7 @@ const Login = ({ open, setOpen, setFenetre }) => {
             if (response.data) {
                 setOpen(false);
                 setCookie('isLoggIn', true);
+                setCookie('remember', remember);
             } else {
                 setError('Identifiants invalides');
             }

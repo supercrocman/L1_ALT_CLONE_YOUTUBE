@@ -1,15 +1,15 @@
-import React, { use } from "react";
+import React, { use } from 'react';
 import Router from 'next/router';
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import StudioLeftNavBar from '../../../components/studio/StudioLeftNavBar';
-import axios from "axios";
-import stringToColor from "@/utils/stringToColor";
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
+import stringToColor from '@/utils/stringToColor';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
 import { styled, useTheme } from '@mui/material/styles';
-import Dashboard from "@/components/studio/Dashboard";
-import Content from "@/components/studio/Content";
+import Dashboard from '@/components/studio/Dashboard';
+import Content from '@/components/studio/Content';
+import axiosInstance from '@/utils/axiosInterceptor';
 
 const DrawerHeader = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -21,33 +21,32 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 }));
 
 export default function StudioPage() {
-
-    const router = useRouter()
-    const { id, page } = router.query
+    const router = useRouter();
+    const { id, page } = router.query;
     const [user, setUser] = React.useState(null);
 
     useEffect(() => {
         if (id) {
             const fetchData = async () => {
-                const baseURL = 'http://localhost:3001/api/user/' + id.split("@")[1];
+                const baseURL = '/api/user/' + id.split('@')[1];
                 try {
-                    const response = await axios.get(baseURL)
-                    response.data.user.avatarcolor = stringToColor(response.data.user.name)
+                    const response = await axiosInstance.get(baseURL);
+                    response.data.user.avatarcolor = stringToColor(
+                        response.data.user.name
+                    );
                     setUser(response.data.user);
                     // console.log(response.data.user);
                 } catch (error) {
                     console.log(error);
                 }
-            }
+            };
 
             fetchData();
 
-            if (!id.startsWith("@")) {
+            if (!id.startsWith('@')) {
                 Router.push('/404');
             }
         }
-
-
     }, [id]);
 
     const renderPageContent = () => {
@@ -55,17 +54,17 @@ export default function StudioPage() {
             case 'dashboard':
                 return <Dashboard user={user} />;
             case 'commentaires':
-                return "commentaires";
+                return 'commentaires';
             case 'content':
                 return <Content user={user} />;
             case 'playlists':
-                return "playlists";
+                return 'playlists';
             case 'personnalisation':
-                return "personnalisation";
+                return 'personnalisation';
             case 'paramètres':
-                return "paramètres";
+                return 'paramètres';
             case 'analytics':
-                return "analytics";
+                return 'analytics';
             default:
                 return <Dashboard user={user} />;
         }
@@ -74,9 +73,17 @@ export default function StudioPage() {
     return (
         <div>
             <StudioLeftNavBar user={user} page={page} />
-            <Box component="main" sx={{ flexGrow: 1, p: 3, marginLeft: "64px", paddingTop: "64px" }}>
+            <Box
+                component="main"
+                sx={{
+                    flexGrow: 1,
+                    p: 3,
+                    marginLeft: '64px',
+                    paddingTop: '64px',
+                }}
+            >
                 {renderPageContent()}
             </Box>
         </div>
-    )
+    );
 }

@@ -110,7 +110,7 @@ export default function AccountMenu({ handleLogout }) {
                 >
                     <MenuItem
                         onClick={() =>
-                            Router.push(`/channel/${user.identifier}/home`)
+                            Router.push(`/channel/@${user.identifier}/home`)
                         }
                     >
                         <Avatar
@@ -127,12 +127,6 @@ export default function AccountMenu({ handleLogout }) {
                         {user.name ? user.name : null}
                     </MenuItem>
                     <Divider />
-                    <MenuItem onClick={handleClose}>
-                        <ListItemIcon>
-                            <PersonAdd fontSize="small" />
-                        </ListItemIcon>
-                        Add another account
-                    </MenuItem>
                     <MenuItem onClick={handleClose}>
                         <ListItemIcon>
                             <Settings fontSize="small" />

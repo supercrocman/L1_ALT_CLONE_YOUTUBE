@@ -6,10 +6,10 @@ import React from 'react';
 import SearchBar from '@/components/SearchBar';
 import TuneIcon from '@mui/icons-material/Tune';
 import { VideoCard } from '@/components/VideoCard';
-import axios from 'axios';
 import results from '../../public/results.svg';
 import { styled } from '@mui/material/styles';
 import { useRouter } from 'next/router';
+import axiosInstance from '@/utils/axiosInterceptor';
 
 const LastAuthorVideo = styled('p')(({ theme }) => ({
     color: theme.palette.text.primary,
@@ -108,12 +108,9 @@ export async function getServerSideProps(context) {
     let data = [];
     try {
         // fetch data from the API based on the search_query
-        const response = await axios.post(
-            `http://localhost:3001/api/submit-search`,
-            {
-                q: search_query,
-            }
-        );
+        const response = await axiosInstance.post(`/api/submit-search`, {
+            q: search_query,
+        });
         console.log(response.data);
         data = response.data;
     } catch (error) {
