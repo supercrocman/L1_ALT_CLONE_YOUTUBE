@@ -10,7 +10,7 @@ const router = express.Router();
 function GenerateGUID() {
   const guid = uuidv4();
   try {
-    const user = await db.User.findOne({
+    const user = db.User.findOne({
       where: {
         identifier: guid,
       },
