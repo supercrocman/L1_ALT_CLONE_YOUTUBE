@@ -67,7 +67,9 @@ router.post('/timeline', async (req, res) => {
         author.dataValues.subCount = subCount;
         authors.set(author_id, author);
     }
-    
+    const exclude_ids = videos_result.map((video) => video.id);
+    const defaultvids = await defaultTimeline(exclude_ids);
+
 
     authors = Array.from(authors.values());
 
@@ -90,8 +92,6 @@ router.post('/timeline', async (req, res) => {
         const { id, ...author_without_id } = author.dataValues;
         return author_without_id;
     });
-
-    const defaultvids = await defaultTimeline();
     
     return res.send({defaultvids, videos_reco: videos_found, authors_reco: authors_found, user_reco:true});
     } catch (error) {
@@ -102,11 +102,14 @@ router.post('/timeline', async (req, res) => {
 
 module.exports = router;
 
-async function getRecentPopularVideos(max){
+async function getRecentPopularVideos(max, exclude=[]){
     const videos = await db.Video.findAll({
         where: {
             uploaded_at: {
                 [Op.gte]: new Date(new Date() - 7 * 60 * 60 * 24 * 1000),
+            },
+            id: {
+                [Op.notIn]: exclude,
             },
         },
         limit: max,
@@ -117,6 +120,9 @@ async function getRecentPopularVideos(max){
             where: {
                 uploaded_at: {
                     [Op.gte]: new Date(new Date() - 30 * 60 * 60 * 24 * 1000),
+                },
+                id: {
+                    [Op.notIn]: exclude,
                 },
             },
             limit: max - videos.length,
@@ -130,6 +136,9 @@ async function getRecentPopularVideos(max){
                 uploaded_at: {
                     [Op.gte]: new Date(new Date() - 365 * 60 * 60 * 24 * 1000),
                 },
+                id: {
+                    [Op.notIn]: exclude,
+                },
             },
             limit: max - videos.length,
             order: [['views', 'DESC']],
@@ -138,6 +147,11 @@ async function getRecentPopularVideos(max){
     }
     if(videos.length < max){
         const videos4 = await db.Video.findAll({
+            where:{
+                id: {
+                    [Op.notIn]: exclude,
+                },
+            },
             limit: max - videos.length,
             order: [['views', 'DESC']],
         });
@@ -146,8 +160,8 @@ async function getRecentPopularVideos(max){
     return videos;
 }
 
-async function defaultTimeline(amount = 12){
-    const popVideos = await getRecentPopularVideos(50);
+async function defaultTimeline(exclude =[], amount = 12){
+    const popVideos = await getRecentPopularVideos(50, exclude);
     const videos_result = popVideos.sort(() => Math.random() - 0.5).slice(0, amount);
         let authors = new Map();
             for (let i = 0; i < videos_result.length; i++) {
