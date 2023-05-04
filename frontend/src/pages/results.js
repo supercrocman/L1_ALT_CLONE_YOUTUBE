@@ -1,86 +1,38 @@
-import { AuthorCard, LowerButton } from "@/components/AuthorCard";
-import { Container, Divider } from "@mui/material";
+import { AuthorCard, LowerButton } from '@/components/AuthorCard';
+import { Container, Divider, Typography } from '@mui/material';
 
-import React from "react";
-import TuneIcon from "@mui/icons-material/Tune";
-import { VideoCard } from "@/components/VideoCard";
-import { styled } from "@mui/material/styles";
-import { useRouter } from "next/router";
+import Image from 'next/image';
+import React from 'react';
+import SearchBar from '@/components/SearchBar';
+import TuneIcon from '@mui/icons-material/Tune';
+import { VideoCard } from '@/components/VideoCard';
+import axios from 'axios';
+import results from '../../public/results.svg';
+import { styled } from '@mui/material/styles';
+import { useRouter } from 'next/router';
 
-const author = {
-    name: "John Doe",
-    avatar: "/images/avatar.jpg",
-    subCount: 1000,
-    description:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. lorem ipsum dolor sit amet, consectetur adipiscing elit. lorem ipsum dolor sit amet, consectetur adipiscing elit. lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-    identifier: "johndoe",
-    lastVideos: [
-        {
-            title: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-            description:
-                "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-            thumbnail:
-                "https://i.ytimg.com/vi/FIVzREhIhUY/hq720.jpg?sqp=-oaymwEcCNAFEJQDSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLDUeOp3smg7sq5WJDXwlf_LA2MtQQ",
-            views: 1000,
-            duration: 232323,
-            date: "2023-02-10",
-            identifier: "fivzrehihuy",
-            author: {
-                name: "John Doe",
-                avatar: "/images/avatar.jpg",
-                subCount: 1000,
-                description:
-                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. lorem ipsum dolor sit amet, consectetur adipiscing elit. lorem ipsum dolor sit amet, consectetur adipiscing elit. lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-                identifier: "johndoe",
-            },
-        },
-        {
-            title: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-            description:
-                "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-            thumbnail:
-                "https://i.ytimg.com/vi/FIVzREhIhUY/hq720.jpg?sqp=-oaymwEcCNAFEJQDSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLDUeOp3smg7sq5WJDXwlf_LA2MtQQ",
-            views: 1000,
-            duration: 232323,
-            date: "2023-02-10",
-            identifier: "fivzrehihuy",
-            author: {
-                name: "John Doe",
-                avatar: "/images/avatar.jpg",
-                subCount: 1000,
-                description:
-                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. lorem ipsum dolor sit amet, consectetur adipiscing elit. lorem ipsum dolor sit amet, consectetur adipiscing elit. lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-                identifier: "johndoe",
-            },
-        },
-    ],
-};
-
-const video = {
-    title: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-    description:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-    thumbnail:
-        "https://i.ytimg.com/vi/FIVzREhIhUY/hq720.jpg?sqp=-oaymwEcCNAFEJQDSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLDUeOp3smg7sq5WJDXwlf_LA2MtQQ",
-    views: 1000,
-    duration: 232323,
-    date: "2023-02-10",
-    identifier: "fivzrehihuy",
-    author,
-};
-
-const LastAuthorVideo = styled("p")(({ theme }) => ({
+const LastAuthorVideo = styled('p')(({ theme }) => ({
     color: theme.palette.text.primary,
-    fontWeight: "bold",
+    fontWeight: 'bold',
     margin: 0,
     padding: 0,
-    marginTop: "24px",
-    marginBottom: "16px",
+    marginTop: '24px',
+    marginBottom: '16px',
 }));
 
-const Results = () => {
-    const router = useRouter();
-    const { search_query } = router.query;
+const Results = ({ search_query = '', data = [] }) => {
+    console.log(data);
+    const [featuredAuthor, setFeaturedAuthor] = React.useState(
+        data?.topChannelVideos_found?.length > 0
+            ? typeof data.topChannelVideos_found[0].author === 'string'
+                ? data.authors_found.find(
+                      (author) =>
+                          author.identifier ===
+                          data.topChannelVideos_found[0].author
+                  )
+                : data.topChannelVideos_found[0].author
+            : null
+    );
     return (
         <>
             <Container>
@@ -88,34 +40,89 @@ const Results = () => {
                     Filtres
                 </LowerButton>
                 <Divider />
-                {author && (
+                {featuredAuthor && (
                     <>
-                        <AuthorCard author={author} />
+                        <AuthorCard author={featuredAuthor} />
                         <Divider />
-                    </>
-                )}
-                {author &&
-                    author.lastVideos &&
-                    author.lastVideos.length > 0 && (
-                        <>
-                            <LastAuthorVideo>
-                                Dernières vidéos de {author.name}
-                            </LastAuthorVideo>
-                            {author.lastVideos.map((authorVideo, i) => (
+                        <LastAuthorVideo>
+                            Dernières vidéos de {featuredAuthor.name}
+                        </LastAuthorVideo>
+                        {data.topChannelVideos_found.map((authorVideo, i) => {
+                            authorVideo.author = featuredAuthor;
+                            return (
                                 <VideoCard
-                                    key={"authorVideo" + i}
+                                    key={'authorVideo' + i}
                                     video={authorVideo}
                                 />
-                            ))}
-                            <Divider sx={{ mt: "12px" }} />
-                        </>
-                    )}
-                {Array.from(new Array(100)).map((_, i) => (
-                    <VideoCard key={"searchVideo" + i} video={video} />
-                ))}
+                            );
+                        })}
+                        <Divider sx={{ mt: '12px' }} />
+                    </>
+                )}
+                {data?.videos_found?.map((video, i) => {
+                    if (typeof video.author === 'string')
+                        video.author = data.authors_found.find(
+                            (author) => author.identifier === video.author
+                        );
+                    return <VideoCard key={'searchVideo' + i} video={video} />;
+                })}
+                {(data?.length === 0 ||
+                    (data?.videos_found?.length === 0 &&
+                        data?.topChannelVideos_found?.length === 0)) && (
+                    <Container
+                        sx={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                            mt: '32px',
+                        }}
+                    >
+                        <Image
+                            src="/results.svg"
+                            alt="Logo"
+                            width={424}
+                            height={239}
+                        />
+                        <Typography
+                            variant="h4"
+                            component="h4"
+                            margin="16px 0px"
+                        >
+                            Aucun résultat trouvé
+                        </Typography>
+                        <Typography textAlign="center">
+                            Essayez d'autres mots clés ou supprimez les filtres
+                            de recherche
+                        </Typography>
+                    </Container>
+                )}
             </Container>
         </>
     );
 };
+
+export async function getServerSideProps(context) {
+    // get the search_query from the query parameters
+    const { search_query } = context.query;
+
+    let data = [];
+    try {
+        // fetch data from the API based on the search_query
+        const response = await axios.post(
+            `http://localhost:3001/api/submit-search`,
+            {
+                q: search_query,
+            }
+        );
+        console.log(response.data);
+        data = response.data;
+    } catch (error) {
+        console.log(error.message);
+    }
+    // pass the data to the page component as props
+    return {
+        props: { search_query, data },
+    };
+}
 
 export default Results;

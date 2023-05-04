@@ -1,3 +1,5 @@
+const Sequelize = require('sequelize');
+
 module.exports = (sequelize, DataTypes) =>
     sequelize.define(
         'user',
@@ -57,10 +59,14 @@ module.exports = (sequelize, DataTypes) =>
             createdAt: {
                 field: 'created_at',
                 type: DataTypes.DATE,
+                allowNull: false,
+                defaultValue: Sequelize.Sequelize.fn('current_timestamp'),
             },
             updatedAt: {
                 field: 'updated_at',
                 type: DataTypes.DATE,
+                allowNull: false,
+                defaultValue: Sequelize.Sequelize.fn('current_timestamp'),
             },
         },
         {

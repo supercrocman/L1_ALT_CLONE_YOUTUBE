@@ -56,10 +56,13 @@ app.get('/', (req, res) => {
     res.send('Hello World!');
 });
 app.use('/profil', profilRouter);
+app.use('/api', require('./routes/timeline'));
 
 app.use('/api', require('./routes/search'));
 
-app.use('/api', require('./routes/channelInfos'));
+app.use('/api', require('./routes/ChannelInfos'));
+
+app.use('/api', require('./routes/video'));
 
 app.listen(port, () => {
     logger.info(`Example app listening on port ${port}`);

@@ -9,7 +9,14 @@ router.get('/user/:identifier', async (req, res) => {
         const userIdentifier = req.params.identifier;
         const user = await db.User.findOne({
             where: { identifier: userIdentifier },
-            attributes: ['id', 'identifier', 'name', 'description', 'avatar'],
+            attributes: [
+                'id',
+                'identifier',
+                'name',
+                'description',
+                'avatar',
+                'createdAt',
+            ],
         });
 
         if (!user) {
@@ -25,11 +32,12 @@ router.get('/user/:identifier', async (req, res) => {
             },
         });
 
-        const videos = await db.Video.findAll({
+        let videos = await db.Video.findAll({
             where: {
                 user_id: user.id,
             },
             attributes: [
+                'id',
                 'title',
                 'description',
                 'views',
@@ -37,24 +45,41 @@ router.get('/user/:identifier', async (req, res) => {
                 'length',
                 'uploaded_at',
                 'identifier',
+                'upvote',
+                'downvote',
             ],
             order: [['uploaded_at', 'DESC']],
         });
 
+        for (let i = 0; i < videos.length; i++) {
+            const video = videos[i];
+            const commentCount = await video.getCommentCount();
+            video.dataValues.commentCount = commentCount;
+            delete video.dataValues.id;
+        }
+
+        const VueCount = await db.Video.sum('views', {
+            where: {
+                user_id: user.id,
+            },
+        });
+
         if (user) {
-            const userInformations = {
+            delete user.dataValues.id;
+
+            const user_informations = {
                 identifier: user.identifier,
                 name: user.name,
                 description: user.description,
-                avatar: user.avatar,
             };
 
             res.json({
                 user: {
-                    ...userInformations,
+                    ...user.dataValues,
                     subCount,
                     videoCount,
                     videos,
+                    VueCount,
                 },
             });
         } else {
