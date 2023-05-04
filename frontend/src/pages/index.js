@@ -1,17 +1,17 @@
-import { Container, Typography } from "@mui/material";
-import { useEffect, useState } from "react";
+import { Container, Typography } from '@mui/material';
+import { useEffect, useState } from 'react';
 
-import { VideoCard } from "@/components/VideoCard";
+import { VideoCard } from '@/components/VideoCard';
 
 export default function Home() {
     let user_reco = false; // j'utilise ça pour l'instant, a voir avec la team profil
     const user = 3; // a relier avec le compte connecté
     const [videos, setVideos] = useState([]);
     useEffect(() => {
-        fetch("http://localhost:3001/api/timeline", {
-            method: "POST",
+        fetch('http://localhost:3001/api/timeline', {
+            method: 'POST',
             headers: {
-                "Content-Type": "application/json",
+                'Content-Type': 'application/json',
             },
             body: JSON.stringify({
                 user: user,
@@ -43,9 +43,9 @@ export default function Home() {
             )}
             <Container
                 sx={{
-                    display: "flex",
-                    flexWrap: "wrap",
-                    justifyContent: "space between",
+                    display: 'flex',
+                    flexWrap: 'wrap',
+                    justifyContent: 'space between',
                 }}
             >
                 {Array.isArray(vids_reco) &&
@@ -81,9 +81,9 @@ export default function Home() {
             </Typography>
             <Container
                 sx={{
-                    display: "flex",
-                    flexWrap: "wrap",
-                    justifyContent: "space-between",
+                    display: 'flex',
+                    flexWrap: 'wrap',
+                    justifyContent: 'space-between',
                 }}
             >
                 {Array.isArray(vids) &&

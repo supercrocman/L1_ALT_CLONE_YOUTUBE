@@ -1,0 +1,28 @@
+.lien {
+    text-decoration: underline;
+    color: cornflowerblue;
+}
+
+.lien:hover {
+    text-decoration: underline;
+    color: rgb(171, 100, 237);
+}
+.profilContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.profilBar {
+    background-color: #ba55d3;
+    margin-bottom: 40px;
+    margin-top: 10px;
+}
+.profilBar_confirmation {
+    width: 110px;
+    height: 5px;
+}
+.profilBar_inscription_connexion {
+    width: 250px;
+    height: 10px;
+}

@@ -1,13 +1,13 @@
-import { Box, CircularProgress, Container } from "@mui/material";
+import { Box, CircularProgress, Container } from '@mui/material';
 
-import { NextVideos } from "@/components/NextVideos";
-import React from "react";
-import VideoComments from "../components/VideoComments";
-import VideoInformation from "../components/VideoInformation";
-import { VideoJS } from "../components/Player";
-import axios from "axios";
-import { styled } from "@mui/material/styles";
-import { useRouter } from "next/router";
+import { NextVideos } from '@/components/NextVideos';
+import React from 'react';
+import VideoComments from '../components/VideoComments';
+import VideoInformation from '../components/VideoInformation';
+import { VideoJS } from '../components/Player';
+import { styled } from '@mui/material/styles';
+import { useRouter } from 'next/router';
+import axiosInstance from '@/utils/axiosInterceptor';
 
 export default function VideoPlayerPage() {
     // use router
@@ -29,26 +29,22 @@ export default function VideoPlayerPage() {
             setVideo(null);
             setRelatedVideos(null);
             try {
-                const vid = await axios.get(
-                    `http://localhost:3001/api/video/${v}`
-                );
+                const vid = await axiosInstance.get(`/api/video/${v}`);
                 setVideo(vid.data);
                 setvideoJsOptions({
                     ...videoJsOptions,
                     sources: [
                         {
                             src: vid.data.path,
-                            type: "video/mp4",
+                            type: 'video/mp4',
                         },
                     ],
                     poster: vid.data.thumbnail,
                 });
-                const res = await axios.get(
-                    `http://localhost:3001/api/video/${v}/related`
-                );
+                const res = await axiosInstance.get(`/api/video/${v}/related`);
                 setRelatedVideos(res.data);
             } catch (e) {
-                router.push("/404");
+                router.push('/404');
             }
         };
         getRelatedVideos(v);
@@ -56,7 +52,7 @@ export default function VideoPlayerPage() {
     return (
         <Box
             sx={{
-                display: "flex",
+                display: 'flex',
             }}
         >
             {video ? (
@@ -67,11 +63,11 @@ export default function VideoPlayerPage() {
             ) : (
                 <Box
                     sx={{
-                        display: "flex",
-                        width: "100%",
-                        height: "100vh",
-                        justifyContent: "center",
-                        alignItems: "center",
+                        display: 'flex',
+                        width: '100%',
+                        height: '100vh',
+                        justifyContent: 'center',
+                        alignItems: 'center',
                     }}
                 >
                     <CircularProgress />

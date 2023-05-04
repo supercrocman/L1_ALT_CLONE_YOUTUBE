@@ -1,8 +1,8 @@
-import React from "react";
-import { VideoCard } from "./VideoCard";
-import { styled } from "@mui/material/styles";
+import React from 'react';
+import { VideoCard } from './VideoCard';
+import { styled } from '@mui/material/styles';
 
-const NextVideoCard = styled("div")(({ theme }) => ({
+const NextVideoCard = styled('div')(({ theme }) => ({
     minWidth: 402,
 }));
 

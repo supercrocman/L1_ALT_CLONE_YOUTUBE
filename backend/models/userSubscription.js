@@ -30,7 +30,10 @@ module.exports = (sequelize, DataTypes) =>
                     name: 'PRIMARY',
                     unique: true,
                     using: 'BTREE',
-                    fields: [{ name: 'user_id' }, { name: 'user_subscribe_id' }],
+                    fields: [
+                        { name: 'user_id' },
+                        { name: 'user_subscribe_id' },
+                    ],
                 },
                 {
                     name: 'user_id',

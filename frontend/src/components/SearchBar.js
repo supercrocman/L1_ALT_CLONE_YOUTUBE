@@ -1,35 +1,35 @@
-import * as React from "react";
+import * as React from 'react';
 
-import Autocomplete from "@mui/material/Autocomplete";
-import Button from "@mui/material/Button";
-import SearchIcon from "@mui/icons-material/Search";
-import TextField from "@mui/material/TextField";
-import axios from "axios";
-import { styled } from "@mui/material/styles";
+import Autocomplete from '@mui/material/Autocomplete';
+import Button from '@mui/material/Button';
+import SearchIcon from '@mui/icons-material/Search';
+import TextField from '@mui/material/TextField';
+import { styled } from '@mui/material/styles';
+import axiosInstance from '@/utils/axiosInterceptor';
 
-const SearchForm = styled("form")(({ theme }) => ({
-    height: "40px",
-    color: "black",
-    display: "flex",
-    marginTop: "7px",
+const SearchForm = styled('form')(({ theme }) => ({
+    height: '40px',
+    color: 'black',
+    display: 'flex',
+    marginTop: '7px',
 }));
 
 const SearchIconThemed = styled(SearchIcon)(({ theme }) => ({
-    color: "#f1f1f1 !important",
-    width: "1.75rem",
-    height: "1.75rem",
+    color: '#f1f1f1 !important',
+    width: '1.75rem',
+    height: '1.75rem',
 }));
 
-const SearchBox = styled("div")(({ theme }) => ({
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    width: "100%",
-    height: "100%",
-    borderRadius: "4px",
+const SearchBox = styled('div')(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '100%',
+    height: '100%',
+    borderRadius: '4px',
 }));
 
-export default function SearchBar({ defaultValue = "" }) {
+export default function SearchBar({ defaultValue = '' }) {
     const [inputValue, setInputValue] = React.useState(null);
     const [searchResults, setSearchResults] = React.useState([]);
     const [cancelToken, setCancelToken] = React.useState(null);
@@ -53,36 +53,36 @@ export default function SearchBar({ defaultValue = "" }) {
                 id="SearchBar-AutoComplete"
                 sx={{
                     width: 550,
-                    "& .MuiOutlinedInput-root": {
-                        borderRadius: "30px 0 0 30px",
-                        color: "white",
-                        backgroundColor: "hsl(0, 0%, 7%)",
-                        padding: "1px",
+                    '& .MuiOutlinedInput-root': {
+                        borderRadius: '30px 0 0 30px',
+                        color: 'white',
+                        backgroundColor: 'hsl(0, 0%, 7%)',
+                        padding: '1px',
                     },
-                    "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline":
+                    '& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline':
                         {
-                            border: "1px solid hsl(0, 0%, 18.82%)",
-                            borderRight: "none",
+                            border: '1px solid hsl(0, 0%, 18.82%)',
+                            borderRight: 'none',
                         },
-                    "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline":
+                    '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline':
                         {
-                            border: "1px solid hsl(0, 0%, 18.82%)",
-                            borderRight: "none",
+                            border: '1px solid hsl(0, 0%, 18.82%)',
+                            borderRight: 'none',
                         },
-                    "& .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline":
+                    '& .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline':
                         {
-                            border: "1px solid hsl(0, 0%, 18.82%)",
-                            borderRight: "none",
+                            border: '1px solid hsl(0, 0%, 18.82%)',
+                            borderRight: 'none',
                         },
-                    "& .MuiAutocomplete-endAdornment .MuiIconButton-root": {
-                        color: "white",
+                    '& .MuiAutocomplete-endAdornment .MuiIconButton-root': {
+                        color: 'white',
                     },
-                    "& .MuiOutlinedInput-root .MuiAutocomplete-input": {
-                        paddingLeft: "15px",
+                    '& .MuiOutlinedInput-root .MuiAutocomplete-input': {
+                        paddingLeft: '15px',
                     },
                 }}
                 options={searchResults}
-                inputValue={inputValue || ""}
+                inputValue={inputValue || ''}
                 onChange={async (event, value) => {
                     if (value) {
                         if (cancelToken) {
@@ -97,11 +97,12 @@ export default function SearchBar({ defaultValue = "" }) {
                         if (cancelToken) {
                             cancelToken.cancel();
                         }
-                        const newCancelToken = axios.CancelToken.source();
+                        const newCancelToken =
+                            axiosInstance.CancelToken.source();
                         setCancelToken(newCancelToken);
-                        axios
+                        axiosInstance
                             .post(
-                                "http://localhost:3001/api/search",
+                                'http://localhost:3001/api/search',
                                 {
                                     q: newInputValue,
                                 },
@@ -118,7 +119,7 @@ export default function SearchBar({ defaultValue = "" }) {
                                 setSearchResults(response.data.videos);
                             })
                             .catch((error) => {
-                                if (!axios.isCancel(error)) {
+                                if (!axiosInstance.isCancel(error)) {
                                     console.log(error);
                                 }
                             });
@@ -139,12 +140,12 @@ export default function SearchBar({ defaultValue = "" }) {
                 variant="contained"
                 type="submit"
                 sx={{
-                    borderRadius: "0px 30px 30px 0px",
-                    background: "hsla(0, 0%, 100%, 0.08)",
-                    border: "1px solid hsl(0, 0%, 18.82%)",
+                    borderRadius: '0px 30px 30px 0px',
+                    background: 'hsla(0, 0%, 100%, 0.08)',
+                    border: '1px solid hsl(0, 0%, 18.82%)',
                     boxShadow: 0,
-                    "&:hover": {
-                        background: "hsla(0, 0%, 100%, 0.08)",
+                    '&:hover': {
+                        background: 'hsla(0, 0%, 100%, 0.08)',
                     },
                 }}
             >

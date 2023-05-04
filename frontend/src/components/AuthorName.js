@@ -1,35 +1,35 @@
-import { Avatar, Skeleton } from "@mui/material";
+import { Avatar, Skeleton } from '@mui/material';
 
-import Link from "next/link";
-import React from "react";
-import { styled } from "@mui/material/styles";
+import Link from 'next/link';
+import React from 'react';
+import { styled } from '@mui/material/styles';
 
-const ChannelCard = styled("div")(({ theme }) => ({
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
-    padding: "8px 0px",
-    fontSize: "0.75rem",
+const ChannelCard = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: '8px 0px',
+    fontSize: '0.75rem',
     color: theme.palette.text.secondary,
-    paddingTop: "8px",
-    paddingBottom: "8px",
+    paddingTop: '8px',
+    paddingBottom: '8px',
 }));
 
 const ChannelNameVideo = styled(Link)(({ theme }) => ({
-    textDecoration: "none",
+    textDecoration: 'none',
     color: theme.palette.text.secondary,
-    "&:hover": {
+    '&:hover': {
         color: theme.palette.text.primary,
     },
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
 }));
 
 export const AuthorName = ({ author, small = false }) => {
-    if (!author) return <Skeleton variant="text" width={"100%"} />;
+    if (!author) return <Skeleton variant="text" width={'100%'} />;
     return (
-        <ChannelCard sx={small && { pt: "4px", pb: 0 }}>
+        <ChannelCard sx={small && { pt: '4px', pb: 0 }}>
             <ChannelNameVideo
                 onClick={(e) => e.stopPropagation()}
                 href={`/channel/@${author?.identifier}`}
@@ -41,7 +41,7 @@ export const AuthorName = ({ author, small = false }) => {
                         sx={{
                             width: 24,
                             height: 24,
-                            marginRight: "8px",
+                            marginRight: '8px',
                         }}
                     />
                 )}

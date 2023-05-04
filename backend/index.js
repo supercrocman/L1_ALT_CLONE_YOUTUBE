@@ -1,18 +1,13 @@
 const express = require('express');
-const db = require('./services/sequelize');
-const bodyParser = require('body-parser');
 const cors = require('cors');
+const winston = require('winston');
+const cookieParser = require('cookie-parser');
+const db = require('./services/sequelize');
+const profilRouter = require('./routes/profils');
 const path = require('path');
 const logger = require('./services/winston');
 
 const app = express();
-
-
-app.use(
-    cors({
-        origin: '*',
-    })
-);
 
 db.sequelize
     .sync()
@@ -24,14 +19,20 @@ db.sequelize
     });
 
 const port = 3001;
-
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
+const corsOptions = {
+    origin: 'http://localhost:3000',
+    credentials: true,
+    optionSuccessStatus: 200,
+};
+app.use(cookieParser());
+app.use(express.static(`/src/avatar/`));
+app.use(cors(corsOptions));
+app.use(express.json());
 
 app.get('/', (req, res) => {
     res.send('Hello World!');
 });
-
+app.use('/profil', profilRouter);
 app.use('/api', require('./routes/timeline'));
 
 app.use('/api', require('./routes/search'));

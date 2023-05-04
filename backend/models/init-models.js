@@ -71,20 +71,20 @@ function initModels(sequelize) {
         as: 'User_histories',
         foreignKey: 'Video_id',
     });
-    
+
     Video.belongsToMany(Tag, { through: 'video_tag', foreignKey: 'video_id' });
     Tag.belongsToMany(Video, { through: 'video_tag', foreignKey: 'tag_id' });
-    
-    Video.prototype.getCommentCount = async function () { 
+
+    Video.prototype.getCommentCount = async function () {
         const videoCommentCount = await Comments.count({
             where: {
                 video_id: this.id,
-            }
+            },
         });
         return videoCommentCount;
-     }
+    };
 
-    User.prototype.getSubCount = async function () { 
+    User.prototype.getSubCount = async function () {
         const userSubCount = await UserSubscription.count({
             where: {
                 user_subscribe_id: this.id,
@@ -148,17 +148,23 @@ function initModels(sequelize) {
                     where: {
                         user_id: this.id,
                     },
-                }
+                },
             ],
         });
         return videoHistory || [];
-    }
+    };
 
     User.prototype.getPreferredTags = async function () {
         const history = await this.getHistory();
         const favoriteTags = await Tag.findAll({
-            attributes: ['id', 'name', [Sequelize.fn('COUNT', Sequelize.col('videos.id')), 'occurrences']
-        ],
+            attributes: [
+                'id',
+                'name',
+                [
+                    Sequelize.fn('COUNT', Sequelize.col('videos.id')),
+                    'occurrences',
+                ],
+            ],
             include: [
                 {
                     model: Video,
@@ -167,10 +173,9 @@ function initModels(sequelize) {
                         id: history.map((video) => video.id),
                     },
                 },
-                
             ],
             group: ['Tag.id', 'Tag.name'],
-            order: [[Sequelize.literal('occurrences'), 'DESC']]
+            order: [[Sequelize.literal('occurrences'), 'DESC']],
         });
 
         const tags = {};
@@ -178,10 +183,10 @@ function initModels(sequelize) {
         for (const tag of favoriteTags) {
             tags[tag.name] = tag.dataValues.occurrences;
         }
-        
+
         return tags || {};
-    }
-            
+    };
+
     return {
         Comments,
         Playlist,
