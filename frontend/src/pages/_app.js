@@ -1,10 +1,7 @@
+import React, { useState, useEffect } from 'react';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-
 import CssBaseline from '@mui/material/CssBaseline';
-
 import LeftMenu from '@/components/leftMenu';
-
-import React from 'react';
 
 const darkTheme = createTheme({
     palette: {
@@ -13,30 +10,25 @@ const darkTheme = createTheme({
 });
 
 export default function App({ Component, pageProps }) {
-    const [lastUrlPart, setLastUrlPart] = React.useState(null);
+    const [lastUrlPart, setLastUrlPart] = useState(null);
 
-    React.useEffect(() => {
-        if (typeof window === 'undefined') {
-            return;
-        } else {
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
             setLastUrlPart(window.location.href.split('/')[3]);
         }
     }, []);
 
-    if (lastUrlPart === 'studio') {
-        return (
-            <ThemeProvider theme={darkTheme}>
-                <CssBaseline />
-                <Component {...pageProps} />
-            </ThemeProvider>
-        );
-    }
-    return (
+    const content = (
         <ThemeProvider theme={darkTheme}>
             <CssBaseline />
-            <LeftMenu>
-                <Component {...pageProps} />
-            </LeftMenu>
+            <Component {...pageProps} />
+        </ThemeProvider>
+    );
+
+    return lastUrlPart === 'studio' ? content : (
+        <ThemeProvider theme={darkTheme}>
+            <CssBaseline />
+            <LeftMenu>{content}</LeftMenu>
         </ThemeProvider>
     );
 }
