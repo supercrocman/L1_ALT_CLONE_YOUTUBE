@@ -237,15 +237,11 @@ export default function ChannelPage({ user }) {
                         variant="extended"
                         size="medium"
                         onClick={
-<<<<<<< Updated upstream
-                            isLoggIn ? () => Router.push('/channel/' + id + '/personalize') : () => Router.push('/login')
-=======
                             isnowlogin ? () => Router.push(`/studio/${id}`).then(() => {
                                 if (typeof window !== 'undefined') {
-                                  window.location.reload();
+                                    window.location.reload();
                                 }
-                              }) : ""
->>>>>>> Stashed changes
+                            }) : ""
                         }
                     >
                         {
