@@ -59,15 +59,6 @@ function a11yProps(index) {
 
 export default function ChannelPage({ user }) {
     const theme = useTheme();
-    const isLoggIn = getCookie('isLoggIn');
-
-    if (isLoggIn) {
-        const AccessToken = getCookie('AccessToken');
-        const RefreshToken = getCookie('RefreshToken');
-
-
-
-    }
 
     const router = useRouter();
     const { id, page } = router.query;
@@ -116,6 +107,29 @@ export default function ChannelPage({ user }) {
     const handleChangeIndex = (index) => {
         setValue(index);
     };
+
+
+    const [identifierConnected, setIdentifierConnected] = React.useState('');
+    const isLoggIn = getCookie('isLoggIn');
+    const [isnowlogin, setIsnowlogin] = React.useState(false);
+
+    useEffect(() => {
+        if (isLoggIn) {
+            if (id) {
+                const AccessToken = getCookie('AccessToken');
+                const RefreshToken = getCookie('RefreshToken');
+                const decoded = jwt.decode(AccessToken);
+                const exp = decoded.exp;
+                const now = Math.floor(Date.now() / 1000);
+                if (exp > now) {
+                    setIdentifierConnected(decoded.identifier);
+                    if (id.split('@')[1] === decoded.identifier) {
+                        setIsnowlogin(true);
+                    }
+                }
+            }
+        }
+    }, [isLoggIn, id]);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -217,17 +231,25 @@ export default function ChannelPage({ user }) {
 
                     <Fab
                         color={
-                            isLoggIn ? 'primary' : 'secondary'
+                            isnowlogin ? 'primary' : 'secondary'
                         }
                         aria-label="Personalize"
                         variant="extended"
                         size="medium"
                         onClick={
+<<<<<<< Updated upstream
                             isLoggIn ? () => Router.push('/channel/' + id + '/personalize') : () => Router.push('/login')
+=======
+                            isnowlogin ? () => Router.push(`/studio/${id}`).then(() => {
+                                if (typeof window !== 'undefined') {
+                                  window.location.reload();
+                                }
+                              }) : ""
+>>>>>>> Stashed changes
                         }
                     >
                         {
-                            isLoggIn ? "Personnaliser" : "S'abonner"
+                            isnowlogin ? "Personnaliser" : "S'abonner"
                         }
                     </Fab>
                 </div>
