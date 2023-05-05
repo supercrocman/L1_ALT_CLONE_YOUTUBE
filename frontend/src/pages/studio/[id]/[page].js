@@ -10,6 +10,7 @@ import { styled, useTheme } from '@mui/material/styles';
 import Dashboard from '@/components/studio/Dashboard';
 import Content from '@/components/studio/Content';
 import axiosInstance from '@/utils/axiosInterceptor';
+import Upload from '@/components/studio/Upload';
 
 const DrawerHeader = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -73,7 +74,7 @@ export default function StudioPage() {
 
     return (
         <div>
-            <StudioLeftNavBar user={user} page={page} />
+            <StudioLeftNavBar user={user} page={page ? page : "dashboard"} />
             <Box
                 component="main"
                 sx={{
